@@ -186,7 +186,7 @@ Date.CultureStrings["en-NZ"] = {
 Date.CultureStrings.lang = "en-NZ";
 
 /** 
- * @overview datejs
+ * @dashboard datejs
  * @version 1.0.0-rc3
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith

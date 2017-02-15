@@ -186,7 +186,7 @@ Date.CultureStrings["ar-KW"] = {
 Date.CultureStrings.lang = "ar-KW";
 
 /** 
- * @overview datejs
+ * @dashboard datejs
  * @version 1.0.0-rc3
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith

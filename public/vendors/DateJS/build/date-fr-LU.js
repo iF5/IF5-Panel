@@ -186,7 +186,7 @@ Date.CultureStrings["fr-LU"] = {
 Date.CultureStrings.lang = "fr-LU";
 
 /** 
- * @overview datejs
+ * @dashboard datejs
  * @version 1.0.0-rc3
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith

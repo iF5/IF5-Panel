@@ -186,7 +186,7 @@ Date.CultureStrings["en-US"] = {
 Date.CultureStrings.lang = "en-US";
 
 /** 
- * @overview datejs
+ * @dashboard datejs
  * @version 1.0.0-beta-2014-03-25
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith
