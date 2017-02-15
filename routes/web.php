@@ -19,3 +19,4 @@ Route::get('dashboard-main', 'DashboardMainController@index');
 
 Route::get('dashboard', 'Panel\DashboardController@index');
 Route::get('checklist', 'Panel\ChecklistController@index');
+Route::get('user', 'Panel\UserController@create');
