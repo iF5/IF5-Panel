@@ -17,6 +17,14 @@ Route::get('/', function () {
 
 Route::get('dashboard-main', 'DashboardMainController@index');
 
+//Dashboard
 Route::get('dashboard', 'Panel\DashboardController@index');
+Route::get('dashboard-employee', 'Panel\DashboardController@employee');
+
+//Ckecklist
 Route::get('checklist', 'Panel\ChecklistController@index');
-Route::get('user', 'Panel\UserController@create');
+
+//User
+Route::get('user', 'Panel\UserController@index');
+Route::get('user-create', 'Panel\UserController@create');
+Route::get('user-edit/{id}', 'Panel\UserController@edit');

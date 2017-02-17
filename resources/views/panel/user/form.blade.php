@@ -1,5 +1,7 @@
 @extends('panel.layout')
 
+@section('title', 'Formul&aacute;rio de usu&aacute;rio')
+
 @section('content')
     <!-- page content -->
     <div class="right_col" role="main">
@@ -8,9 +10,8 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>
-                            Usu&aacute;rios
-                            <small>Cadastro</small>
+                        <h2>Usu&aacute;rios
+                            <span class="text-primary">formul&aacute;rio de cadastro</span>
                         </h2>
                         <div class="clearfix"></div>
                     </div>
@@ -70,10 +71,11 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="ln_solid"></div>
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                    <button class="btn btn-primary" type="button">Cancelar</button>
+                                    <a href="{{ url('user') }}" class="btn btn-primary">Cancelar</a>
                                     <button class="btn btn-primary" type="reset">Limpar</button>
                                     <button type="submit" class="btn btn-success">Enviar</button>
                                 </div>

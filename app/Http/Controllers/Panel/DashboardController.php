@@ -12,4 +12,9 @@ class DashboardController
         return view('panel.dashboard.index');
     }
 
+    public function employee()
+    {
+        return view('panel.dashboard.employee');
+    }
+
 }
