@@ -28,3 +28,9 @@ Route::get('checklist', 'Panel\ChecklistController@index');
 Route::get('user', 'Panel\UserController@index');
 Route::get('user-create', 'Panel\UserController@create');
 Route::get('user-edit/{id}', 'Panel\UserController@edit');
+
+//Company
+Route::get('company', 'Panel\CompanyController@index');
+
+//Report
+Route::get('report', 'Panel\ReportController@index');

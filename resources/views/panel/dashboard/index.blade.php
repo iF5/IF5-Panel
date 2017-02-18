@@ -120,58 +120,58 @@
                         <tbody>
                         <tr>
                             <td>Funcionario A</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
+                            <td><i class="fa fa-check"></i></td>
+                            <td></td>
+                            <td><i class="fa fa-check"></i></td>
+                            <td></td>
+                            <td></td>
+                            <td><i class="fa fa-check"></i></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>Funcionario B</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
+                            <td><i class="fa fa-check"></i></td>
+                            <td></td>
+                            <td><i class="fa fa-check"></i></td>
+                            <td></td>
+                            <td></td>
+                            <td><i class="fa fa-check"></i></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>Funcionario C</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
+                            <td><i class="fa fa-check"></i></td>
+                            <td></td>
+                            <td><i class="fa fa-check"></i></td>
+                            <td></td>
+                            <td></td>
+                            <td><i class="fa fa-check"></i></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>Funcionario D</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
+                            <td><i class="fa fa-check"></i></td>
+                            <td></td>
+                            <td><i class="fa fa-check"></i></td>
+                            <td></td>
+                            <td></td>
+                            <td><i class="fa fa-check"></i></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>Funcionario E</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
-                            <td>10/10</td>
+                            <td><i class="fa fa-check"></i></td>
+                            <td></td>
+                            <td><i class="fa fa-check"></i></td>
+                            <td></td>
+                            <td></td>
+                            <td><i class="fa fa-check"></i></td>
+                            <td></td>
+                            <td></td>
                         </tr>
 
                         </tbody>

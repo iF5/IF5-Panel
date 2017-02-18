@@ -80,7 +80,7 @@
                             <li>
                                 <a href="#"><i class="fa fa-bar-chart-o"></i> Relat&oacute;rios <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
-                                    <li><a href="#">Lista</a></li>
+                                    <li><a href="{{ url('report') }}">Upload</a></li>
                                     <li><a href="#">Menu 02</a></li>
                                 </ul>
                             </li>
@@ -92,7 +92,7 @@
                                 <a href="#"><i class="fa fa-table"></i> Funcion&aacute;rios </a>
                             </li>
                             <li>
-                                <a href="#"><i class="fa fa-clone"></i> Empresas </a>
+                                <a href="{{ url('company') }}"><i class="fa fa-clone"></i> Empresas </a>
                             </li>
                         </ul>
                     </div>
