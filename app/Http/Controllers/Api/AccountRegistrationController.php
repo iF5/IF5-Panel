@@ -13,7 +13,13 @@ class AccountRegistrationController extends Controller
     public function __construct(Request $request)
     {
         $this->request = $request;
+
+        //alterar antes de ir para produção
+        //session(['admin' => 1]);
+        //session(['client' => 1]);
+
         $this->accountRegService = new AccountRegistrationService();
+
     }
 
     public function registration()
@@ -38,6 +44,6 @@ class AccountRegistrationController extends Controller
 
     public function show()
     {
-        dd($this->accountRegService->getAllAccounts());
+        $this->accountRegService->getAllAccounts();
     }
 }

@@ -6,11 +6,24 @@ class AccountRepository
 {
     public function insertAccountData($data)
     {
-        return \DB::insert(
-                    "INSERT INTO " . " IF5Panel.account " .
-                    "(name, cnpj, createdAt, updatedAt) VALUES(?, ?, current_timestamp, current_timestamp)",
-                    [$data['name'], $data['cnpj']]
-                   );
+        return \DB::table('IF5Panel.account')->insertGetId(
+            ['name' => $data['name'], 'cnpj' => $data['cnpj'],
+            'createdAt' => date('Y-m-d H:i:s'), 'updatedAt' => date('Y-m-d H:i:s')]
+        );
+    }
+
+    public function insertAccountProfile($idAccount, $idAccountType)
+    {
+        return \DB::table('IF5Panel.accountProfile')->insert(
+            ['idAccount' => $idAccount, 'idAccountType' => $idAccountType]
+        );
+    }
+
+    public function insertProviderAllocation($idAccount, $idClient)
+    {
+        return \DB::table('IF5Panel.providerAllocation')->insert(
+            ['idProvider' => $idAccount, 'idClient' => $idClient]
+        );
     }
 
     public function updateAccountData($data)
@@ -31,6 +44,12 @@ class AccountRepository
         }
 
         $query = "SELECT * FROM IF5Panel.account WHERE " . $where;
+        return \DB::select($query);
+    }
+
+    public function selectAllAccount()
+    {
+        $query = "SELECT * FROM IF5Panel.account";
         return \DB::select($query);
     }
 }
