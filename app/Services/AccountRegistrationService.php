@@ -31,7 +31,7 @@ class AccountRegistrationService
             }
             $this->resultLogService->result($idAccount);
         }catch(\Exception $e){
-            $this->resultLogService->result(false, false, "Registration Error: " . $e->getMessage());
+            $this->resultLogService->result(false, false, "Account Registration Error: " . $e->getMessage());
         }
     }
 

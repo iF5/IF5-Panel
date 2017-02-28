@@ -29,8 +29,10 @@ class AccountRepository
     public function updateAccountData($data)
     {
         return \DB::table('IF5Panel.account')
-                        ->where('idAccount', $data['id'])
-                        ->update(['name' => $data['name'], 'cnpj' => $data['cnpj'], 'updatedAt' => date('Y-m-d H:i:s')]);
+        ->where('idAccount', $data['id'])
+        ->update(
+        ['name' => $data['name'], 'cnpj' => $data['cnpj'],
+         'updatedAt' => date('Y-m-d H:i:s')]);
     }
 
     public function selectAccount($data)

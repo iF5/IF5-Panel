@@ -54,6 +54,7 @@
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input id="password-repeat" class="form-control col-md-7 col-xs-12" type="password"
                                            name="password-repeat">
+                                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 </div>
                             </div>
                             <div class="form-group">
