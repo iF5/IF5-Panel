@@ -81,8 +81,12 @@ class LoginRegistrationService
     public function findLogin($data)
     {
         try{
-            $findedData = $this->loginRepository->selectAccount($data);
-            $this->resultLogService->result(true, $findedData, false);
+            $findedData = $this->loginRepository->selectLogin($data);
+            if($findedData){
+                 $this->resultLogService->result(true, $findedData, false);
+            }else{
+                $this->resultLogService->result(false, false, false);
+            }
         }catch(\Exception $e){
             $this->resultLogService->result(false, false, "Find Error: " . $e->getMessage());
         }
@@ -92,8 +96,12 @@ class LoginRegistrationService
     public function getAllLogin()
     {
         try{
-            $allAccounts = $this->loginRepository->selectAllAccount();
-            $this->resultLogService->result(true, $allAccounts, false);
+            $allAccounts = $this->loginRepository->selectAllLogin();
+            if($allAccounts){
+               $this->resultLogService->result(true, $allAccounts, false);
+           }else{
+               $this->resultLogService->result(false, false, false);
+           }
         }catch(\Exception $e){
             $this->resultLogService->result(false, false, "Show Error: " . $e->getMessage());
         }

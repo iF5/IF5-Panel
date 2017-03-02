@@ -52,23 +52,23 @@ class LoginRepository
         );
     }
 
-    public function selectAccount($data)
+    public function selectLogin($data)
     {
         $where = "";
-        if(array_key_exists('name', $data) and $data['name']){
-             $where = "name like '%" . $data['name']. "%';";
+        if(array_key_exists('email', $data) and $data['email']){
+             $where = "email like '%" . $data['email']. "%';";
         }
-        if(array_key_exists('cnpj', $data) and $data['cnpj']){
-            $where = "cnpj = '" . $data['cnpj']. "';";
+        if(array_key_exists('idLogin', $data) and $data['idLogin']){
+            $where = "idLogin = '" . $data['idLogin']. "';";
         }
 
-        $query = "SELECT * FROM IF5Panel.account WHERE " . $where;
+        $query = "SELECT * FROM IF5Panel.login WHERE " . $where;
         return \DB::select($query);
     }
 
-    public function selectAllAccount()
+    public function selectAllLogin()
     {
-        $query = "SELECT * FROM IF5Panel.account";
+        $query = "SELECT * FROM IF5Panel.login";
         return \DB::select($query);
     }
 }

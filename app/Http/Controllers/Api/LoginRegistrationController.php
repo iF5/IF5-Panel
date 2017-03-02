@@ -39,11 +39,11 @@ class LoginRegistrationController extends Controller
 
     public function find()
     {
-        //$this->accountRegService->findAccount($this->request->all());
+        $this->loginRegService->findLogin($this->request->all());
     }
 
     public function show()
     {
-        //$this->accountRegService->getAllAccounts();
+        $this->loginRegService->getAllLogin();
     }
 }

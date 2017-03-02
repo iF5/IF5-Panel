@@ -103,7 +103,11 @@ class AccountRegistrationService
     {
         try{
             $findedData = $this->accountRepository->selectAccount($data);
-            $this->resultLogService->result(true, $findedData, false);
+            if($findedData){
+                  $this->resultLogService->result(true, $findedData, false);
+            }else{
+                 $this->resultLogService->result(false, false, false);
+            }
         }catch(\Exception $e){
             $this->resultLogService->result(false, false, "Find Error: " . $e->getMessage());
         }

@@ -26,3 +26,5 @@ Route::get('account/find', 'Api\AccountRegistrationController@find');
 //Login
 Route::post('login/registration', 'Api\LoginRegistrationController@registration');
 Route::post('login/update', 'Api\LoginRegistrationController@update');
+Route::get('login/find', 'Api\LoginRegistrationController@find');
+Route::get('login/show', 'Api\LoginRegistrationController@show');
