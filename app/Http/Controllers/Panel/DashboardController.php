@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Models\RoleModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController
 {
