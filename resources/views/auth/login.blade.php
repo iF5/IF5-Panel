@@ -32,21 +32,21 @@
                     <h1>Painel IF5</h1>
 
                     <div>
-                        <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}"
-                               placeholder="Login" required autofocus>
                         @if ($errors->has('email'))
                             <span class="help-block">
                             <strong>{{ $errors->first('email') }}</strong>
                                     </span>
                         @endif
+                        <input id="login" type="text" class="form-control" name="login" value="{{ old('email') }}"
+                               placeholder="Login" required autofocus>
                     </div>
                     <div>
-                        <input id="password" type="password" class="form-control" name="password" required>
                         @if ($errors->has('password'))
                             <span class="help-block">
                             <strong>{{ $errors->first('password') }}</strong>
                                     </span>
                         @endif
+                        <input id="password" type="password" class="form-control" name="password" placeholder="Senha" required>
                     </div>
                     <div>
                         <button class="btn btn-default submit" type="submit">Entrar</button>

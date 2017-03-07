@@ -9,7 +9,7 @@
 
     <title>IF5 | @yield('title') </title>
 
-            <!-- Bootstrap -->
+    <!-- Bootstrap -->
     <link href="{{ asset('vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="{{ asset('vendors/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
@@ -27,7 +27,8 @@
     <!-- Datatables -->
     <link href="{{ asset('vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}"
+          rel="stylesheet">
     <link href="{{ asset('vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
 
@@ -50,7 +51,7 @@
                 <!-- menu profile quick info -->
                 <div class="profile clearfix">
                     <div class="profile_pic">
-                        <img src="images/img.jpg" alt="..." class="img-circle profile_img">
+                        <img src="{{ asset('images/img.jpg') }}" alt="..." class="img-circle profile_img">
                     </div>
                     <div class="profile_info">
                         <span>Ol&aacute;,</span>
@@ -78,22 +79,41 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="#"><i class="fa fa-bar-chart-o"></i> Relat&oacute;rios <span class="fa fa-chevron-down"></span></a>
+                                <a href="#"><i class="fa fa-bar-chart-o"></i> Relat&oacute;rios <span
+                                            class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                     <li><a href="{{ url('report') }}">Upload</a></li>
                                     <li><a href="#">Menu 02</a></li>
                                 </ul>
                             </li>
 
+                            @can('onlyAdmin')
+                                <li>
+                                    <a href="{{ route('user-admin.index') }}"><i class="fa fa-desktop"></i> Usu&aacute;rios
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('company.index') }}"><i class="fa fa-clone"></i> Empresas </a>
+                                </li>
+                            @endcan
+
+                            @can('onlyCompany')
+                                <li>
+                                    <a href="{{ route('user-company.index') }}"><i class="fa fa-desktop"></i> Usu&aacute;rios
+                                    </a>
+                                </li>
+                            @endcan
+
+                            @can('isCompany')
+                                <li>
+                                    <a href="#"><i class="fa fa-table"></i> Prestadores </a>
+                                </li>
+                            @endcan
+                            {{-- @can('isAdmin') --}}
                             <li>
-                                <a href="{{ url('user') }}"><i class="fa fa-desktop"></i> Usu&aacute;rios </a>
+                                <a href="#"><i class="fa fa-arrow-circle-up"></i> Funcion&aacute;rios </a>
                             </li>
-                            <li>
-                                <a href="#"><i class="fa fa-table"></i> Funcion&aacute;rios </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('company') }}"><i class="fa fa-clone"></i> Empresas </a>
-                            </li>
+                            {{-- @endcan --}}
                         </ul>
                     </div>
 
@@ -114,19 +134,19 @@
                         <li class="">
                             <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
                                aria-expanded="false">
-                                <img src="{!! asset('images/img.jpg') !!}" alt="">{{ Auth()->user()->name }}
+                                <img src="{{ asset('images/img.jpg') }}" alt="">{{ Auth()->user()->name }}
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                <li><a href="javascript:;"> Profile</a></li>
                                 <li>
                                     <a href="javascript:;">
                                         <span class="badge bg-red pull-right">50%</span>
-                                        <span>Settings</span>
+                                        <span> Perfil</span>
                                     </a>
                                 </li>
-                                <li><a href="javascript:;">Help</a></li>
-                                <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out pull-right"></i> Sair </a></li>
+                                <li><a href="javascript:;"> Ajuda</a></li>
+                                <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out pull-right"></i> Sair </a>
+                                </li>
                             </ul>
                         </li>
 
@@ -202,8 +222,8 @@
         <!-- /top navigation -->
 
         <!-- page content -->
-        @yield('content')
-                <!-- /page content -->
+    @yield('content')
+    <!-- /page content -->
 
         <!-- footer content -->
         <footer>
@@ -217,8 +237,7 @@
 </div>
 
 
-
-        <!-- jQuery -->
+<!-- jQuery -->
 <script src="{{ asset('vendors/jquery/dist/jquery.min.js') }}"></script>
 <!-- Bootstrap -->
 <script src="{{ asset('vendors/bootstrap/dist/js/bootstrap.min.js') }}"></script>
@@ -274,7 +293,6 @@
 
 <!-- Custom Theme Scripts -->
 <script src="{{ asset('build/js/custom.min.js') }}"></script>
-
 
 
 </body>

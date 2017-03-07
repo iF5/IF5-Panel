@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Http\Controllers\Controller;
 use App\Models\RoleModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
-class DashboardController
+class DashboardController extends Controller
 {
 
     public function index()
     {
-        return view('panel.dashboard.index');
+       $this->authorize('isProvider');
+
+       return view('panel.dashboard.index');
+
     }
 
     public function employee()

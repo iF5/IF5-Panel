@@ -9,13 +9,23 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    public $timestamps = false;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password',
+        'role',
+        'companyId',
+        'providerId',
+        'isAllPrivileges',
+        'createdAt',
+        'updateAt'
     ];
 
     /**
@@ -24,6 +34,15 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password'
     ];
+
+    public function validationRules()
+    {
+        return [
+            'name' => 'required|min:2',
+            'email' => 'required|email',
+            'password' => 'required'
+        ];
+    }
 }

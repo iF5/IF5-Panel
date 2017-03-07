@@ -1,6 +1,6 @@
 @extends('panel.layout')
 
-@section('title', 'Gest&atilde;o de usu&aacute;rios')
+@section('title', 'Lista de empresas')
 
 @section('content')
     <!-- page content -->
@@ -11,13 +11,13 @@
             <div class="x_panel">
                 <div class="x_title">
                     <h2>Gest&atilde;o de
-                        <span class="text-primary">usu&aacute;rios</span>
+                        <span class="text-primary">empresas</span>
                     </h2>
                     <div class="clearfix"></div>
                 </div>
 
                 <div class="col-md-6">
-                    <form action="{{ route($route . '.index') }}" method="get">
+                    <form action="{{ route('company.index') }}" method="get">
                         <div class="input-group">
                             <input class="form-control" id="system-search" name="q" placeholder="Buscar por" required>
                     <span class="input-group-btn">
@@ -29,8 +29,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <a class="btn btn-success" href="{{ route($route . '.create') }}">Cadastrar novo usu&aacute;rio
-                        +</a>
+                    <a class="btn btn-success" href="{{ route('company.create') }}"> Cadastrar nova empresa +</a>
                 </div>
 
                 <!--
@@ -42,25 +41,33 @@
                         <table id="users-table" class="table table-bordred table-striped">
                             <thead>
                             <th>Nome</th>
-                            <th>E-mail</th>
+                            <th>Cnpj</th>
+                            <th>Usu&aacute;rios</th>
+                            <th>Prestadores de servi&ccedil;os</th>
                             </thead>
                             <tbody>
 
-                            @forelse($users as $user)
+                            @forelse($companies as $company)
 
                                 <tr>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $company->name }}</td>
+                                    <td>{{ $company->cnpj }}</td>
+                                    <td>
+                                        <a href="{{ route('user-company.identify', $company->id) }}">Visualizar</a>
+                                    </td>
+                                    <td>
+                                        <a href="#">Visualizar</a>
+                                    </td>
                                     <td>
                                         <p data-placement="top" data-toggle="tooltip" title="Editar">
-                                            <a href="{{ route($route . '.edit', $user->id) }}"
+                                            <a href="{{ route('company.edit', $company->id) }}"
                                                class="btn btn-primary btn-xs"><span
                                                         class="glyphicon glyphicon-pencil"></span></a>
                                         </p>
                                     </td>
                                     <td>
                                         <p data-placement="top" data-toggle="tooltip" title="Excluir">
-                                        <form method="post" action="{{ route($route . '.destroy', $user->id)  }}">
+                                        <form method="post" action="{{ route('company.destroy', $company->id)  }}">
                                             {{ method_field('DELETE') }}
                                             {{ csrf_field() }}
                                             <button class="btn btn-danger btn-xs" type="submit"><span
@@ -68,17 +75,17 @@
                                             </button>
                                         </form>
 
-                                        <!--
-                                                <button class="btn btn-danger btn-xs" data-title="Excluir" data-toggle="modal"
-                                                        data-target="#delete" value=""><span class="glyphicon glyphicon-trash"></span>
-                                                </button>
-                                                -->
+                                    <!--
+                                            <button class="btn btn-danger btn-xs" data-title="Excluir" data-toggle="modal"
+                                                    data-target="#delete" value=""><span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                            -->
                                         </p>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" align="center">Nenhum usu&aacute;rio foi encontrado.</td>
+                                    <td colspan="4" align="center">Nenhuma empresa foi encontrada.</td>
                                 </tr>
                             @endforelse
 

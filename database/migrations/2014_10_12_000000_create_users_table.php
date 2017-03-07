@@ -18,10 +18,13 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->tinyInteger('roleId');
-            $table->tinyInteger('isAllPrivileges');
+            $table->string('role');
+            $table->integer('companyId')->default(0);
+            $table->integer('providerId')->default(0);
+            $table->boolean('isAllPrivileges')->default(false);
+            $table->timestamp('createdAt')->nullable();
+            $table->timestamp('updatedAt')->nullable();
             $table->rememberToken();
-            $table->timestamps();
         });
     }
 

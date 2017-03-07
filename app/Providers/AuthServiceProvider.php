@@ -13,8 +13,18 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
+        //'App\Model' => 'App\Policies\ModelPolicy',
     ];
+
+    private function registerCustomPolicies()
+    {
+        Gate::define('isAdmin', 'App\Policies\RolePolicy@isAdmin');
+        Gate::define('onlyAdmin', 'App\Policies\RolePolicy@onlyAdmin');
+        Gate::define('isCompany', 'App\Policies\RolePolicy@isCompany');
+        Gate::define('onlyCompany', 'App\Policies\RolePolicy@onlyCompany');
+        Gate::define('isProvider', 'App\Policies\RolePolicy@isProvider');
+        Gate::define('onlyProvider', 'App\Policies\RolePolicy@onlyProvider');
+    }
 
     /**
      * Register any authentication / authorization services.
@@ -24,7 +34,6 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-        //
+        $this->registerCustomPolicies();
     }
 }

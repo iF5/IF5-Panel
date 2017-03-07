@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Request;
 
 class LoginController extends Controller
 {
@@ -27,10 +28,11 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/dashboard';
 
-    protected function redirectTo()
-    {
-        return $this->redirectTo;
-    }
+    /**
+     * @var string
+     */
+    protected $login;
+
 
     /**
      * Create a new controller instance.
@@ -38,5 +40,29 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'logout']);
+        $this->login = Request::input('login');
+        Request::merge([
+            'email' => $this->login,
+            'name' => $this->login
+        ]);
     }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     */
+    protected function validateLogin(\Illuminate\Http\Request $request)
+    {
+        $this->validate($request, [
+            'login' => 'required', 'password' => 'required',
+        ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function username()
+    {
+        return filter_var($this->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
+    }
+
 }
