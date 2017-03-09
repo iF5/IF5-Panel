@@ -1,6 +1,6 @@
-@extends('panel.layout')
+@extends('layouts.panel')
 
-@section('title', 'Formul&aacute;rio de empresa')
+@section('title', 'Relat&oacute;rio upload')
 
 @section('content')
     <!-- page content -->
@@ -9,242 +9,78 @@
         <div class="row">
             <div class="x_panel">
                 <div class="x_title">
-                    <h2>Relatórios
-                        <span class="text-primary">Upload</span>
+                    <h2>Gest&atilde;o de
+                        <span class="text-primary">upload</span>
                     </h2>
                     <div class="clearfix"></div>
                 </div>
                 <div class="col-md-12">
-                    <div class="table-responsive">
-                        <div class="col-md-6">
-                            <form action="#" method="post">
-                                <div class="input-group">
-                                    <input class="form-control" id="system-search" name="company"
-                                           placeholder="Pesquisar empresa"
-                                           required>
-                    <span class="input-group-btn">
-                        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
+
+                    <div id="dzSuccess"></div>
+
+                    <form method="post" action="{{ route('report.upload') }}" class="dropzone" id="dzUpload"
+                          enctype="multipart/form-data">
+                        {{ csrf_field() }}
+                        <div class="dz-message">
+                            Clique aqui para selecionar o(s) arquivo(s)
+                        </div>
+
+                        <div class="dropzone-previews"></div>
+
+                        <button type="submit" id="submit-all" class="btn btn-success" style="cursor: pointer;">Enviar
                         </button>
-                    </span>
-                                </div>
-                            </form>
-                        </div>
+                    </form>
 
-                        <div class="clearfix"></div>
-
-                        <div class="col-md-6">
-                            <form action="#" method="post">
-                                <div class="input-group">
-                                    <textarea class="form-control" id="system-search" name="company"
-                                           placeholder="Upload relatório"
-                                           required></textarea>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="col-md-12" style="margin-top: 20px;"> <a class="btn btn-primary" href="#"> Upload</a></div>
-                        <div class="clearfix"></div>
-                        <div class="table-responsive">
-                            <table id="employee-table" class="table table-bordred table-striped">
-                                <thead>
-                                    <tr>
-                                        <td colspan="10">Arquivos carregados</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="row">
-                                            <div class="col-sm-1">
-                                                <div class="round round-lg hollow ">
-                                                    <span class="glyphicon glyphicon-file"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-
-                    </div>
                 </div>
             </div>
         </div>
     </div>
     </div>
     <!-- /page content -->
+    <script src="{{ asset('js/dropzone.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        Dropzone.options.dzUpload = {
+
+            autoProcessQueue: false,
+            uploadMultiple: true,
+            maxFilesize: 256,
+            maxFiles: 2,
+
+            init: function () {
+
+                var submitButton = document.querySelector('#submit-all');
+                var dzUpload = this;
+
+                submitButton.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dzUpload.processQueue();
+                });
+
+                this.on('addedfile', function (file) {
+                    var removeButton = Dropzone.createElement('<button class="btn btn-danger btn-xs modal-delete" style="cursor: pointer;"><span class="glyphicon glyphicon-trash"></span></button>');
+                    var _this = this;
+
+                    removeButton.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        _this.removeFile(file);
+                    });
+
+                    file.previewElement.appendChild(removeButton);
+                    document.getElementById('dzSuccess').innerHTML = '';
+                });
+
+                this.on('complete', function (file) {
+                    dzUpload.removeFile(file);
+                });
+
+                this.on("success", function(file, serverResponse) {
+                    var resp = JSON.parse(JSON.stringify(serverResponse));
+                    document.getElementById('dzSuccess').innerHTML = resp.message;
+                });
+            }
+
+        };
+    </script>
 @endsection

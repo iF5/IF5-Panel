@@ -10,6 +10,8 @@ class CompanyController extends Controller
 {
     private $company;
 
+    private $totalPerPage = 2;
+
     public function __construct(Company $company)
     {
         $this->company = $company;
@@ -22,7 +24,10 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = $this->company->paginate(7);
+        $this->authorize('onlyAdmin');
+
+        $companies = $this->company
+            ->paginate($this->totalPerPage);
 
         return view('panel.company.list', compact('companies'));
     }
@@ -34,6 +39,8 @@ class CompanyController extends Controller
      */
     public function create()
     {
+        $this->authorize('onlyAdmin');
+
         $company = $this->company;
         $route = 'company.store';
         $method = 'POST';
@@ -49,11 +56,22 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('onlyAdmin');
+
         $this->validate($request, $this->company->validationRules());
         $this->company->create($request->all());
         return redirect()
             ->route('company.create')
             ->with('success', 'Empresa cadastrada com sucesso!');
+    }
+
+    /**
+     * @param int $id
+     * @return int
+     */
+    private function checkId($id)
+    {
+        return (\Auth::user()->role === 'admin') ? $id : \Auth::user()->companyId;
     }
 
     /**
@@ -64,10 +82,11 @@ class CompanyController extends Controller
      */
     public function show($id)
     {
-        /**
-         * $company = $this->company->find($id);
-         * return view('panel.company.show', compact('company'));
-         */
+        /*
+        $id = $this->checkId($id);
+        $company = $this->company->find($id);
+        return view('panel.company.show', compact('company'));
+        */
     }
 
     /**
@@ -78,6 +97,8 @@ class CompanyController extends Controller
      */
     public function edit($id)
     {
+        $id = $this->checkId($id);
+
         $company = $this->company->findOrFail($id);
         $route = 'company.update';
         $method = 'PUT';
@@ -94,8 +115,10 @@ class CompanyController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $id = $this->checkId($id);
+
         $this->validate($request, $this->company->validationRules());
-        $company = $this->company
+        $this->company
             ->findOrFail($id)
             ->update($request->all());
 
@@ -112,6 +135,8 @@ class CompanyController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('onlyAdmin');
+
         $this->company->destroy($id);
         return redirect()->route('company.index');
     }

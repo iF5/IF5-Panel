@@ -13,6 +13,8 @@ class UserCompanyController extends Controller implements UserInterface
 {
     private $user;
 
+    private $totalPerPage = 2;
+
     use UserTrait;
 
     public function __construct(User $user)
@@ -66,7 +68,7 @@ class UserCompanyController extends Controller implements UserInterface
         $users = $this->user->where([
             ['role', '=', $this->getRole()],
             ['companyId', '=', $this->getCompanyId()]
-        ])->get();
+        ])->paginate($this->totalPerPage);
 
         $route = "user-{$this->getRole()}";
 

@@ -1,4 +1,4 @@
-@extends('panel.layout')
+@extends('layouts.panel')
 
 @section('title', 'Funcion&aacute;rios')
 

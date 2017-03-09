@@ -1,6 +1,6 @@
 @extends('layouts.panel')
 
-@section('title', 'Gest&atilde;o de empresa')
+@section('title', 'Gest&atilde;o de prestadores de servi&ccedil;os')
 
 @section('content')
     <!-- page content -->
@@ -11,18 +11,18 @@
                 <div class="x_panel">
                     <div class="x_title">
                         <h2>
-                            <a href="{{ route('company.index') }}" title="Voltar">
+                            <a href="{{ route('provider.index') }}" title="Voltar">
                                 <span class="glyphicon glyphicon-circle-arrow-left"></span>
                             </a>
                             Gest&atilde;o de
-                            <span class="text-primary">empresas</span>
+                            <span class="text-primary">prestadores de servi&ccedil;os</span>
                         </h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
                         <br/>
 
-                        <form id="company-form" method="post" action="{{ route($route, $parameters) }}"
+                        <form id="provider-form" method="post" action="{{ route($route, $parameters) }}"
                               data-parsley-validate class="form-horizontal form-label-left">
 
                             {{ method_field($method) }}
@@ -35,7 +35,7 @@
                                         <div class="control-group">
                                             <label class="control-label" for="name">Nome *</label>
                                             <div class="controls">
-                                                <input id="name" name="name" value="{{ $company->name }}" type="text"
+                                                <input id="name" name="name" value="{{ $provider->name }}" type="text"
                                                        placeholder="" class="input" required="">
                                             </div>
                                         </div>
@@ -44,7 +44,7 @@
                                         <div class="control-group">
                                             <label class="control-label" for="cnpj">CNPJ *</label>
                                             <div class="controls">
-                                                <input id="cnpj" name="cnpj" value="{{ $company->cnpj }}" type="text"
+                                                <input id="cnpj" name="cnpj" value="{{ $provider->cnpj }}" type="text"
                                                        placeholder="" class="input" required="">
                                             </div>
                                         </div>
@@ -57,7 +57,7 @@
                                             <div class="controls">
                                                 <button type="submit" class="btn btn-success">Salvar</button>
                                                 <button class="btn btn-primary" type="reset">Limpar</button>
-                                                <a href="{{ route('company.index') }}"
+                                                <a href="{{ route('provider.index') }}"
                                                    class="btn btn-primary">Cancelar</a>
                                             </div>
                                         </div>

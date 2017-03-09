@@ -1,6 +1,6 @@
 @extends('layouts.panel')
 
-@section('title', 'Lista de empresas')
+@section('title', 'Gest&atilde;o de prestadores de servi&ccedil;os')
 
 @section('content')
     <!-- page content -->
@@ -12,13 +12,13 @@
                 <div class="x_title">
                     <h2>
                         Gest&atilde;o de
-                        <span class="text-primary">empresa</span>
+                        <span class="text-primary">prestadores de servi&ccedil;os</span>
                     </h2>
                     <div class="clearfix"></div>
                 </div>
 
                 <div class="col-md-6">
-                    <form action="{{ route('company.index') }}" method="get">
+                    <form action="{{ route('provider.index') }}" method="get">
                         <div class="input-group">
                             <input class="form-control" id="system-search" name="q" placeholder="Buscar por" required>
                     <span class="input-group-btn">
@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <a class="btn btn-success" href="{{ route('company.create') }}"> Cadastrar nova empresa +</a>
+                    <a class="btn btn-success" href="{{ route('provider.create') }}"> Cadastrar novo prestador +</a>
                 </div>
 
                 <div class="col-md-12" style="margin-top: 20px;">
@@ -39,34 +39,20 @@
                         <th>Nome</th>
                         <th>Cnpj</th>
                         <th>Usu&aacute;rios</th>
-                        <th>Prestadores de servi&ccedil;os</th>
                         </thead>
                         <tbody>
 
-                        @forelse($companies as $company)
-
+                        @forelse($providers as $provider)
                             <tr>
-                                <td>{{ $company->name }}</td>
-                                <td>{{ $company->cnpj }}</td>
+                                <td>{{ $provider->name }}</td>
+                                <td>{{ $provider->cnpj }}</td>
                                 <td>
-                                    <a href="{{ route('user-company.identify', $company->id) }}"
+                                    <a href="{{ route('user-provider.identify', [$provider->companyId, $provider->id]) }}"
                                        class="btn btn-primary btn-xs"><span
                                                 class="glyphicon glyphicon-user"></span></a>
-                                    {{--
-                                        <p data-placement="top" data-toggle="tooltip" title="Visualizar">
-                                            <a href="{{ route('user-company.identify', $company->id) }}"
-                                               class="btn btn-success btn-xs"><span
-                                                        class="glyphicon glyphicon-user"></span></a>
-                                        </p>
-                                     --}}
                                 </td>
                                 <td>
-                                    <a href="{{ route('provider.identify', $company->id) }}"
-                                       class="btn btn-warning btn-xs"><span
-                                                class="glyphicon glyphicon-hand-right"></span></a>
-                                </td>
-                                <td>
-                                    <a href="{{ route('company.edit', $company->id) }}"
+                                    <a href="{{ route('provider.edit', $provider->id) }}"
                                        class="btn btn-success btn-xs"><span
                                                 class="glyphicon glyphicon-pencil"></span></a>
 
@@ -76,13 +62,13 @@
                                        class="btn btn-danger btn-xs modal-delete" data-title="Excluir"
                                        data-toggle="modal"
                                        data-target="#delete"
-                                       rel="{{ route('company.destroy', $company->id) }}"><span
+                                       rel="{{ route('provider.destroy', $provider->id) }}"><span
                                                 class="glyphicon glyphicon-trash"></span></a>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" align="center">Nenhuma empresa foi encontrada.</td>
+                                <td colspan="5" align="center">Nenhum prestador de servi&ccedil;o foi encontrado.</td>
                             </tr>
                         @endforelse
 
@@ -91,7 +77,7 @@
 
                     <div class="clearfix"></div>
                     <!-- Paginacao -->
-                    {!! $companies->links() !!}
+                    {!! $providers->links() !!}
 
                 </div>
             </div>

@@ -30,10 +30,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('checklist', 'Panel\ChecklistController@index');
 
     //Report
-    Route::get('report', 'Panel\ReportController@index');
+    Route::get('report', 'Panel\ReportController@index')->name('report.index');
+    Route::post('/report/upload', 'Panel\ReportController@upload')->name('report.upload');
 
     //Company
     Route::resource('company', 'Panel\CompanyController', ['middleware' => ['can:isCompany']]);
+
+    //Provider
+    Route::get('/provider/{companyId}/identify', 'Panel\ProviderController@identify')
+        ->middleware('can:onlyAdmin')
+        ->name('provider.identify')
+        ->where('companyId', '[0-9]+');
+    Route::resource('provider', 'Panel\ProviderController', ['middleware' => ['can:isProvider']]);
 
     //Users
     Route::resource('/user-admin', 'Panel\UserAdminController', ['middleware' => ['can:onlyAdmin']]);
@@ -44,18 +52,18 @@ Route::group(['middleware' => 'auth'], function () {
         ->where('companyId', '[0-9]+');
     Route::resource('/user-company', 'Panel\UserCompanyController', ['middleware' => ['can:isCompany']]);
 
-    /*
     Route::get('/user/provider/{companyId}/{providerId}/identify', 'Panel\UserProviderController@identify')
-        ->middleware('can:isCompany')
-        ->name('user-provider.identify')
-        ->where('companyId', '[0-9]+');
-    Route::resource('/user-company', 'Panel\UserProviderController', ['middleware' => ['can:isProvider']]);
-    */
+        ->middleware('can:onlyAdmin')
+        ->name('user-provider.identify');
+        /*->where([
+            ['companyId', '[0-9]+'],
+            ['providerId', '[0-9]+']
+        ]);*/
+    Route::resource('/user-provider', 'Panel\UserProviderController', ['middleware' => ['can:isProvider']]);
 
 });
 
 //Errors
-
-$this->get('/access-denied', function(){
-    echo 'Esta a&ccedil;&atilde;o n&atilde;o &eacute; autorizada -> <a href="home">In&iacute;cio</a>';
+$this->get('/access-denied', function () {
+    return view('errors.access-denied');
 })->name('access.denied');

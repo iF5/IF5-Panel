@@ -44,6 +44,32 @@ trait UserTrait
     }
 
     /**
+     * @param int $id
+     * @return array
+     */
+    private function filter($id)
+    {
+        $filters = [
+            'admin' => [
+                ['id', '=', $id]
+            ],
+            'company' => [
+                ['role', '=', 'company'],
+                ['companyId', '=', \Auth::user()->companyId],
+                ['id', '=', $id]
+            ],
+            'provider' => [
+                ['role', '=', 'provider'],
+                ['companyId', '=', \Auth::user()->companyId],
+                ['providerId', '=', \Auth::user()->providerId],
+                ['id', '=', $id]
+            ]
+        ];
+
+        return $filters[\Auth::user()->role];
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
@@ -68,10 +94,14 @@ trait UserTrait
      */
     public function show($id)
     {
-        /**
-         * $company = $this->company->find($id);
-         * return view('panel.company.show', compact('company'));
-         */
+        $user = $this->getUser()
+            ->where($this->filter($id))
+            ->first();
+
+        return view('panel.user.show', [
+            'user' => $user,
+            'routePrefix' => "user-{$this->getRole()}"
+        ]);
     }
 
     /**
@@ -82,8 +112,12 @@ trait UserTrait
      */
     public function edit($id)
     {
+        $user = $this->getUser()
+            ->where($this->filter($id))
+            ->first();
+
         return view('panel.user.form', [
-            'user' => $this->getUser()->findOrFail($id),
+            'user' => $user,
             'method' => 'PUT',
             'routePrefix' => "user-{$this->getRole()}",
             'route' => "user-{$this->getRole()}.update",

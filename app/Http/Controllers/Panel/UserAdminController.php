@@ -11,6 +11,8 @@ class UserAdminController extends Controller implements UserInterface
 {
     private $user;
 
+    private $totalPerPage = 2;
+
     use UserTrait;
 
     public function __construct(User $user)
@@ -47,7 +49,7 @@ class UserAdminController extends Controller implements UserInterface
     {
         $users = $this->user
             ->where('role', '=', $this->getRole())
-            ->get();
+            ->paginate($this->totalPerPage);
 
         $route = "user-{$this->getRole()}";
 

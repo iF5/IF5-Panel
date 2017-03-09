@@ -11,7 +11,7 @@ class AuthorizationCustomException
         if ($exception instanceof AuthorizationException) {
             return [
                 'error' => true,
-                'route' => 'access.denied'
+                'route' => 'access.denied' 
             ];
         }
         return ['error' => false];
