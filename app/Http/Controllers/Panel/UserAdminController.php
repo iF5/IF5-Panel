@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Http\Interfaces\UserInterface;
-use App\User;
+use App\Models\User;
 use App\Http\Traits\UserTrait;
 
 class UserAdminController extends Controller implements UserInterface

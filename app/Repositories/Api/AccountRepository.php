@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository\Api;
+namespace App\Repositories\Api;
 
 class AccountRepository
 {

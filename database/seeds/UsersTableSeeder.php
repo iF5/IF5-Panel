@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-use App\User;
+use App\Models\User;
 
 class UsersTableSeeder extends Seeder
 {
@@ -19,7 +19,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'admin@if5.com.br',
             'password' => bcrypt('123456'),
             'role' => 'admin',
-            'isAllPrivileges' => true
+            //'isAllPrivileges' => true
         ]);
     }
 }

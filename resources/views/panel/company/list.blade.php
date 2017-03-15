@@ -1,6 +1,6 @@
 @extends('layouts.panel')
 
-@section('title', 'Lista de empresas')
+@section('title', 'Empresas')
 
 @section('content')
     <!-- page content -->
@@ -11,8 +11,7 @@
             <div class="x_panel">
                 <div class="x_title">
                     <h2>
-                        Gest&atilde;o de
-                        <span class="text-primary">empresa</span>
+                        <span class="text-primary">Empresas &raquo;</span> Lista
                     </h2>
                     <div class="clearfix"></div>
                 </div>
