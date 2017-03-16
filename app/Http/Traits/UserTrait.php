@@ -7,9 +7,23 @@ use Illuminate\Http\Request;
 trait UserTrait
 {
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        //
+        $keyword = \Request::input('keyword');
+        $users = ($keyword) ?
+            $this->getUser()->findLike('name', $keyword) :
+            $this->getUser()->findOrderBy();
+
+        return view('panel.user.list', [
+            'keyword' => $keyword,
+            'users' => $users,
+            'route' => "user-{$this->getRole()}"
+        ]);
     }
 
     /**
@@ -38,35 +52,9 @@ trait UserTrait
         $data['role'] = $this->getRole();
         $data['companyId'] = $this->getCompanyId();
         $data['providerId'] = $this->getProviderId();
-        $data['isAllPrivileges'] = isset($data['isAllPrivileges']) ? true : false;
+        //$data['isAllPrivileges'] = isset($data['isAllPrivileges']) ? true : false;
 
         return $data;
-    }
-
-    /**
-     * @param int $id
-     * @return array
-     */
-    private function filter($id)
-    {
-        $filters = [
-            'admin' => [
-                ['id', '=', $id]
-            ],
-            'company' => [
-                ['role', '=', 'company'],
-                ['companyId', '=', \Auth::user()->companyId],
-                ['id', '=', $id]
-            ],
-            'provider' => [
-                ['role', '=', 'provider'],
-                ['companyId', '=', \Auth::user()->companyId],
-                ['providerId', '=', \Auth::user()->providerId],
-                ['id', '=', $id]
-            ]
-        ];
-
-        return $filters[\Auth::user()->role];
     }
 
     /**
@@ -78,12 +66,17 @@ trait UserTrait
     public function store(Request $request)
     {
         $data = $this->formRequest($request->all());
-        $this->validate($request, $this->getUser()->validationRules());
-        $this->getUser()->create($data);
+        $this->validate(
+            $request, $this->getUser()->validateRules(), $this->getUser()->validateMessages()
+        );
+        $user = $this->getUser()->create($data);
 
         return redirect()
             ->route("user-{$this->getRole()}.create")
-            ->with('success', 'Usu&aacute;rio cadastrado com sucesso!');
+            ->with([
+                'success' => 'Usu&aacute;rio cadastrado com sucesso!',
+                'id' => $user->id
+            ]);
     }
 
     /**
@@ -94,12 +87,8 @@ trait UserTrait
      */
     public function show($id)
     {
-        $user = $this->getUser()
-            ->where($this->filter($id))
-            ->first();
-
         return view('panel.user.show', [
-            'user' => $user,
+            'user' => $this->getUser()->findById($id),
             'routePrefix' => "user-{$this->getRole()}"
         ]);
     }
@@ -112,12 +101,8 @@ trait UserTrait
      */
     public function edit($id)
     {
-        $user = $this->getUser()
-            ->where($this->filter($id))
-            ->first();
-
         return view('panel.user.form', [
-            'user' => $user,
+            'user' => $this->getUser()->findById($id),
             'method' => 'PUT',
             'routePrefix' => "user-{$this->getRole()}",
             'route' => "user-{$this->getRole()}.update",
@@ -135,14 +120,20 @@ trait UserTrait
     public function update(Request $request, $id)
     {
         $data = $this->formRequest($request->all());
-        $this->validate($request, $this->getUser()->validationRules());
+        $this->validate(
+            $request, $this->getUser()->validateRules(), $this->getUser()->validateMessages()
+        );
+
         $this->getUser()
             ->findOrFail($id)
             ->update($data);
 
         return redirect()
             ->route("user-{$this->getRole()}.edit", $id)
-            ->with('success', 'Usu&aacute;rio atualizado com sucesso!');
+            ->with([
+                'success' => 'Usu&aacute;rio atualizado com sucesso!',
+                'id' => $id
+            ]);
     }
 
     /**

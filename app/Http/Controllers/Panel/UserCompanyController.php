@@ -4,44 +4,50 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Http\Interfaces\UserInterface;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
+use App\Repositories\Panel\UserRepository;
 use App\Http\Traits\UserTrait;
 
 class UserCompanyController extends Controller implements UserInterface
 {
-    private $user;
-
-    private $totalPerPage = 2;
+    private $userRepository;
 
     use UserTrait;
 
-    public function __construct(User $user)
+    public function __construct(UserRepository $userRepository)
     {
-        $this->user = $user;
+        $this->userRepository = $userRepository;
     }
 
+    /**
+     * @return UserRepository
+     */
     public function getUser()
     {
-        return $this->user;
+        return $this->userRepository
+            ->setRole($this->getRole())
+            ->setCompanyId($this->getCompanyId())
+            ->setProviderId($this->getProviderId());
     }
 
+    /**
+     * @return string
+     */
     public function getRole()
     {
         return 'company';
     }
 
+    /**
+     * @return int
+     */
     public function getCompanyId()
     {
-        $companyId = Auth::user()->companyId;
-        if (Session::has('companyId')) {
-            $companyId = Session::get('companyId');
-        }
-
-        return $companyId;
+        return (\Session::has('companyId')) ? \Session::get('companyId') : \Auth::user()->companyId;
     }
 
+    /**
+     * @return int
+     */
     public function getProviderId()
     {
         return 0;
@@ -53,26 +59,8 @@ class UserCompanyController extends Controller implements UserInterface
      */
     public function identify($companyId)
     {
-        Session::put('companyId', $companyId);
+        \Session::put('companyId', $companyId);
         return redirect()->route("user-{$this->getRole()}.index");
-    }
-
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $users = $this->user->where([
-            ['role', '=', $this->getRole()],
-            ['companyId', '=', $this->getCompanyId()]
-        ])->paginate($this->totalPerPage);
-
-        $route = "user-{$this->getRole()}";
-
-        return view('panel.user.list', compact('users', 'route'));
     }
 
 }

@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Repositories\Panel\CompanyRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Company;
 
 class CompanyController extends Controller
 {
-    private $company;
 
-    private $totalPerPage = 2;
+    private $companyRepository;
 
-    public function __construct(Company $company)
+    public function __construct(CompanyRepository $companyRepository)
     {
-        $this->company = $company;
+        $this->companyRepository = $companyRepository;
     }
 
     /**
@@ -24,12 +23,12 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $this->authorize('onlyAdmin');
+        $keyword = \Request::input('keyword');
+        $companies = ($keyword) ?
+            $this->companyRepository->findLike('name', $keyword) :
+            $this->companyRepository->findOrderBy();
 
-        $companies = $this->company
-            ->paginate($this->totalPerPage);
-
-        return view('panel.company.list', compact('companies'));
+        return view('panel.company.list', compact('keyword', 'companies'));
     }
 
     /**
@@ -39,13 +38,12 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        $this->authorize('onlyAdmin');
-
-        $company = $this->company;
-        $route = 'company.store';
-        $method = 'POST';
-        $parameters = [];
-        return view('panel.company.form', compact('company', 'method', 'route', 'parameters'));
+        return view('panel.company.form', [
+            'company' => $this->companyRepository,
+            'route' => 'company.store',
+            'method' => 'POST',
+            'parameters' => []
+        ]);
     }
 
     /**
@@ -56,23 +54,28 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('onlyAdmin');
+        $this->validate(
+            $request, $this->companyRepository->validateRules(), $this->companyRepository->validateMessages()
+        );
 
-        $this->validate($request, $this->company->validationRules());
-        $this->company->create($request->all());
+        $company = $this->companyRepository->create($request->all());
         return redirect()
             ->route('company.create')
-            ->with('success', 'Empresa cadastrada com sucesso!');
+            ->with([
+                'success' => 'Empresa cadastrada com sucesso!',
+                'id' => $company->id
+            ]);
     }
 
     /**
      * @param int $id
      * @return int
      */
-    private function checkId($id)
+    /*private function checkId($id)
     {
         return (\Auth::user()->role === 'admin') ? $id : \Auth::user()->companyId;
     }
+    */
 
     /**
      * Display the specified resource.
@@ -82,11 +85,8 @@ class CompanyController extends Controller
      */
     public function show($id)
     {
-        /*
-        $id = $this->checkId($id);
-        $company = $this->company->find($id);
+        $company = $this->companyRepository->find($id);
         return view('panel.company.show', compact('company'));
-        */
     }
 
     /**
@@ -97,13 +97,14 @@ class CompanyController extends Controller
      */
     public function edit($id)
     {
-        $id = $this->checkId($id);
+        $company = $this->companyRepository->findOrFail($id);
 
-        $company = $this->company->findOrFail($id);
-        $route = 'company.update';
-        $method = 'PUT';
-        $parameters = [$id];
-        return view('panel.company.form', compact('company', 'method', 'route', 'parameters'));
+        return view('panel.company.form', [
+            'company' => $company,
+            'route' => 'company.update',
+            'method' => 'PUT',
+            'parameters' => [$id]
+        ]);
     }
 
     /**
@@ -115,16 +116,20 @@ class CompanyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $id = $this->checkId($id);
+        $this->validate(
+            $request, $this->companyRepository->validateRules(), $this->companyRepository->validateMessages()
+        );
 
-        $this->validate($request, $this->company->validationRules());
-        $this->company
+        $this->companyRepository
             ->findOrFail($id)
             ->update($request->all());
 
         return redirect()
             ->route('company.edit', $id)
-            ->with('success', 'Empresa atualizada com sucesso!');
+            ->with([
+                'success' => 'Empresa atualizada com sucesso!',
+                'id' => $id
+            ]);
     }
 
     /**
@@ -135,9 +140,7 @@ class CompanyController extends Controller
      */
     public function destroy($id)
     {
-        $this->authorize('onlyAdmin');
-
-        $this->company->destroy($id);
+        $this->companyRepository->destroy($id);
         return redirect()->route('company.index');
     }
 

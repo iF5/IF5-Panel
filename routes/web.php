@@ -34,7 +34,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/report/upload', 'Panel\ReportController@upload')->name('report.upload');
 
     //Company
-    Route::resource('company', 'Panel\CompanyController', ['middleware' => ['can:isCompany']]);
+    Route::resource('company', 'Panel\CompanyController', ['middleware' => ['can:isAdmin']]);
 
     //Provider
     Route::get('/provider/{companyId}/identify', 'Panel\ProviderController@identify')
@@ -64,6 +64,8 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 //Errors
-$this->get('/access-denied', function () {
-    return view('errors.access-denied');
-})->name('access.denied');
+$this->get('/error-custom', function () {
+    return view('errors.custom', [
+        'message' => \Session::get('message')
+    ]);
+})->name('error.custom');

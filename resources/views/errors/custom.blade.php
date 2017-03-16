@@ -49,7 +49,7 @@
             font-size: 84px;
         }
 
-        .links > a{
+        .links > a {
             color: #636b6f;
             padding: 0 25px;
             font-size: 12px;
@@ -76,7 +76,7 @@
 <body>
 <div class="flex-center position-ref full-height">
     <div class="top-right links">
-        <a href="{{ url('/home') }}">In&iacute;cio</a>
+        <a href="{{ url('/') }}">In&iacute;cio</a>
     </div>
 
     <div class="content">
@@ -84,7 +84,11 @@
             Ooooops!
         </div>
         <div class="message">
-            Desculpe voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar este conte&uacute;do.
+            @if($message)
+                {{ $message }}
+            @else
+                <a href="{{ url('/') }}">In&iacute;cio</a>
+            @endif
         </div>
     </div>
 </div>

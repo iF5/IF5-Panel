@@ -1,6 +1,6 @@
 @extends('layouts.panel')
 
-@section('title', 'Empresas')
+@section('title', 'Gest&atilde;o de empresa')
 
 @section('content')
     <!-- page content -->
@@ -10,20 +10,28 @@
         <div class="row">
             <div class="x_panel">
                 <div class="x_title">
-                    <h2>
-                        <span class="text-primary">Empresas &raquo;</span> Lista
-                    </h2>
+                    <h2>Empresas</h2>
                     <div class="clearfix"></div>
                 </div>
 
                 <div class="col-md-6">
                     <form action="{{ route('company.index') }}" method="get">
                         <div class="input-group">
-                            <input class="form-control" id="system-search" name="q" placeholder="Buscar por" required>
-                    <span class="input-group-btn">
-                        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
-                        </button>
-                    </span>
+                            @if($keyword)
+                                <span class="input-group-addon">
+                                <a href="{{ route('company.index') }}" title="Limpar busca">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </a>
+                            </span>
+                            @endif
+                            <input class="form-control" type="text" id="keyword" name="keyword" placeholder="Buscar por"
+                                   value="{{ $keyword }}" required>
+
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
+                                </button>
+                            </span>
+
                         </div>
                     </form>
                 </div>
@@ -39,13 +47,17 @@
                         <th>Cnpj</th>
                         <th>Usu&aacute;rios</th>
                         <th>Prestadores de servi&ccedil;os</th>
+                        <th></th>
+                        <th></th>
                         </thead>
                         <tbody>
 
                         @forelse($companies as $company)
 
                             <tr>
-                                <td>{{ $company->name }}</td>
+                                <td>
+                                    <a href="{{ route('company.show', ['id' => $company->id]) }}">{{ $company->name }}</a>
+                                </td>
                                 <td>{{ $company->cnpj }}</td>
                                 <td>
                                     <a href="{{ route('user-company.identify', $company->id) }}"
@@ -90,8 +102,11 @@
 
                     <div class="clearfix"></div>
                     <!-- Paginacao -->
-                    {!! $companies->links() !!}
-
+                    @if($keyword)
+                        {!! $companies->appends(['keyword' => $keyword])->links() !!}
+                    @else
+                        {!! $companies->links() !!}
+                    @endif
                 </div>
             </div>
         </div>

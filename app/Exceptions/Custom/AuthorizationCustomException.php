@@ -9,11 +9,11 @@ class AuthorizationCustomException
     public static function is(\Exception $exception)
     {
         if ($exception instanceof AuthorizationException) {
-            return [
+            return (object)[
                 'error' => true,
-                'route' => 'access.denied' 
+                'message' => 'Desculpe voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar este conte&uacute;do.'
             ];
         }
-        return ['error' => false];
+        return (object)['error' => false];
     }
 }

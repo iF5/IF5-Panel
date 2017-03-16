@@ -4,56 +4,53 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Http\Interfaces\UserInterface;
-use App\Models\User;
+use App\Repositories\Panel\UserRepository;
 use App\Http\Traits\UserTrait;
 
 class UserAdminController extends Controller implements UserInterface
 {
-    private $user;
-
-    private $totalPerPage = 2;
+    private $userRepository;
 
     use UserTrait;
 
-    public function __construct(User $user)
+    public function __construct(UserRepository $userRepository)
     {
-        $this->user = $user;
+        $this->userRepository = $userRepository;
     }
 
+    /**
+     * @return UserRepository
+     */
     public function getUser()
     {
-        return $this->user;
+        return $this->userRepository
+            ->setRole($this->getRole())
+            ->setCompanyId($this->getCompanyId())
+            ->setProviderId($this->getProviderId());
     }
 
+    /**
+     * @return string
+     */
     public function getRole()
     {
         return 'admin';
     }
 
+    /**
+     * @return int
+     */
     public function getCompanyId()
     {
         return 0;
     }
 
+    /**
+     * @return int
+     */
     public function getProviderId()
     {
         return 0;
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $users = $this->user
-            ->where('role', '=', $this->getRole())
-            ->paginate($this->totalPerPage);
-
-        $route = "user-{$this->getRole()}";
-
-        return view('panel.user.list', compact('users', 'route'));
     }
 
 }

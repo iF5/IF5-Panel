@@ -26,7 +26,8 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $exceptionsCustom = [
-        \App\Exceptions\Custom\AuthorizationCustomException::class
+        \App\Exceptions\Custom\AuthorizationCustomException::class,
+        \App\Exceptions\Custom\ModelNotFoundCustomException::class
     ];
 
     /**
@@ -53,8 +54,10 @@ class Handler extends ExceptionHandler
     {
         foreach ($this->exceptionsCustom as $custom) {
             $is = $custom::is($exception);
-            if($is['error']){
-                return redirect()->route($is['route']);
+            if ($is->error) {
+                return redirect()
+                    ->route('error.custom')
+                    ->with('message', $is->message);
             }
         }
 

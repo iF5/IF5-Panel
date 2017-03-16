@@ -4,60 +4,46 @@
 
 @section('content')
     <!-- page content -->
+
     <div class="right_col" role="main">
 
         <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="x_panel">
-                    <div class="x_title">
-                        <h2>
-                            <a href="{{ route($routePrefix .'.index') }}" title="Voltar">
-                                <span class="glyphicon glyphicon-circle-arrow-left"></span>
-                            </a>
-                            Gest&atilde;o de
-                            <span class="text-primary">usu&aacute;rios</span>
-                        </h2>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="x_content">
-                        <table style="width: 100%;" border="0">
-                            <tr>
-                                <td>
-                                    Nome :
-                                </td>
-                                <td align="left">
-                                    {{ $user->name }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    E-mail :
-                                </td>
-                                <td>
-                                    {{ $user->email }}
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td style="height: 100px;">
-                                    <div class="control-group">
-                                        <div class="controls">
-                                            <a href="{{ route($routePrefix .'.edit', $user->id) }}"
-                                               class="btn btn-success">Editar</a>
-                                            <a href="{{ route($routePrefix .'.index') }}"
-                                               class="btn btn-primary">Cancelar</a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-
-                        </table>
-
-                    </div>
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>
+                        <a href="{{ route('company.index') }}">
+                            <span class="text-primary">Empresas</span>
+                        </a>
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                        <a href="{{ route($routePrefix . '.index') }}">
+                            <span class="text-primary">Usu&aacute;rios</span>
+                        </a>
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                        {{ $user->name }}
+                    </h2>
+                    <div class="clearfix"></div>
                 </div>
+
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Nome : </strong> {{ $user->name }}</li>
+                    <li class="list-group-item"><strong>E-mail : </strong> {{ $user->email }}</li>
+                    <li class="list-group-item">
+                        <a href="{{ route( $routePrefix . '.edit', $user->id) }}"
+                           class="btn btn-success btn-xs"><span
+                                    class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                        <a href="#"
+                           class="btn btn-danger btn-xs modal-delete"
+                           data-toggle="modal" data-target="#delete"
+                           rel="{{ route($routePrefix . '.destroy', $user->id) }}"><span
+                                    class="glyphicon glyphicon-trash"></span>
+                        </a>
+
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
-    </div>
+
     <!-- /page content -->
 @endsection

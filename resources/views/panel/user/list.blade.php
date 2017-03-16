@@ -1,6 +1,6 @@
 @extends('layouts.panel')
 
-@section('title', 'Gest&atilde;o de usu&aacute;rios')
+@section('title', 'Gest&atilde;o de usu&aacute;rio')
 
 @section('content')
     <!-- page content -->
@@ -10,8 +10,12 @@
         <div class="row">
             <div class="x_panel">
                 <div class="x_title">
-                    <h2>Gest&atilde;o de
-                        <span class="text-primary">usu&aacute;rios</span>
+                    <h2>
+                        <a href="{{ route('company.index') }}">
+                            <span class="text-primary">Empresas</span>
+                        </a>
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                        Usu&aacute;rios
                     </h2>
                     <div class="clearfix"></div>
                 </div>
@@ -19,14 +23,23 @@
                 <div class="col-md-6">
                     <form action="{{ route($route . '.index') }}" method="get">
                         <div class="input-group">
-                            <input class="form-control" id="system-search" name="q" placeholder="Buscar por" required>
-                    <span class="input-group-btn">
-                        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
-                        </button>
-                    </span>
+                            @if($keyword)
+                                <span class="input-group-addon">
+                                <a href="{{ route($route . '.index') }}" title="Limpar busca">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </a>
+                            </span>
+                            @endif
+                            <input class="form-control" type="text" id="keyword" name="keyword" placeholder="Buscar por"
+                                   value="{{ $keyword }}" required>
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
+                                </button>
+                            </span>
                         </div>
                     </form>
                 </div>
+
 
                 <div class="col-md-6">
                     <a class="btn btn-success" href="{{ route($route . '.create') }}">Cadastrar novo usu&aacute;rio
@@ -42,28 +55,22 @@
                         <tbody>
 
                         @forelse($users as $user)
-
                             <tr>
                                 <td>
                                     <a href="{{ route($route . '.show', $user->id) }}">{{ $user->name }}</a>
                                 </td>
                                 <td>{{ $user->email }}</td>
                                 <td>
-                                    <p data-placement="top" data-toggle="tooltip" title="Editar">
-                                        <a href="{{ route($route . '.edit', $user->id) }}"
-                                           class="btn btn-primary btn-xs"><span
-                                                    class="glyphicon glyphicon-pencil"></span></a>
-                                    </p>
+                                    <a href="{{ route($route . '.edit', $user->id) }}"
+                                       class="btn btn-primary btn-xs" title="Editar"><span
+                                                class="glyphicon glyphicon-pencil"></span></a>
                                 </td>
                                 <td>
-                                    <p data-placement="top" data-toggle="tooltip" title="Excluir">
-                                        <a href=""
-                                           class="btn btn-danger btn-xs modal-delete" data-title="Excluir"
-                                           data-toggle="modal"
-                                           data-target="#delete"
-                                           rel="{{ route($route . '.destroy', $user->id)  }}"><span
-                                                    class="glyphicon glyphicon-trash"></span></a>
-                                    </p>
+                                    <a href=""
+                                       class="btn btn-danger btn-xs modal-delete" title="Excluir" data-toggle="modal"
+                                       data-target="#delete" rel="{{ route($route . '.destroy', $user->id)  }}">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </a>
                                 </td>
                             </tr>
                         @empty
@@ -76,19 +83,12 @@
                     </table>
 
                     <div class="clearfix"></div>
-                {!! $users->links() !!}
-                <!--
-                        <ul class="pagination pull-right">
-                            <li class="disabled"><a href="#"><span class="glyphicon glyphicon-chevron-left"></span></a>
-                            </li>
-                            <li class="active"><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>
-                            <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
-                        </ul>
-                        -->
+                    <!-- Paginacao -->
+                    @if($keyword)
+                        {!! $users->appends(['keyword' => $keyword])->links() !!}
+                    @else
+                        {!! $users->links() !!}
+                    @endif
                 </div>
             </div>
         </div>

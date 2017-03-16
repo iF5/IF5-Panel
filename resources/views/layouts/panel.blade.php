@@ -249,6 +249,7 @@
 
 <!-- jQuery -->
 <script src="{{ asset('vendors/jquery/dist/jquery.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/jquery.maskedinput.min.js') }}" type="text/javascript"></script>
 <!-- Bootstrap -->
 <script src="{{ asset('vendors/bootstrap/dist/js/bootstrap.min.js') }}" type="text/javascript"></script>
 <!-- FastClick -->
