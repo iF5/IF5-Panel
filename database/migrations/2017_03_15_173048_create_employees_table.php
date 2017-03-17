@@ -18,6 +18,7 @@ class CreateEmployeesTable extends Migration
             $table->string('name');
             $table->string('cpf');
             $table->integer('providerId');
+            $table->unique(['cpf', 'providerId']);
         });
     }
 

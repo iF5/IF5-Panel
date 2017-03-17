@@ -39,9 +39,15 @@ Route::group(['middleware' => 'auth'], function () {
     //Provider
     Route::get('/provider/{companyId}/identify', 'Panel\ProviderController@identify')
         ->middleware('can:onlyAdmin')
-        ->name('provider.identify')
-        ->where('companyId', '[0-9]+');
+        ->name('provider.identify');
+        //->where('companyId', '[0-9]+');
+
+    Route::match(['GET', 'POST'], '/provider/associate', 'Panel\ProviderController@associate')
+        ->middleware('can:isCompany')
+        ->name('provider.associate');
+
     Route::resource('provider', 'Panel\ProviderController', ['middleware' => ['can:isProvider']]);
+    //EndProvider
 
     //Users
     Route::resource('/user-admin', 'Panel\UserAdminController', ['middleware' => ['can:onlyAdmin']]);

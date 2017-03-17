@@ -16,8 +16,7 @@ class CreateProvidersTable extends Migration
         Schema::create('providers', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->string('name');
-            $table->string('cnpj');
-            $table->integer('companyId');
+            $table->string('cnpj')->unique();
         });
     }
 

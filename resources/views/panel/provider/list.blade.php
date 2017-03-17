@@ -1,6 +1,6 @@
 @extends('layouts.panel')
 
-@section('title', 'Gest&atilde;o de prestadores de servi&ccedil;os')
+@section('title', 'Gest&atilde;o de prestador de servi&ccedil;os')
 
 @section('content')
     <!-- page content -->
@@ -11,8 +11,11 @@
             <div class="x_panel">
                 <div class="x_title">
                     <h2>
-                        Gest&atilde;o de
-                        <span class="text-primary">prestadores de servi&ccedil;os</span>
+                        <a href="{{ route('company.index') }}">
+                            <span class="text-primary">Empresas</span>
+                        </a>
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                        Prestadores de servi&ccedil;os
                     </h2>
                     <div class="clearfix"></div>
                 </div>
@@ -20,25 +23,37 @@
                 <div class="col-md-6">
                     <form action="{{ route('provider.index') }}" method="get">
                         <div class="input-group">
-                            <input class="form-control" id="system-search" name="q" placeholder="Buscar por" required>
-                    <span class="input-group-btn">
-                        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
-                        </button>
-                    </span>
+                            @if($keyword)
+                                <span class="input-group-addon">
+                                <a href="{{ route('provider.index') }}" title="Limpar busca">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </a>
+                            </span>
+                            @endif
+                            <input class="form-control" type="text" id="keyword" name="keyword" placeholder="Buscar por"
+                                   value="{{ $keyword }}" required>
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
+                                </button>
+                            </span>
                         </div>
                     </form>
                 </div>
 
                 <div class="col-md-6">
-                    <a class="btn btn-success" href="{{ route('provider.create') }}"> Cadastrar novo prestador +</a>
+                    <a class="btn btn-success" href="{{ route('provider.associate') }}"> Cadastrar/Associar novo prestador +</a>
                 </div>
 
                 <div class="col-md-12" style="margin-top: 20px;">
-                    <table id="users-table" class="table table-bordred table-striped">
+                    <table id="provider-table" class="table table-bordred table-striped">
                         <thead>
                         <th>Nome</th>
                         <th>Cnpj</th>
                         <th>Usu&aacute;rios</th>
+                        @can('onlyAdmin')
+                        <th></th>
+                        @endcan
+                        <th></th>
                         </thead>
                         <tbody>
 
@@ -47,16 +62,18 @@
                                 <td>{{ $provider->name }}</td>
                                 <td>{{ $provider->cnpj }}</td>
                                 <td>
-                                    <a href="{{ route('user-provider.identify', [$provider->companyId, $provider->id]) }}"
+                                    <a href="{{ route('user-provider.identify', [0, $provider->id]) }}"
                                        class="btn btn-primary btn-xs"><span
                                                 class="glyphicon glyphicon-user"></span></a>
                                 </td>
+                                @can('onlyAdmin')
                                 <td>
                                     <a href="{{ route('provider.edit', $provider->id) }}"
                                        class="btn btn-success btn-xs"><span
                                                 class="glyphicon glyphicon-pencil"></span></a>
 
                                 </td>
+                                @endcan
                                 <td>
                                     <a href="#"
                                        class="btn btn-danger btn-xs modal-delete" data-title="Excluir"
@@ -77,8 +94,11 @@
 
                     <div class="clearfix"></div>
                     <!-- Paginacao -->
-                    {!! $providers->links() !!}
-
+                    @if($keyword)
+                        {!! $providers->appends(['keyword' => $keyword])->links() !!}
+                    @else
+                        {!! $providers->links() !!}
+                    @endif
                 </div>
             </div>
         </div>

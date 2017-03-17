@@ -25,31 +25,7 @@
                             <strong>Atenção : </strong>todos os campos com o s&iacute;mbolo * s&atilde;o obrigat&oacute;rios.
                         </div>
 
-                        @if( Session::has('success'))
-                            <div class="alert alert-success alert-dismissible" role="alert">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                                            aria-hidden="true">&times;</span></button>
-                                <p>
-                                    {!! Session::get('success') !!}
-                                </p>
-                                <p>
-                                    <a href="{{ route('company.show', ['id' => Session::get('id')]) }}"
-                                       class="btn btn-default">
-                                        Clique aqui para visualizar
-                                    </a>
-                                </p>
-
-                            </div>
-                        @endif
-                        @if( isset($errors) && count($errors) > 0)
-                            <div class="alert alert-danger alert-dismissible" role="alert">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                                            aria-hidden="true">&times;</span></button>
-                                @foreach($errors->all() as $error)
-                                    <p>{{ $error }}</p>
-                                @endforeach
-                            </div>
-                        @endif
+                        @include('includes/validate-form')
 
                         <form id="company-form" method="post" action="{{ route($route, $parameters) }}">
 
@@ -81,7 +57,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
     <!-- /page content -->
 @endsection

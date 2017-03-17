@@ -23,7 +23,7 @@ class Company extends Model
     {
         return [
             'name' => 'required|min:2',
-            'cnpj' => 'required|numeric'
+            'cnpj' => 'unique:companies,cnpj|unique:companies,name'
         ];
     }
 
@@ -38,7 +38,7 @@ class Company extends Model
             'name.required' => 'O campo nome é obrigatório.',
             'name.min' => 'O campo nome deve ter no mínimo 2 caracteres.',
             'cnpj.required' => 'O campo cnpj é obrigatório.',
-            'cnpj.numeric' => 'O campo cnpj deve ser um número.',
+            'cnpj.unique' => 'O nome e o CNPJ da empresa já existe.'
         ];
     }
     

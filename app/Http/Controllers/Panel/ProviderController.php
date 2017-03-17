@@ -2,25 +2,36 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Models\Provider;
+use App\Repositories\Panel\AssociateRepository;
+use App\Repositories\Panel\ProviderRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class ProviderController extends Controller
 {
-    private $provider;
+    /**
+     * @var ProviderRepository
+     */
+    private $providerRepository;
 
-    private $totalPerPage = 2;
+    /**
+     * @var AssociateRepository
+     */
+    private $associateRepository;
 
-    public function __construct(Provider $provider)
+    public function __construct(
+        ProviderRepository $providerRepository,
+        AssociateRepository $associateRepository
+    )
     {
-        $this->provider = $provider;
+        $this->providerRepository = $providerRepository;
+        $this->associateRepository = $associateRepository;
     }
 
     public function identify($companyId)
     {
         \Session::put('companyId', $companyId);
-        return redirect()->route("provider.index");
+        return redirect()->route('provider.index');
     }
 
     protected function getCompanyId()
@@ -37,11 +48,43 @@ class ProviderController extends Controller
     {
         $this->authorize('isCompany');
 
-        $providers = $this->provider
-            ->where('companyId', '=', $this->getCompanyId())
-            ->paginate($this->totalPerPage);
+        $providers = $this->providerRepository
+            ->findByCompany($this->getCompanyId());
 
-        return view('panel.provider.list', compact('providers'));
+        return view('panel.provider.list', [
+            'keyword' => null,
+            'providers' => $providers
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function associate(Request $request)
+    {
+        $search = false;
+        $cnpj = null;
+        $provider = null;
+        $success = false;
+
+        if ($request->isMethod('post') && $request->get('action') === 'search') {
+            $search = true;
+            $cnpj = $request->get('cnpj');
+            $provider = $this->providerRepository->findByCnpj($cnpj);
+            \Session::put('cnpj', $cnpj);
+        }
+
+        if ($request->isMethod('post') && $request->get('action') === 'associate') {
+            $this->associateRepository->create('companies_has_providers', [
+                'companyId' => $this->getCompanyId(),
+                'providerId' => $request->get('providerId')
+            ]);
+            $success = true;
+            \Session::remove('cnpj');
+        }
+
+        return view('panel.provider.form-associate', compact('search', 'cnpj', 'provider', 'success'));
     }
 
     /**
@@ -52,11 +95,20 @@ class ProviderController extends Controller
     public function create()
     {
         $this->authorize('isCompany');
-        $provider = $this->provider;
-        $route = 'provider.store';
-        $method = 'POST';
-        $parameters = [];
-        return view('panel.provider.form', compact('provider', 'method', 'route', 'parameters'));
+
+        if (!\Session::has('cnpj')) {
+            return redirect()->route('provider.associate');
+        }
+
+        return view('panel.provider.form', [
+            'provider' => (object)[
+                'cnpj' => \Session::get('cnpj'),
+                'cnpjHidden' => true
+            ],
+            'method' => 'POST',
+            'route' => 'provider.store',
+            'parameters' => []
+        ]);
     }
 
     protected function formRequest($data)
@@ -75,13 +127,24 @@ class ProviderController extends Controller
     {
         $this->authorize('isCompany');
 
-        $this->validate($request, $this->provider->validationRules());
-        $data = $this->formRequest($request->all());
-        $this->provider->create($data);
+        $this->validate(
+            $request, $this->providerRepository->validateRules(), $this->providerRepository->validateMessages()
+        );
 
+        $data = $this->formRequest($request->all());
+        $provider = $this->providerRepository->create($data);
+        $this->associateRepository->create('companies_has_providers', [
+            'companyId' => $this->getCompanyId(),
+            'providerId' => $provider->id
+        ]);
+
+        \Session::remove('cnpj');
         return redirect()
-            ->route('provider.create')
-            ->with('success', 'Prestador cadastrado com sucesso!');
+            ->route('provider.associate')
+            ->with([
+                'success' => true,
+                'message' => 'Prestador de servi&ccedil;os cadastrado com sucesso!'
+            ]);
     }
 
     /**
@@ -112,9 +175,7 @@ class ProviderController extends Controller
      */
     public function edit($id)
     {
-        $id = $this->checkId($id);
-
-        $provider = $this->provider->findOrFail($id);
+        $provider = $this->providerRepository->findOrFail($id);
         $route = 'provider.update';
         $method = 'PUT';
         $parameters = [$id];
@@ -130,17 +191,21 @@ class ProviderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $id = $this->checkId($id);
+        //$id = $this->checkId($id);
 
-        $this->validate($request, $this->provider->validationRules());
+        $this->validate(
+            $request, $this->providerRepository->validateRules(), $this->providerRepository->validateMessages()
+        );
+
         $data = $this->formRequest($request->all());
-        $this->provider
+        $this->providerRepository
             ->findOrFail($id)
             ->update($data);
 
-        return redirect()
-            ->route('provider.edit', $id)
-            ->with('success', 'Prestador atualizado com sucesso!');
+        return redirect()->route('provider.edit', $id)->with([
+                'success' => true,
+                'message' => 'Prestador de servi&ccedil;os atualizado com sucesso!'
+            ]);
     }
 
     /**
@@ -152,8 +217,24 @@ class ProviderController extends Controller
     public function destroy($id)
     {
         $this->authorize('isCompany');
-
-        $this->provider->destroy($id);
+        $this->associateRepository->destroy('companies_has_providers', [
+            'companyId' => $this->getCompanyId(),
+            'providerId' => $id
+        ]);
         return redirect()->route('provider.index');
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    /**public function delete($id)
+     * {
+     * $this->authorize('isAdmin');
+     * $this->providerRepository->destroy($id);
+     * return redirect()->route('provider.index');
+     * }
+     */
 }

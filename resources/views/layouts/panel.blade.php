@@ -55,7 +55,8 @@
                 <!-- menu profile quick info -->
                 <div class="profile clearfix">
                     <div class="profile_pic">
-                        <img src="{{ asset('images/profile/'. Auth::user()->image) }}" alt="..." class="img-circle profile_img">
+                        <img src="{{ asset('images/profile/'. Auth::user()->image) }}" alt="..."
+                             class="img-circle profile_img">
                     </div>
                     <div class="profile_info">
                         <span>Ol&aacute;,</span>
@@ -107,7 +108,8 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('provider.index') }}"><i class="fa fa-table"></i> Prestadores </a>
+                                    <a href="{{ route('provider.index') }}"><i class="fa fa-table"></i> Prestadores de
+                                        servi&ccedil;os </a>
                                 </li>
                             @endcan
 
@@ -143,7 +145,8 @@
                         <li class="">
                             <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
                                aria-expanded="false">
-                                <img src="{{ asset('images/profile/'. Auth::user()->image) }}" alt="">{{ Auth()->user()->name }}
+                                <img src="{{ asset('images/profile/'. Auth::user()->image) }}"
+                                     alt="">{{ Auth()->user()->name }}
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu pull-right">

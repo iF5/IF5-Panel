@@ -7,7 +7,7 @@ use App\Models\Company;
 class CompanyRepository extends Company
 {
 
-    protected $totalPerPage = 2;
+    protected $totalPerPage = 20;
 
     /**
      * @param string $field

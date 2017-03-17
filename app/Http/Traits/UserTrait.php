@@ -2,10 +2,27 @@
 
 namespace App\Http\Traits;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 trait UserTrait
 {
+
+    /**
+     * @param null $message
+     * @param int $id
+     * @param string $type
+     * @return array
+     */
+    protected function message($message = null, $id = 0, $type = 'success')
+    {
+        return [
+            $type => true,
+            'message' => $message,
+            'route' => "user-{$this->getRole()}.show",
+            'id' => $id
+        ];
+    }
 
     /**
      * Display a listing of the resource.
@@ -69,14 +86,15 @@ trait UserTrait
         $this->validate(
             $request, $this->getUser()->validateRules(), $this->getUser()->validateMessages()
         );
+
         $user = $this->getUser()->create($data);
 
-        return redirect()
-            ->route("user-{$this->getRole()}.create")
-            ->with([
-                'success' => 'Usu&aacute;rio cadastrado com sucesso!',
-                'id' => $user->id
-            ]);
+        return redirect()->route("user-{$this->getRole()}.create")->with([
+            'success' => true,
+            'message' => 'Usu&aacute;rio cadastrado com sucesso!',
+            'route' => "user-{$this->getRole()}.show",
+            'id' => $user->id
+        ]);
     }
 
     /**
@@ -124,16 +142,16 @@ trait UserTrait
             $request, $this->getUser()->validateRules(), $this->getUser()->validateMessages()
         );
 
-        $this->getUser()
-            ->findOrFail($id)
-            ->update($data);
+        try {
+            $this->getUser()->findOrFail($id)->update($data);
+            $arrayMessage = $this->message('Usu&aacute;rio atualizado com sucesso!', $id);
+        } catch (QueryException $e) {
+            if ((int)$e->errorInfo[1] === 1062) {
+                $arrayMessage = $this->message('O e-mail já existe.', null, 'error');
+            }
+        }
 
-        return redirect()
-            ->route("user-{$this->getRole()}.edit", $id)
-            ->with([
-                'success' => 'Usu&aacute;rio atualizado com sucesso!',
-                'id' => $id
-            ]);
+        return redirect()->route("user-{$this->getRole()}.edit", $id)->with($arrayMessage);
     }
 
     /**

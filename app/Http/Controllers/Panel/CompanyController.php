@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Repositories\Panel\AssociateRepository;
 use App\Repositories\Panel\CompanyRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -9,11 +10,23 @@ use App\Http\Controllers\Controller;
 class CompanyController extends Controller
 {
 
+    /**
+     * @var CompanyRepository
+     */
     private $companyRepository;
 
-    public function __construct(CompanyRepository $companyRepository)
+    /**
+     * @var AssociateRepository
+     */
+    private $associateRepository;
+
+    public function __construct(
+        CompanyRepository $companyRepository,
+        AssociateRepository $associateRepository
+    )
     {
         $this->companyRepository = $companyRepository;
+        $this->associateRepository = $associateRepository;
     }
 
     /**
@@ -59,12 +72,13 @@ class CompanyController extends Controller
         );
 
         $company = $this->companyRepository->create($request->all());
-        return redirect()
-            ->route('company.create')
-            ->with([
-                'success' => 'Empresa cadastrada com sucesso!',
-                'id' => $company->id
-            ]);
+
+        return redirect()->route('company.create')->with([
+            'success' => true,
+            'message' => 'Empresa cadastrada com sucesso!',
+            'route' => 'company.show',
+            'id' => $company->id
+        ]);
     }
 
     /**
@@ -108,6 +122,22 @@ class CompanyController extends Controller
     }
 
     /**
+     * @param null $message
+     * @param int $id
+     * @param string $type
+     * @return array
+     */
+    protected function message($message = null, $id = 0, $type = 'success')
+    {
+        return [
+            $type => true,
+            'message' => $message,
+            'route' => 'company.show',
+            'id' => $id
+        ];
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
@@ -120,16 +150,14 @@ class CompanyController extends Controller
             $request, $this->companyRepository->validateRules(), $this->companyRepository->validateMessages()
         );
 
-        $this->companyRepository
-            ->findOrFail($id)
-            ->update($request->all());
+        $this->companyRepository->findOrFail($id)->update($request->all());
 
-        return redirect()
-            ->route('company.edit', $id)
-            ->with([
-                'success' => 'Empresa atualizada com sucesso!',
-                'id' => $id
-            ]);
+        return redirect()->route('company.edit', $id)->with([
+            'success' => true,
+            'message' => 'Empresa atualizada com sucesso!',
+            'route' => 'company.show',
+            'id' => $id
+        ]);
     }
 
     /**
@@ -141,6 +169,9 @@ class CompanyController extends Controller
     public function destroy($id)
     {
         $this->companyRepository->destroy($id);
+        $this->associateRepository->destroy('companies_has_providers', [
+            'companyId' => $id
+        ]);
         return redirect()->route('company.index');
     }
 
