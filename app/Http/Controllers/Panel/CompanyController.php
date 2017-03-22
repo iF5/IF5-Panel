@@ -131,7 +131,7 @@ class CompanyController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate(
-            $request, $this->companyRepository->validateRules(), $this->companyRepository->validateMessages()
+            $request, $this->companyRepository->validateRules($id), $this->companyRepository->validateMessages()
         );
 
         $this->companyRepository->findOrFail($id)->update($request->all());

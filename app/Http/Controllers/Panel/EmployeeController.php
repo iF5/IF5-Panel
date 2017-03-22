@@ -143,7 +143,7 @@ class EmployeeController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate(
-            $request, $this->employeeRepository->validateRules(), $this->employeeRepository->validateMessages()
+            $request, $this->employeeRepository->validateRules($id), $this->employeeRepository->validateMessages()
         );
 
         $this->employeeRepository->findOrFail($id)->update($request->all());

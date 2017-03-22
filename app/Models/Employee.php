@@ -17,13 +17,14 @@ class Employee extends Model
     /**
      * Rules of the validation
      *
+     * @param null $id
      * @return array
      */
-    public function validateRules()
+    public function validateRules($id = NULL)
     {
         return [
             'name' => 'required|min:2',
-            'cpf' => 'required|unique_multiple:employees,cpf,providerId'
+            'cpf' => 'required|unique_multiple:employees,cpf,providerId,id=' . $id
         ];
     }
 

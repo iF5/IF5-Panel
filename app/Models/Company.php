@@ -17,13 +17,14 @@ class Company extends Model
     /**
      * Rules of the validation
      *
+     * @param null $id
      * @return array
      */
-    public function validateRules()
+    public function validateRules($id = null)
     {
         return [
             'name' => 'required|min:2',
-            'cnpj' => 'required|unique_multiple:companies,cnpj,name'
+            'cnpj' => 'required|unique_multiple:companies,cnpj,name,id=' . $id
         ];
     }
 
