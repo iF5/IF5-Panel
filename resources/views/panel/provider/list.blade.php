@@ -41,7 +41,8 @@
                 </div>
 
                 <div class="col-md-6">
-                    <a class="btn btn-success" href="{{ route('provider.associate') }}"> Cadastrar/Associar novo prestador +</a>
+                    <a class="btn btn-success" href="{{ route('provider.associate') }}"> Cadastrar ou Incluir novo
+                        Prestador +</a>
                 </div>
 
                 <div class="col-md-12" style="margin-top: 20px;">
@@ -50,8 +51,9 @@
                         <th>Nome</th>
                         <th>Cnpj</th>
                         <th>Usu&aacute;rios</th>
+                        <th>Funcion&aacute;rios</th>
                         @can('onlyAdmin')
-                        <th></th>
+                            <th></th>
                         @endcan
                         <th></th>
                         </thead>
@@ -59,20 +61,28 @@
 
                         @forelse($providers as $provider)
                             <tr>
-                                <td>{{ $provider->name }}</td>
+                                <td>
+                                    <a href="{{ route('provider.show', ['id' => $provider->id]) }}">{{ $provider->name }}</a>
+                                </td>
                                 <td>{{ $provider->cnpj }}</td>
                                 <td>
                                     <a href="{{ route('user-provider.identify', [0, $provider->id]) }}"
                                        class="btn btn-primary btn-xs"><span
                                                 class="glyphicon glyphicon-user"></span></a>
                                 </td>
-                                @can('onlyAdmin')
                                 <td>
-                                    <a href="{{ route('provider.edit', $provider->id) }}"
-                                       class="btn btn-success btn-xs"><span
-                                                class="glyphicon glyphicon-pencil"></span></a>
+                                    <a href="{{ route('employee.identify', [$provider->id]) }}"
+                                       class="btn btn-warning btn-xs"><span
+                                                class="glyphicon glyphicon-list-alt"></span></a>
 
                                 </td>
+                                @can('onlyAdmin')
+                                    <td>
+                                        <a href="{{ route('provider.edit', $provider->id) }}"
+                                           class="btn btn-success btn-xs"><span
+                                                    class="glyphicon glyphicon-pencil"></span></a>
+
+                                    </td>
                                 @endcan
                                 <td>
                                     <a href="#"

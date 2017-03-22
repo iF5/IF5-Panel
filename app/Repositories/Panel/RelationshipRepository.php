@@ -8,14 +8,10 @@ class RelationshipRepository
     /**
      * Create associations
      *
-     * @param array $data
-     * @return object
-     */
-    /**
-     * @param $table
+     * @param string $table
      * @param array $fields
      * @return object
-     * 
+     *
      */
     public function create($table, array $fields = [])
     {
@@ -24,7 +20,7 @@ class RelationshipRepository
         } catch (\PDOException $e) {
             return (object)[
                 'error' => true,
-                'debug' => $e->errorInfo
+                'info' => $e->errorInfo
             ];
         }
         return (object)['error' => false];
@@ -33,21 +29,25 @@ class RelationshipRepository
     /**
      * Delete associations
      *
-     * @param array $data
+     * @param string $table
+     * @param array $whereFields
      * @return object
      */
-    public function destroy(array $data = [])
+    public function destroy($table, array $whereFields = [])
     {
-        foreach ($data as $key => $values) {
-            try {
-                \DB::table($key)->where($values)->delete();
-            } catch (\PDOException $e) {
-                return (object)[
-                    'error' => true,
-                    'debug' => $e->errorInfo
-                ];
+        try {
+            $stmt = \DB::table($table);
+            if (count($whereFields) > 0) {
+                $stmt->where($whereFields);
             }
+            $stmt->delete();
+        } catch (\PDOException $e) {
+            return (object)[
+                'error' => true,
+                'info' => $e->errorInfo
+            ];
         }
+
         return (object)['error' => false];
     }
 

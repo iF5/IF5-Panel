@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Repositories\Panel\AssociateRepository;
+use App\Repositories\Panel\RelationshipRepository;
 use App\Repositories\Panel\ProviderRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -15,17 +15,17 @@ class ProviderController extends Controller
     private $providerRepository;
 
     /**
-     * @var AssociateRepository
+     * @var RelationshipRepository
      */
-    private $associateRepository;
+    private $relationshipRepository;
 
     public function __construct(
         ProviderRepository $providerRepository,
-        AssociateRepository $associateRepository
+        RelationshipRepository $relationshipRepository
     )
     {
         $this->providerRepository = $providerRepository;
-        $this->associateRepository = $associateRepository;
+        $this->relationshipRepository = $relationshipRepository;
     }
 
     public function identify($companyId)
@@ -48,11 +48,13 @@ class ProviderController extends Controller
     {
         $this->authorize('isCompany');
 
-        $providers = $this->providerRepository
-            ->findByCompany($this->getCompanyId());
+        $keyword = \Request::input('keyword');
+        $providers = ($keyword) ?
+            $this->providerRepository->findLikeByCompany('name', $keyword, $this->getCompanyId()) :
+            $this->providerRepository->findByCompany($this->getCompanyId());
 
         return view('panel.provider.list', [
-            'keyword' => null,
+            'keyword' => $keyword,
             'providers' => $providers
         ]);
     }
@@ -76,7 +78,7 @@ class ProviderController extends Controller
         }
 
         if ($request->isMethod('post') && $request->get('action') === 'associate') {
-            $this->associateRepository->create('companies_has_providers', [
+            $this->relationshipRepository->create('companies_has_providers', [
                 'companyId' => $this->getCompanyId(),
                 'providerId' => $request->get('providerId')
             ]);
@@ -133,7 +135,7 @@ class ProviderController extends Controller
 
         $data = $this->formRequest($request->all());
         $provider = $this->providerRepository->create($data);
-        $this->associateRepository->create('companies_has_providers', [
+        $this->relationshipRepository->create('companies_has_providers', [
             'companyId' => $this->getCompanyId(),
             'providerId' => $provider->id
         ]);
@@ -164,7 +166,8 @@ class ProviderController extends Controller
      */
     public function show($id)
     {
-        //
+        $provider = $this->providerRepository->find($id);
+        return view('panel.provider.show', compact('provider'));
     }
 
     /**
@@ -203,9 +206,9 @@ class ProviderController extends Controller
             ->update($data);
 
         return redirect()->route('provider.edit', $id)->with([
-                'success' => true,
-                'message' => 'Prestador de servi&ccedil;os atualizado com sucesso!'
-            ]);
+            'success' => true,
+            'message' => 'Prestador de servi&ccedil;os atualizado com sucesso!'
+        ]);
     }
 
     /**
@@ -217,7 +220,7 @@ class ProviderController extends Controller
     public function destroy($id)
     {
         $this->authorize('isCompany');
-        $this->associateRepository->destroy('companies_has_providers', [
+        $this->relationshipRepository->destroy('companies_has_providers', [
             'companyId' => $this->getCompanyId(),
             'providerId' => $id
         ]);

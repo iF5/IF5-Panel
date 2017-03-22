@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Repositories\Panel\AssociateRepository;
+use App\Repositories\Panel\RelationshipRepository;
 use App\Repositories\Panel\CompanyRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -16,17 +16,17 @@ class CompanyController extends Controller
     private $companyRepository;
 
     /**
-     * @var AssociateRepository
+     * @var RelationshipRepository
      */
-    private $associateRepository;
+    private $relationshipRepository;
 
     public function __construct(
         CompanyRepository $companyRepository,
-        AssociateRepository $associateRepository
+        RelationshipRepository $relationshipRepository
     )
     {
         $this->companyRepository = $companyRepository;
-        $this->associateRepository = $associateRepository;
+        $this->relationshipRepository = $relationshipRepository;
     }
 
     /**
@@ -122,22 +122,6 @@ class CompanyController extends Controller
     }
 
     /**
-     * @param null $message
-     * @param int $id
-     * @param string $type
-     * @return array
-     */
-    protected function message($message = null, $id = 0, $type = 'success')
-    {
-        return [
-            $type => true,
-            'message' => $message,
-            'route' => 'company.show',
-            'id' => $id
-        ];
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
@@ -169,7 +153,7 @@ class CompanyController extends Controller
     public function destroy($id)
     {
         $this->companyRepository->destroy($id);
-        $this->associateRepository->destroy('companies_has_providers', [
+        $this->relationshipRepository->destroy('companies_has_providers', [
             'companyId' => $id
         ]);
         return redirect()->route('company.index');

@@ -1,6 +1,6 @@
 @extends('layouts.panel')
 
-@section('title', 'Gest&atilde;o de prestador de servi&ccedil;os')
+@section('title', 'Gest&atilde;o de funcion&aacute;rios')
 
 @section('content')
     <!-- page content -->
@@ -17,6 +17,10 @@
                             <span class="glyphicon glyphicon-chevron-right"></span>
                             <a href="{{ route('provider.index') }}">
                                 <span class="text-primary">Prestadores de servi&ccedil;os</span>
+                            </a>
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                            <a href="{{ route('employee.index') }}">
+                                <span class="text-primary">Funcion&aacute;rios</span>
                             </a>
                             <span class="glyphicon glyphicon-chevron-right"></span>
                             {{ ($method === 'PUT')? 'Editar' : 'Cadastrar' }}
@@ -36,21 +40,17 @@
                             {{ method_field($method) }}
                             {{ csrf_field() }}
 
+                            <input type="hidden" name="providerId" value="{{ $employee->providerId }}">
+
                             <div class="form-group col-xs-4">
                                 <label for="name">Nome* :</label>
-                                <input type="text" id="name" name="name" value="{{ $provider->name or old('name') }}"
+                                <input type="text" id="name" name="name" value="{{ $employee->name or old('name') }}"
                                        class="form-control" required>
                             </div>
                             <div class="form-group col-xs-4">
-                                @if(isset($provider->cnpjHidden))
-                                    <label>CNPJ* :</label>
-                                    {{ $provider->cnpj }}
-                                    <input type="hidden" name="cnpj" value="{{ $provider->cnpj }}">
-                                @else
-                                    <label for="cpnj">CNPJ* : </label>
-                                    <input type="text" id="cnpj" name="cnpj"
-                                           value="{{ $provider->cnpj or old('cnpj') }}" class="form-control" required>
-                                @endif
+                                <label for="cpf">CPF* : </label>
+                                <input type="text" id="cpf" name="cpf"
+                                       value="{{ $employee->cpf or old('cpf') }}" class="form-control" required>
                             </div>
 
                             <div class="clearfix"></div>

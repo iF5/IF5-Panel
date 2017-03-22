@@ -13,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        \Validator::extend('unique_multiple', '\App\Http\Validations\FormValidate@uniqueMultiple');
     }
 
     /**

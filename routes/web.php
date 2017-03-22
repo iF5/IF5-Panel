@@ -49,6 +49,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('provider', 'Panel\ProviderController', ['middleware' => ['can:isProvider']]);
     //EndProvider
 
+    //Employee
+    Route::get('/employee/{providerId}/identify', 'Panel\EmployeeController@identify')
+        ->middleware('can:isCompany')
+        ->name('employee.identify');
+    Route::resource('employee', 'Panel\EmployeeController', ['middleware' => ['can:isProvider']]);
+    //EndEmployee
+
     //Users
     Route::resource('/user-admin', 'Panel\UserAdminController', ['middleware' => ['can:onlyAdmin']]);
 

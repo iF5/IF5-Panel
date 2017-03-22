@@ -29,7 +29,7 @@
                             <strong>Atenção : </strong>todos os campos com o s&iacute;mbolo * s&atilde;o obrigat&oacute;rios.
                         </div>
 
-                        @include('includes/validate-form')
+                        @include('includes.form-validate')
 
                         <form id="user-form" method="post" action="{{ route($route, $parameters) }}">
 

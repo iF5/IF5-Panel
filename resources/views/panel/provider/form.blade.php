@@ -16,7 +16,7 @@
                             </a>
                             <span class="glyphicon glyphicon-chevron-right"></span>
                             <a href="{{ route('provider.index') }}">
-                                <span class="text-primary">Prestadores</span>
+                                <span class="text-primary">Prestadores de servi&ccedil;os</span>
                             </a>
                             <span class="glyphicon glyphicon-chevron-right"></span>
                             {{ ($method === 'PUT')? 'Editar' : 'Cadastrar' }}
@@ -29,7 +29,7 @@
                             <strong>Atenção : </strong>todos os campos com o s&iacute;mbolo * s&atilde;o obrigat&oacute;rios.
                         </div>
 
-                        @include('includes/validate-form')
+                        @include('includes.form-validate')
 
                         <form method="post" action="{{ route($route, $parameters) }}">
 

@@ -19,17 +19,17 @@
                                 <span class="text-primary">Prestadores</span>
                             </a>
                             <span class="glyphicon glyphicon-chevron-right"></span>
-                            {{ 'Cadastrar/Associar' }}
+                            {{ 'Pesquisar' }}
                         </h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
 
-                        @include('includes/validate-form')
+                        @include('includes.form-validate')
 
                         @if($success)
                             <div class="alert alert-success alert-dismissible" role="alert">
-                                <p>Associa&ccedil;&atilde;o realizada com sucesso!</p>
+                                <p>Inclus&atilde;o realizada com sucesso!</p>
                             </div>
                         @endif
 
@@ -59,7 +59,7 @@
                                         {{ csrf_field() }}
                                         <input type="hidden" name="action" value="associate"/>
                                         <input type="hidden" name="providerId" value="{{ $provider->id }}"/>
-                                        <button type="submit" class="btn btn-warning btn-ms">Associar agora</button>
+                                        <button type="submit" class="btn btn-warning btn-ms">Incluir agora</button>
                                     </form>
                                 </li>
                             </ul>

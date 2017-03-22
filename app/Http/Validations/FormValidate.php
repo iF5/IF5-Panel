@@ -3,28 +3,29 @@
 namespace App\Http\Validations;
 
 
-class Form
+class FormValidate
 {
 
+    /**
+     * Validate fields multiple unique
+     *
+     * @param string $attribute
+     * @param string $value
+     * @param array $parameters
+     * @param object $validator
+     * @return bool
+     */
     public function uniqueMultiple($attribute, $value, $parameters, $validator)
     {
-        // Get the other fields
         $fields = $validator->getData();
-
-        // Get table name from first parameter
         $table = array_shift($parameters);
+        $stmt = \DB::table($table);
 
-        // Build the query
-        $query = \DB::table($table);
-
-        // Add the field conditions
-        foreach ($parameters as $i => $field) {
-            $query->where($field, $fields[$field]);
+        foreach ($parameters as $key => $field) {
+            $stmt->where($field, '=', $fields[$field]);
         }
 
-        // Validation result will be false if any rows match the combination
-        return ($query->count() === 0);
-
+        return ($stmt->count() === 0);
     }
 
 }

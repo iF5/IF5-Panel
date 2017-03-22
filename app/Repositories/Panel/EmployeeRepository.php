@@ -2,49 +2,40 @@
 
 namespace App\Repositories\Panel;
 
-use App\Models\Provider;
+use App\Models\Employee;
 
-class ProviderRepository extends Provider
+class EmployeeRepository extends Employee
 {
 
     protected $totalPerPage = 20;
 
     /**
+     * @param int $providerId
      * @param string $field
      * @param string $keyword
-     * @param int $companyId
      * @return mixed
      */
-    public function findLikeByCompany($field, $keyword, $companyId)
+    public function findLike($providerId, $field, $keyword)
     {
-        return Provider::join('companies_has_providers', function ($join) {
-            return $join->on('providerId', '=', 'id');
-        })->where([
-            ['companyId', '=', $companyId],
+        return Employee::where([
+            ['providerId', '=', $providerId],
             [$field, 'like', "%{$keyword}%"]
         ])->paginate($this->totalPerPage);
     }
 
     /**
-     * @param int $companyId
+     * @param int $providerId
+     * @param string $field
+     * @param string $type
      * @return mixed
      */
-    public function findByCompany($companyId)
+    public function findOrderBy($providerId, $field = 'id', $type = 'desc')
     {
-        return Provider::join('companies_has_providers', function ($join) {
-            return $join->on('providerId', '=', 'providers.id');
-        })
-            ->where('companies_has_providers.companyId', '=', $companyId)
+        return Employee::where([
+            ['providerId', '=', $providerId]
+        ])
+            ->orderBy($field, $type)
             ->paginate($this->totalPerPage);
-    }
-
-    /**
-     * @param string $cnpj
-     * @return mixed
-     */
-    public function findByCnpj($cnpj)
-    {
-        return Provider::where('cnpj', '=', $cnpj)->first();
     }
 
 }
