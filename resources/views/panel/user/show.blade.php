@@ -1,27 +1,16 @@
 @extends('layouts.panel')
 
-@section('title', 'Gest&atilde;o de usu&aacute;rios')
+@section('title', 'Gest&atilde;o de usu&aacute;rio')
 
 @section('content')
     <!-- page content -->
 
     <div class="right_col" role="main">
-
         <div class="row">
             <div class="x_panel">
                 <div class="x_title">
-                    <h2>
-                        <a href="{{ route('company.index') }}">
-                            <span class="text-primary">Empresas</span>
-                        </a>
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                        <a href="{{ route($routePrefix . '.index') }}">
-                            <span class="text-primary">Usu&aacute;rios</span>
-                        </a>
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                        {{ $user->name }}
-                    </h2>
-                    <div class="clearfix"></div>
+                    <!-- menu breadcrumb -->
+                    @include('includes.breadcrumb')
                 </div>
 
                 <ul class="list-group">
@@ -38,7 +27,6 @@
                            rel="{{ route($routePrefix . '.destroy', $user->id) }}"><span
                                     class="glyphicon glyphicon-trash"></span>
                         </a>
-
                     </li>
                 </ul>
             </div>

@@ -59,13 +59,13 @@ Route::group(['middleware' => 'auth'], function () {
     //Users
     Route::resource('/user-admin', 'Panel\UserAdminController', ['middleware' => ['can:onlyAdmin']]);
 
-    Route::get('/user/company/{companyId}/identify', 'Panel\UserCompanyController@identify')
+    Route::get('/user/company/{id}/identify', 'Panel\UserCompanyController@identify')
         ->middleware('can:onlyAdmin')
         ->name('user-company.identify')
-        ->where('companyId', '[0-9]+');
+        ->where('id', '[0-9]+');
     Route::resource('/user-company', 'Panel\UserCompanyController', ['middleware' => ['can:isCompany']]);
 
-    Route::get('/user/provider/{companyId}/{providerId}/identify', 'Panel\UserProviderController@identify')
+    Route::get('/user/provider/{id}/identify', 'Panel\UserProviderController@identify')
         ->middleware('can:onlyAdmin')
         ->name('user-provider.identify');
         /*->where([

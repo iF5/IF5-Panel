@@ -47,4 +47,16 @@ class ProviderRepository extends Provider
         return Provider::where('cnpj', '=', $cnpj)->first();
     }
 
+    /**
+     * @param int $id
+     * @param string $field
+     * @return mixed
+     */
+    public function getNameById($id, $field = 'name')
+    {
+        return Provider::where('id', '=', $id)
+            ->pluck($field)
+            ->first();
+    }
+
 }

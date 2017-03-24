@@ -2,27 +2,11 @@
 
 namespace App\Http\Traits;
 
-use Illuminate\Database\QueryException;
+//use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 trait UserTrait
 {
-
-    /**
-     * @param null $message
-     * @param int $id
-     * @param string $type
-     * @return array
-     */
-    protected function message($message = null, $id = 0, $type = 'success')
-    {
-        return [
-            $type => true,
-            'message' => $message,
-            'route' => "user-{$this->getRole()}.show",
-            'id' => $id
-        ];
-    }
 
     /**
      * Display a listing of the resource.
@@ -39,7 +23,8 @@ trait UserTrait
         return view('panel.user.list', [
             'keyword' => $keyword,
             'users' => $users,
-            'route' => "user-{$this->getRole()}"
+            'route' => "user-{$this->getRole()}",
+            'breadcrumbs' => $this->getBreadcrumb()
         ]);
     }
 
@@ -55,7 +40,8 @@ trait UserTrait
             'method' => 'POST',
             'routePrefix' => "user-{$this->getRole()}",
             'route' => "user-{$this->getRole()}.store",
-            'parameters' => []
+            'parameters' => [],
+            'breadcrumbs' => $this->getBreadcrumb('Cadastrar')
         ]);
     }
 
@@ -107,7 +93,8 @@ trait UserTrait
     {
         return view('panel.user.show', [
             'user' => $this->getUser()->findById($id),
-            'routePrefix' => "user-{$this->getRole()}"
+            'routePrefix' => "user-{$this->getRole()}",
+            'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
     }
 
@@ -124,7 +111,8 @@ trait UserTrait
             'method' => 'PUT',
             'routePrefix' => "user-{$this->getRole()}",
             'route' => "user-{$this->getRole()}.update",
-            'parameters' => [$id]
+            'parameters' => [$id],
+            'breadcrumbs' => $this->getBreadcrumb('Editar')
         ]);
     }
 
@@ -141,17 +129,14 @@ trait UserTrait
         $this->validate(
             $request, $this->getUser()->validateRules(), $this->getUser()->validateMessages()
         );
+        $this->getUser()->findOrFail($id)->update($data);
 
-        try {
-            $this->getUser()->findOrFail($id)->update($data);
-            $arrayMessage = $this->message('Usu&aacute;rio atualizado com sucesso!', $id);
-        } catch (QueryException $e) {
-            if ((int)$e->errorInfo[1] === 1062) {
-                $arrayMessage = $this->message('O e-mail já existe.', null, 'error');
-            }
-        }
-
-        return redirect()->route("user-{$this->getRole()}.edit", $id)->with($arrayMessage);
+        return redirect()->route("user-{$this->getRole()}.edit", $id)->with([
+            'success' => true,
+            'message' => 'Usu&aacute;rio atualizado com sucesso!',
+            'route' => "user-{$this->getRole()}.show",
+            'id' => $id
+        ]);
     }
 
     /**

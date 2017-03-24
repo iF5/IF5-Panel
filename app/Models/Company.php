@@ -11,7 +11,8 @@ class Company extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'name', 'cnpj'
+        'name',
+        'cnpj',
     ];
 
     /**
@@ -24,7 +25,8 @@ class Company extends Model
     {
         return [
             'name' => 'required|min:2',
-            'cnpj' => 'required|unique_multiple:companies,cnpj,name,id=' . $id
+            'cnpj' => 'required|unique_multiple:companies,cnpj,name,id=' . $id,
+            'name' => 'required|min:2|max:14',
         ];
     }
 

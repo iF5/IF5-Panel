@@ -3,6 +3,7 @@
 namespace App\Repositories\Panel;
 
 use App\Models\Company;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CompanyRepository extends Company
 {
@@ -29,6 +30,31 @@ class CompanyRepository extends Company
     {
         return Company::orderBy($field, $type)
             ->paginate($this->totalPerPage);
+    }
+
+    /**
+     * @param int $id
+     * @param string $field
+     * @return mixed
+     */
+    public function getName($id, $field = 'name')
+    {
+        return Company::where('id', '=', $id)
+            ->pluck($field)
+            ->first();
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function findById($id)
+    {
+        try {
+            return (object)Company::find($id)->original;
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
     }
 
 }

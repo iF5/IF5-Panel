@@ -28,9 +28,9 @@ class ProviderController extends Controller
         $this->relationshipRepository = $relationshipRepository;
     }
 
-    public function identify($companyId)
+    public function identify($providerId)
     {
-        \Session::put('companyId', $companyId);
+        \Session::put('providerId', $providerId);
         return redirect()->route('provider.index');
     }
 

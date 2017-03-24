@@ -93,31 +93,32 @@
                             </li>
 
                             @can('onlyAdmin')
-                                <li>
-                                    <a href="{{ route('user-admin.index') }}"><i class="fa fa-desktop"></i> Usu&aacute;rios
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('company.index') }}"><i class="fa fa-clone"></i> Empresas </a>
-                                </li>
+                            <li>
+                                <a href="{{ route('user-admin.index') }}"><i class="fa fa-users"></i>
+                                    Usu&aacute;rios admin
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('company.index') }}"><i class="fa fa-building-o"></i> Empresas </a>
+                            </li>
                             @endcan
 
                             @can('onlyCompany')
-                                <li>
-                                    <a href="{{ route('user-company.index') }}"><i class="fa fa-desktop"></i> Usu&aacute;rios
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('provider.index') }}"><i class="fa fa-table"></i> Prestadores de
-                                        servi&ccedil;os </a>
-                                </li>
+                            <li>
+                                <a href="{{ route('user-company.index') }}"><i class="fa fa-users"></i> Usu&aacute;rios
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('provider.index') }}"><i class="fa fa-briefcase"></i> Prestadores de
+                                    servi&ccedil;os </a>
+                            </li>
                             @endcan
 
                             @can('onlyProvider')
-                                <li>
-                                    <a href="{{ route('user-provider.index') }}"><i class="fa fa-desktop"></i> Usu&aacute;rios
-                                    </a>
-                                </li>
+                            <li>
+                                <a href="{{ route('user-provider.index') }}"><i class="fa fa-desktop"></i> Usu&aacute;rios
+                                </a>
+                            </li>
                             @endcan
 
                             {{--
@@ -234,8 +235,8 @@
         <!-- /top navigation -->
 
         <!-- page content -->
-    @yield('content')
-    <!-- /page content -->
+        @yield('content')
+                <!-- /page content -->
 
         <!-- footer content -->
         <footer>
@@ -250,7 +251,7 @@
 
 @include('includes.modal')
 
-<!-- jQuery -->
+        <!-- jQuery -->
 <script src="{{ asset('vendors/jquery/dist/jquery.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/jquery.maskedinput.min.js') }}" type="text/javascript"></script>
 <!-- Bootstrap -->

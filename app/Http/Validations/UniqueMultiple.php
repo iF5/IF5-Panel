@@ -3,7 +3,7 @@
 namespace App\Http\Validations;
 
 
-class FormValidate
+class UniqueMultiple
 {
     /**
      * @var string
@@ -24,18 +24,18 @@ class FormValidate
      * @param object $validator
      * @return bool
      */
-    public function uniqueMultiple($attribute, $value, $parameters, $validator)
+    public function has($attribute, $value, $parameters, $validator)
     {
-        $fields = $validator->getData();
+        $data = $validator->getData();
         $this->table = array_shift($parameters);
 
-        foreach ($parameters as $key => $field) {
+        foreach ($parameters as $field) {
             if (preg_match('/^id=/', $field)) {
                 $this->whereFieldId($field);
                 continue;
             }
             $this->where[] = [
-                $field, '=', $fields[$field]
+                $field, '=', $data[$field]
             ];
         }
 
@@ -48,9 +48,9 @@ class FormValidate
      */
     private function whereFieldId($fieldId, $operator = '!=')
     {
-        $expId = explode('=', $fieldId);
-        if ($expId[1]) {
-            $this->where[] = [$expId[0], $operator, $expId[1]];
+        $data = explode('=', $fieldId);
+        if ((int)$data[1]) {
+            $this->where[] = [$data[0], $operator, $data[1]];
         }
     }
 

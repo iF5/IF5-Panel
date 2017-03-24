@@ -6,16 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Http\Interfaces\UserInterface;
 use App\Repositories\Panel\UserRepository;
 use App\Http\Traits\UserTrait;
+use App\Services\BreadcrumbService;
 
 class UserAdminController extends Controller implements UserInterface
 {
     private $userRepository;
 
+    private $breadcrumbService;
+
     use UserTrait;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(
+        UserRepository $userRepository,
+        BreadcrumbService $breadcrumbService
+    )
     {
         $this->userRepository = $userRepository;
+        $this->breadcrumbService = $breadcrumbService;
     }
 
     /**
@@ -53,5 +60,18 @@ class UserAdminController extends Controller implements UserInterface
         return 0;
     }
 
+    /**
+     * @return array
+     */
+    public function getBreadcrumb()
+    {
+        return $this->breadcrumbService
+            ->add("Usu&aacute;rios administradores", null, true)
+            ->get();
+    }
+
 }
+
+
+
 
