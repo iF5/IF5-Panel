@@ -16,10 +16,14 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('cpf');
+            $table->string('jobRole');
+            $table->string('department');
+            $table->string('phoneNumber');
+            $table->string('cellPhoneNumber');
+            $table->string('email', 191)->unique();
             $table->string('password');
             $table->string('image')->default('no-profile-image.jpg');
-            $table->string('role');
             //$table->boolean('isAllPrivileges')->default(false);
             $table->timestamp('createdAt')->nullable();
             $table->timestamp('updatedAt')->nullable();

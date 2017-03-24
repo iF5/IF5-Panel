@@ -42,7 +42,56 @@
                                 <input type="text" id="cnpj" name="cnpj" value="{{ $company->cnpj or old('cnpj') }}"
                                        class="form-control" required>
                             </div>
-
+                            <div class="form-group col-xs-4">
+                                <label for="stateInscription">Inscrição Estadual* :</label>
+                                <input type="text" id="stateInscription" name="stateInscription" value="{{ $company->stateInscription or old('stateInscription') }}"
+                                       class="form-control" required>
+                            </div>
+                            <div class="form-group col-xs-4">
+                                <label for="municipalInscription">Inscrição Municipal* :</label>
+                                <input type="text" id="municipalInscription" name="municipalInscription" value="{{ $company->municipalInscription or old('municipalInscription') }}"
+                                       class="form-control" required>
+                            </div>
+                            <div class="form-group col-xs-4">
+                                <label for="mainCnae">CNAE Principal* :</label>
+                                <input type="text" id="mainCnae" name="mainCnae" value="{{ $company->mainCnae or old('mainCnae') }}"
+                                       class="form-control" required>
+                            </div>
+                            <div class="form-group col-xs-4">
+                                <label for="activityBranch">Ramo de Atividade* :</label>
+                                <input type="text" id="activityBranch" name="activityBranch" value="{{ $company->activityBranch or old('activityBranch') }}"
+                                       class="form-control" required>
+                            </div>
+                            <div class="form-group col-xs-4">
+                                <label for="cep">CEP* :</label>
+                                <input type="text" id="cep" name="cep" value="{{ $company->cep or old('cep') }}"
+                                       class="form-control" required>
+                            </div>
+                            <div class="form-group col-xs-4">
+                                <label for="number">Número* :</label>
+                                <input type="text" id="number" name="number" value="{{ $company->number or old('number') }}"
+                                       class="form-control" required>
+                            </div>
+                            <div class="form-group col-xs-4">
+                                <label for="addressComplement">Complemento* :</label>
+                                <input type="text" id="addressComplement" name="addressComplement" value="{{ $company->addressComplement or old('addressComplement') }}"
+                                       class="form-control" required>
+                            </div>
+                            <div class="form-group col-xs-4">
+                                <label for="phone">Telefone* :</label>
+                                <input type="phone" id="phone" name="phone" value="{{ $company->phone or old('phone') }}"
+                                       class="form-control" required>
+                            </div>
+                            <div class="form-group col-xs-4">
+                                <label for="fax">Fax :</label>
+                                <input type="fax" id="fax" name="fax" value="{{ $company->fax or old('fax') }}"
+                                       class="form-control">
+                            </div>
+                            <div class="form-group col-xs-4">
+                                <label for="email">E-mail* :</label>
+                                <input type="email" id="email" name="email" value="{{ $company->email or old('email') }}"
+                                       class="form-control" required>
+                            </div>
                             <div class="clearfix"></div>
                             <div class="control-group" style="margin: 30px 0px 0px 12px;">
                                 <button type="submit" class="btn btn-success">Salvar</button>

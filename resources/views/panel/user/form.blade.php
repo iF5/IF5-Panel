@@ -38,6 +38,48 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-5">
+                                <label for="cpf">Cpf* :</label>
+                                <input type="text" id="cpf" name="cpf" value="{{ $user->cpf or old('cpf') }}"
+                                       class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-5">
+                                <label for="jobRole">Cargo* :</label>
+                                <input type="text" id="jobRole" name="jobRole" value="{{ $user->jobRole or old('jobRole') }}"
+                                       class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-5">
+                                <label for="department">Setor* :</label>
+                                <input type="text" id="department" name="department" value="{{ $user->department or old('department') }}"
+                                       class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-5">
+                                <label for="phoneNumber">Telefone* :</label>
+                                <input type="text" id="phoneNumber" name="phoneNumber" value="{{ $user->phoneNumber or old('phoneNumber') }}"
+                                       class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-5">
+                                <label for="cellPhoneNumber">Celular* :</label>
+                                <input type="text" id="cellPhoneNumber" name="cellPhoneNumber" value="{{ $user->cellPhoneNumber or old('cellPhoneNumber') }}"
+                                       class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-5">
+                                <label for="cellPhoneNumber">Celular* :</label>
+                                <input type="text" id="cellPhoneNumber" name="cellPhoneNumber" value="{{ $user->cellPhoneNumber or old('cellPhoneNumber') }}"
+                                       class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-5">
                                 <label for="email">E-mail* :</label>
                                 <input type="email" id="email" name="email"
                                        value="{{ $user->email or old('email') }}"
