@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Repositories\Panel\CompanyRepository;
 use App\Repositories\Panel\RelationshipRepository;
 use App\Repositories\Panel\ProviderRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\BreadcrumbService;
 
 class ProviderController extends Controller
 {
@@ -15,28 +17,50 @@ class ProviderController extends Controller
     private $providerRepository;
 
     /**
+     * @var CompanyRepository
+     */
+    private $companyRepository;
+
+    /**
      * @var RelationshipRepository
      */
     private $relationshipRepository;
 
+    /**
+     * @var BreadcrumbService
+     */
+    private $breadcrumbService;
+
+
     public function __construct(
         ProviderRepository $providerRepository,
-        RelationshipRepository $relationshipRepository
+        CompanyRepository $companyRepository,
+        RelationshipRepository $relationshipRepository,
+        BreadcrumbService $breadcrumbService
     )
     {
         $this->providerRepository = $providerRepository;
+        $this->companyRepository = $companyRepository;
         $this->relationshipRepository = $relationshipRepository;
+        $this->breadcrumbService = $breadcrumbService;
     }
 
-    public function identify($providerId)
+    /**
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function identify($id)
     {
-        \Session::put('providerId', $providerId);
+        \Session::put('company', $this->companyRepository->findById($id));
         return redirect()->route('provider.index');
     }
 
+    /**
+     * @return mixed
+     */
     protected function getCompanyId()
     {
-        return (\Auth::user()->role === 'admin') ? \Session::get('companyId') : \Auth::user()->companyId;
+        return (\Session::has('company')) ? \Session::get('company')->id : \Auth::user()->companyId;
     }
 
     /**
@@ -46,16 +70,15 @@ class ProviderController extends Controller
      */
     public function index()
     {
-        $this->authorize('isCompany');
-
         $keyword = \Request::input('keyword');
         $providers = ($keyword) ?
-            $this->providerRepository->findLikeByCompany('name', $keyword, $this->getCompanyId()) :
-            $this->providerRepository->findByCompany($this->getCompanyId());
+            $this->providerRepository->findLike($this->getCompanyId(), 'name', $keyword) :
+            $this->providerRepository->findOrderBy($this->getCompanyId());
 
         return view('panel.provider.list', [
             'keyword' => $keyword,
-            'providers' => $providers
+            'providers' => $providers,
+            'breadcrumbs' => $this->getBreadcrumb()
         ]);
     }
 
@@ -86,7 +109,8 @@ class ProviderController extends Controller
             \Session::remove('cnpj');
         }
 
-        return view('panel.provider.form-associate', compact('search', 'cnpj', 'provider', 'success'));
+        $breadcrumbs = $this->getBreadcrumb('Cadastrar/Incluir');
+        return view('panel.provider.form-associate', compact('search', 'cnpj', 'provider', 'success', 'breadcrumbs'));
     }
 
     /**
@@ -96,8 +120,6 @@ class ProviderController extends Controller
      */
     public function create()
     {
-        $this->authorize('isCompany');
-
         if (!\Session::has('cnpj')) {
             return redirect()->route('provider.associate');
         }
@@ -109,7 +131,8 @@ class ProviderController extends Controller
             ],
             'method' => 'POST',
             'route' => 'provider.store',
-            'parameters' => []
+            'parameters' => [],
+            'breadcrumbs' => $this->getBreadcrumb('Cadastrar')
         ]);
     }
 
@@ -127,8 +150,6 @@ class ProviderController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('isCompany');
-
         $this->validate(
             $request, $this->providerRepository->validateRules(), $this->providerRepository->validateMessages()
         );
@@ -166,8 +187,10 @@ class ProviderController extends Controller
      */
     public function show($id)
     {
-        $provider = $this->providerRepository->find($id);
-        return view('panel.provider.show', compact('provider'));
+        return view('panel.provider.show', [
+            'provider' => $this->providerRepository->findOrFail($id),
+            'breadcrumbs' => $this->getBreadcrumb('Visualizar')
+        ]);
     }
 
     /**
@@ -178,11 +201,13 @@ class ProviderController extends Controller
      */
     public function edit($id)
     {
-        $provider = $this->providerRepository->findOrFail($id);
-        $route = 'provider.update';
-        $method = 'PUT';
-        $parameters = [$id];
-        return view('panel.provider.form', compact('provider', 'method', 'route', 'parameters'));
+        return view('panel.provider.form', [
+            'provider' => $this->providerRepository->findOrFail($id),
+            'method' => 'provider.update',
+            'route' => 'PUT',
+            'parameters' => [$id],
+            'breadcrumbs' => $this->getBreadcrumb('Editar')
+        ]);
     }
 
     /**
@@ -219,7 +244,6 @@ class ProviderController extends Controller
      */
     public function destroy($id)
     {
-        $this->authorize('isCompany');
         $this->relationshipRepository->destroy('companies_has_providers', [
             'companyId' => $this->getCompanyId(),
             'providerId' => $id
@@ -228,16 +252,26 @@ class ProviderController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param string $location
+     * @return array
      */
-    /**public function delete($id)
-     * {
-     * $this->authorize('isAdmin');
-     * $this->providerRepository->destroy($id);
-     * return redirect()->route('provider.index');
-     * }
-     */
+    protected function getBreadcrumb($location = null)
+    {
+        if (\Session::has('company')) {
+            $company = \Session::get('company');
+            $this->breadcrumbService
+                ->add('Empresas', route('company.index'))
+                ->add($company->name, route('company.show', $company->id));
+        }
+
+        if ($location) {
+            return $this->breadcrumbService
+                ->add('Prestadores de servi&ccedil;os', route('provider.index'))
+                ->add($location, null, true)
+                ->get();
+        }
+
+        return $this->breadcrumbService->add('Prestadores de servi&ccedil;os', null, true)->get();
+    }
+
 }

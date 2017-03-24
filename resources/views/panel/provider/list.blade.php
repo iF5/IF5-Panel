@@ -10,14 +10,8 @@
         <div class="row">
             <div class="x_panel">
                 <div class="x_title">
-                    <h2>
-                        <a href="{{ route('company.index') }}">
-                            <span class="text-primary">Empresas</span>
-                        </a>
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                        Prestadores de servi&ccedil;os
-                    </h2>
-                    <div class="clearfix"></div>
+                    <!-- menu breadcrumb -->
+                    @include('includes.breadcrumb')
                 </div>
 
                 <div class="col-md-6">
@@ -66,7 +60,7 @@
                                 </td>
                                 <td>{{ $provider->cnpj }}</td>
                                 <td>
-                                    <a href="{{ route('user-provider.identify', [0, $provider->id]) }}"
+                                    <a href="{{ route('user-provider.identify', ['id' => $provider->id]) }}"
                                        class="btn btn-primary btn-xs"><span
                                                 class="glyphicon glyphicon-user"></span></a>
                                 </td>

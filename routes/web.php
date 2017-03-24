@@ -21,6 +21,9 @@ $this->get('/logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::group(['middleware' => 'auth'], function () {
 
+    //Profile
+    Route::get('profile', 'Panel\ProfileController@index')->name('profile.index');
+
     //Dashboard
     Route::get('home', 'Panel\DashboardController@index');
     Route::get('dashboard', 'Panel\DashboardController@index');
@@ -37,7 +40,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('company', 'Panel\CompanyController', ['middleware' => ['can:isAdmin']]);
 
     //Provider
-    Route::get('/provider/{companyId}/identify', 'Panel\ProviderController@identify')
+    Route::get('/provider/{id}/identify', 'Panel\ProviderController@identify')
         ->middleware('can:onlyAdmin')
         ->name('provider.identify');
         //->where('companyId', '[0-9]+');
@@ -46,7 +49,7 @@ Route::group(['middleware' => 'auth'], function () {
         ->middleware('can:isCompany')
         ->name('provider.associate');
 
-    Route::resource('provider', 'Panel\ProviderController', ['middleware' => ['can:isProvider']]);
+    Route::resource('provider', 'Panel\ProviderController', ['middleware' => ['can:isCompany']]);
     //EndProvider
 
     //Employee

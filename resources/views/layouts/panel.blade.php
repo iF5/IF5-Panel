@@ -116,7 +116,7 @@
 
                             @can('onlyProvider')
                             <li>
-                                <a href="{{ route('user-provider.index') }}"><i class="fa fa-desktop"></i> Usu&aacute;rios
+                                <a href="{{ route('user-provider.index') }}"><i class="fa fa-users"></i> Usu&aacute;rios
                                 </a>
                             </li>
                             @endcan
@@ -152,7 +152,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu pull-right">
                                 <li>
-                                    <a href="{{ route('user-' . Auth::user()->role . '.show', Auth::user()->id) }}">
+                                    <a href="{{ route('profile.index') }}">
                                         <!--<span class="badge bg-red pull-right">50%</span>-->
                                         <span>Perfil</span>
                                     </a>

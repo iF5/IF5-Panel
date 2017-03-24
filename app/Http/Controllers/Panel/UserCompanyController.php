@@ -91,10 +91,10 @@ class UserCompanyController extends Controller implements UserInterface
      * @param string $location
      * @return array
      */
-    public function getBreadcrumb($location = null)
+    protected function getBreadcrumb($location = null)
     {
-        $company = (\Session::has('company')) ? \Session::get('company') : false;
-        if ($company) {
+        if (\Session::has('company')) {
+            $company = \Session::get('company');
             $this->breadcrumbService->add('Empresas', route('company.index'));
             $this->breadcrumbService->add($company->name, route('company.show', $company->id));
         }

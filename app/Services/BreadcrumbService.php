@@ -31,7 +31,9 @@ class BreadcrumbService
      */
     public function get()
     {
-        return $this->row;
+        $row = $this->row;
+        $this->row = [];
+        return $row;
     }
 
 }

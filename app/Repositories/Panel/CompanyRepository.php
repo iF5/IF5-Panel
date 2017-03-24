@@ -17,8 +17,11 @@ class CompanyRepository extends Company
      */
     public function findLike($field, $keyword = null)
     {
-        return Company::where($field, 'like', "%{$keyword}%")
-            ->paginate($this->totalPerPage);
+        try {
+            return Company::where($field, 'like', "%{$keyword}%")->paginate($this->totalPerPage);
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
     }
 
     /**
@@ -28,8 +31,11 @@ class CompanyRepository extends Company
      */
     public function findOrderBy($field = 'id', $type = 'desc')
     {
-        return Company::orderBy($field, $type)
-            ->paginate($this->totalPerPage);
+        try {
+            return Company::orderBy($field, $type)->paginate($this->totalPerPage);
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
     }
 
     /**
@@ -39,9 +45,11 @@ class CompanyRepository extends Company
      */
     public function getName($id, $field = 'name')
     {
-        return Company::where('id', '=', $id)
-            ->pluck($field)
-            ->first();
+        try {
+            return Company::where('id', '=', $id)->pluck($field)->first();
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
     }
 
     /**

@@ -75,7 +75,7 @@ class UserProviderController extends Controller implements UserInterface
      */
     public function getCompanyId()
     {
-        return (\Session::has('companyId')) ? \Session::get('companyId') : \Auth::user()->companyId;
+        return (\Session::has('company')) ? \Session::get('company')->id : \Auth::user()->companyId;
     }
 
     /**
@@ -83,34 +83,43 @@ class UserProviderController extends Controller implements UserInterface
      */
     public function getProviderId()
     {
-        return (\Session::has('providerId')) ? \Session::get('providerId') : \Auth::user()->providerId;
+        return (\Session::has('provider')) ? \Session::get('provider')->id : \Auth::user()->providerId;
     }
 
     /**
-     * @param int $companyId
-     * @param int $providerId
+     * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function identify($companyId, $providerId)
+    public function identify($id)
     {
-        \Session::put('companyId', $companyId);
-        \Session::put('providerId', $providerId);
+        \Session::put('provider', $this->providerRepository->findById($id));
         return redirect()->route("user-{$this->getRole()}.index");
     }
 
     /**
+     * @param string $location
      * @return array
      */
-    public function getBreadcrumb()
+    protected function getBreadcrumb($location = null)
     {
-        $companyName = $this->companyRepository->getNameById($this->getCompanyId());
-        $providerName = $this->providerRepository->getNameById($this->getProviderId());
+        if (\Session::has('company') && \Session::has('provider')) {
+            $company = \Session::get('company');
+            $provider = \Session::get('provider');
+            $this->breadcrumbService
+                ->add('Empresas', route('company.index'))
+                ->add($company->name, route('company.show', $company->id))
+                ->add('Prestadores de servi&ccedil;os', route('provider.index'))
+                ->add($provider->name, route('provider.show', $provider->id));
+        }
 
-        return $this->breadcrumbService
-            ->add('Empresas', 'company.index')
-            ->add("{$companyName} - Prestadores de serviços", 'provider.index')
-            ->add("{$providerName} - Usu&aacute;rios", null, true)
-            ->get();
+        if ($location) {
+            return $this->breadcrumbService
+                ->add('Usu&aacute;rios', route("user-{$this->getRole()}.index"))
+                ->add($location, null, true)
+                ->get();
+        }
+
+        return $this->breadcrumbService->add('Usu&aacute;rios', null, true)->get();
     }
 
 }
