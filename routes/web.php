@@ -18,6 +18,10 @@ $this->get('/login', 'Auth\LoginController@showLoginForm');
 $this->post('/login', 'Auth\LoginController@login')->name('login');
 $this->get('/logout', 'Auth\LoginController@logout')->name('logout');
 
+$this->get('/company-all', function(){
+    return view('panel.profile.lala');
+});
+
 
 Route::group(['middleware' => 'auth'], function () {
 

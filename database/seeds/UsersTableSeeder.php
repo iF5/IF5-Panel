@@ -19,6 +19,11 @@ class UsersTableSeeder extends Seeder
             'email' => 'admin@if5.com.br',
             'password' => bcrypt('123456'),
             'role' => 'admin',
+            'cpf' => '000.000.000-00',
+            'jobRole' => 'gerente',
+            'department' => 'TI',
+            'phoneNumber' => '0000-0000',
+            'cellPhoneNumber' => '00000-0000',
             //'isAllPrivileges' => true
         ]);
     }

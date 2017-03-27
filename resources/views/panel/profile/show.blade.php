@@ -18,8 +18,13 @@
                     <li class="list-group-item"><strong>E-mail : </strong> {{ $user->email }}</li>
                     <li class="list-group-item">
                         <a href="{{ route( 'profile.index', $user->id) }}"
-                           class="btn btn-success btn-xs"><span
+                           class="btn btn-success btn-md" title="Editar"><span
                                     class="glyphicon glyphicon-pencil"></span>
+                        </a>
+
+                        <a href="{{ route( 'profile.index', $user->id) }}"
+                           class="btn btn-primary btn-md" title="imagem"><span
+                                    class="glyphicon glyphicon-picture"></span>
                         </a>
                     </li>
                 </ul>

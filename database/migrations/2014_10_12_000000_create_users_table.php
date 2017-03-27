@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('cellPhoneNumber');
             $table->string('email', 191)->unique();
             $table->string('password');
+            $table->string('role');
             $table->string('image')->default('no-profile-image.jpg');
             //$table->boolean('isAllPrivileges')->default(false);
             $table->timestamp('createdAt')->nullable();
