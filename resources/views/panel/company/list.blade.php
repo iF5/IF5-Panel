@@ -10,8 +10,8 @@
     <div class="row">
         <div class="x_panel">
             <div class="x_title">
-                <h2>Empresas</h2>
-                <div class="clearfix"></div>
+                <!-- menu breadcrumb -->
+                @include('includes.breadcrumb')
             </div>
 
             <div class="col-md-6">
@@ -44,13 +44,14 @@
                     <thead>
                     <th>Nome</th>
                     <th>Cnpj</th>
+                    <th>Ramo de Atividade</th>
+                    <th>Telefone</th>
                     <th>Usu&aacute;rios</th>
                     <th>Prestadores de servi&ccedil;os</th>
                     <th></th>
                     <th></th>
                     </thead>
                     <tbody>
-
                     @forelse($companies as $company)
 
                         <tr>
@@ -58,6 +59,8 @@
                                 <a href="{{ route('company.show', ['id' => $company->id]) }}">{{ $company->name }}</a>
                             </td>
                             <td>{{ $company->cnpj }}</td>
+                            <td>{{ $company->activityBranch }}</td>
+                            <td>{{ $company->phone }}</td>
                             <td>
                                 <a href="{{ route('user-company.identify', $company->id) }}"
                                    class="btn btn-primary btn-xs" title="Usu&aacute;rios"><span

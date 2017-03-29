@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Repositories\Panel\RelationshipRepository;
 use App\Repositories\Panel\CompanyRepository;
+use App\Services\BreadcrumbService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -20,13 +21,20 @@ class CompanyController extends Controller
      */
     private $relationshipRepository;
 
+    /**
+     * @var BreadcrumbService
+     */
+    private $breadcrumbService;
+
     public function __construct(
         CompanyRepository $companyRepository,
-        RelationshipRepository $relationshipRepository
+        RelationshipRepository $relationshipRepository,
+        BreadcrumbService $breadcrumbService
     )
     {
         $this->companyRepository = $companyRepository;
         $this->relationshipRepository = $relationshipRepository;
+        $this->breadcrumbService = $breadcrumbService;
     }
 
     /**
@@ -41,7 +49,11 @@ class CompanyController extends Controller
             $this->companyRepository->findLike('name', $keyword) :
             $this->companyRepository->findOrderBy();
 
-        return view('panel.company.list', compact('keyword', 'companies'));
+        return view('panel.company.list', [
+            'keyword' => $keyword,
+            'companies' => $companies,
+            'breadcrumbs' => $this->getBreadcrumb()
+        ]);
     }
 
     /**
@@ -55,7 +67,8 @@ class CompanyController extends Controller
             'company' => $this->companyRepository,
             'route' => 'company.store',
             'method' => 'POST',
-            'parameters' => []
+            'parameters' => [],
+            'breadcrumbs' => $this->getBreadcrumb('Cadastrar')
         ]);
     }
 
@@ -100,7 +113,10 @@ class CompanyController extends Controller
     public function show($id)
     {
         $company = $this->companyRepository->find($id);
-        return view('panel.company.show', compact('company'));
+        return view('panel.company.show', [
+            'company' => $company,
+            'breadcrumbs' => $this->getBreadcrumb('Visualizar')
+        ]);
     }
 
     /**
@@ -117,7 +133,8 @@ class CompanyController extends Controller
             'company' => $company,
             'route' => 'company.update',
             'method' => 'PUT',
-            'parameters' => [$id]
+            'parameters' => [$id],
+            'breadcrumbs' => $this->getBreadcrumb('Editar')
         ]);
     }
 
@@ -157,6 +174,21 @@ class CompanyController extends Controller
             'companyId' => $id
         ]);
         return redirect()->route('company.index');
+    }
+
+    /**
+     * @param null $location
+     * @return array
+     */
+    protected function getBreadcrumb($location = null)
+    {
+        if ($location) {
+            return $this->breadcrumbService
+                ->add('Empresas', route('company.index'))
+                ->add($location, null, true)->get();
+        }
+
+        return $this->breadcrumbService->add('Empresas', null, true)->get();
     }
 
 }

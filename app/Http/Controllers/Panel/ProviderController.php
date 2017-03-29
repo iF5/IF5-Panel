@@ -203,8 +203,8 @@ class ProviderController extends Controller
     {
         return view('panel.provider.form', [
             'provider' => $this->providerRepository->findOrFail($id),
-            'method' => 'provider.update',
-            'route' => 'PUT',
+            'route' => 'provider.update',
+            'method' => 'PUT',
             'parameters' => [$id],
             'breadcrumbs' => $this->getBreadcrumb('Editar')
         ]);

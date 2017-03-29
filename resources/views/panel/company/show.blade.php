@@ -10,19 +10,23 @@
     <div class="row">
         <div class="x_panel">
             <div class="x_title">
-                <h2>
-                    <a href="{{ route('company.index') }}">
-                        <span class="text-primary">Empresas</span>
-                    </a>
-                    <span class="glyphicon glyphicon-chevron-right"></span>
-                    {{ $company->name }}
-                </h2>
-                <div class="clearfix"></div>
+                <!-- menu breadcrumb -->
+                @include('includes.breadcrumb')
             </div>
 
             <ul class="list-group">
                 <li class="list-group-item"><strong>Nome : </strong> {{ $company->name }}</li>
                 <li class="list-group-item"><strong>CNPJ : </strong> {{ $company->cnpj }}</li>
+                <li class="list-group-item"><strong>Inscrição Estadual : </strong> {{ $company->stateInscription }}</li>
+                <li class="list-group-item"><strong>Inscrição Municipal : </strong> {{ $company->municipalInscription }}</li>
+                <li class="list-group-item"><strong>CNAE Principal : </strong> {{ $company->mainCnae }}</li>
+                <li class="list-group-item"><strong>Ramo de Atividade : </strong> {{ $company->activityBranch }}</li>
+                <li class="list-group-item"><strong>CEP : </strong> {{ $company->cep }}</li>
+                <li class="list-group-item"><strong>Número : </strong> {{ $company->number }}</li>
+                <li class="list-group-item"><strong>Complemento : </strong> {{ $company->addressComplement }}</li>
+                <li class="list-group-item"><strong>Telefone : </strong> {{ $company->phone }}</li>
+                <li class="list-group-item"><strong>Fax : </strong> {{ $company->fax }}</li>
+                <li class="list-group-item"><strong>E-mail do Responsável: </strong> {{ $company->email }}</li>
                 <li class="list-group-item">
 
                     <a href="{{ route('user-company.identify', $company->id) }}"
