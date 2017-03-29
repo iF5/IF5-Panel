@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('department');
             $table->string('phoneNumber');
             $table->string('cellPhoneNumber');
-            $table->string('email', 191)->unique();
+            $table->string('email')->unique();
             $table->string('password');
             $table->string('role');
             $table->string('image')->default('no-profile-image.jpg');
