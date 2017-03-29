@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Panel\UserRepository;
 use App\Services\BreadcrumbService;
@@ -30,54 +31,91 @@ class ProfileController extends Controller
     }
 
     /**
+     * @return mixed
+     */
+    protected function getId()
+    {
+        return \Auth::user()->id;
+    }
+
+    /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
-        $user = $this->userRepository->findById(\Auth::user()->id);
-        $breadcrumbs = $this->getBreadcrumb();
-        return view('panel.profile.show', compact('user', 'breadcrumbs'));
+        return view('panel.user.show', [
+            'user' => $this->userRepository->findById($this->getId()),
+            'routePrefix' => 'profile',
+            'breadcrumbs' => $this->getBreadcrumb()
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit()
     {
+        $id = $this->getId();
         return view('panel.user.form', [
-            'user' => $this->getUser()->findById($id),
+            'user' => $this->userRepository->findById($id),
             'method' => 'PUT',
-            'routePrefix' => "user-{$this->getRole()}",
-            'route' => "user-{$this->getRole()}.update",
+            'routePrefix' => 'profile',
+            'route' => 'profile.update',
             'parameters' => [$id],
             'breadcrumbs' => $this->getBreadcrumb('Editar')
         ]);
     }
 
     /**
+     * @param array $data
+     * @return array
+     */
+    protected function formRequest($data)
+    {
+        $data['password'] = bcrypt($data['password']);
+        return $data;
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
+        $id = $this->getId();
         $data = $this->formRequest($request->all());
         $this->validate(
-            $request, $this->getUser()->validateRules(), $this->getUser()->validateMessages()
+            $request, $this->userRepository->validateRules($id), $this->userRepository->validateMessages()
         );
-        $this->getUser()->findOrFail($id)->update($data);
 
-        return redirect()->route("user-{$this->getRole()}.edit", $id)->with([
+        $this->userRepository->findOrFail($id)->update($data);
+
+        return redirect()->route('profile.edit')->with([
             'success' => true,
-            'message' => 'Usu&aacute;rio atualizado com sucesso!',
-            'route' => "user-{$this->getRole()}.show",
-            'id' => $id
+            'message' => 'Meu perfil foi atualizado com sucesso!'
         ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function image()
+    {
+        return view('panel.user.form-image', [
+            'id' => $this->getId(),
+            'breadcrumbs' => $this->getBreadcrumb('Imagem')
+        ]);
+    }
+
+    public function upload()
+    {
+
     }
 
     /**

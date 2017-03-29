@@ -48,18 +48,19 @@ class User extends Authenticatable
     /**
      * Rules of the validation
      *
+     * @param int $id
      * @return array
      */
-    public function validateRules()
+    public function validateRules($id = null)
     {
         return [
-            'name' => 'required|min:4',
+            'name' => 'required|min:3',
             'cpf' => 'required',
             'jobRole' => 'required',
             'department' => 'required',
             'phoneNumber' => 'required',
             'cellPhoneNumber' => 'required',
-            'email' => 'email|unique:users',
+            'email' => 'email|unique_multiple:users,email,id=' . $id,
             'password' => 'required|min:6|max:14'
         ];
     }
@@ -80,7 +81,7 @@ class User extends Authenticatable
             'cellPhoneNumber.required' => 'O campo celular é obrigatório.',
             'name.min' => 'O campo nome deve ter no mínimo 4 caracteres.',
             'email.email' => 'O campo e-mail deve ser um endereço de e-mail válido.',
-            'email.unique' => 'O e-mail já existe.',
+            'email.unique_multiple' => 'O e-mail já existe.',
             'password.required' => 'O campo senha é obrigatório.',
             'password.min' => 'O campo senha deve ter mínimo de 6 e no máximo 14 caracteres.',
             'password.max' => 'O campo senha deve ter mínimo de 6 e no máximo 14 caracteres.'

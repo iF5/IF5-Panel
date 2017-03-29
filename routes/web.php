@@ -18,15 +18,14 @@ $this->get('/login', 'Auth\LoginController@showLoginForm');
 $this->post('/login', 'Auth\LoginController@login')->name('login');
 $this->get('/logout', 'Auth\LoginController@logout')->name('logout');
 
-$this->get('/company-all', function(){
-    return view('panel.profile.lala');
-});
-
-
 Route::group(['middleware' => 'auth'], function () {
 
     //Profile
     Route::get('profile', 'Panel\ProfileController@index')->name('profile.index');
+    Route::get('profile/edit', 'Panel\ProfileController@edit')->name('profile.edit');
+    Route::put('profile/update', 'Panel\ProfileController@update')->name('profile.update');
+    Route::get('profile/image', 'Panel\ProfileController@image')->name('profile.image');
+    Route::post('profile/upload', 'Panel\ProfileController@upload')->name('profile.upload');
 
     //Dashboard
     Route::get('home', 'Panel\DashboardController@index');

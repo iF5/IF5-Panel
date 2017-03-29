@@ -127,7 +127,7 @@ trait UserTrait
     {
         $data = $this->formRequest($request->all());
         $this->validate(
-            $request, $this->getUser()->validateRules(), $this->getUser()->validateMessages()
+            $request, $this->getUser()->validateRules($id), $this->getUser()->validateMessages()
         );
         $this->getUser()->findOrFail($id)->update($data);
 

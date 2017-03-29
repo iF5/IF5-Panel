@@ -10,10 +10,8 @@
         <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel">
                 <div class="x_title">
-
                     <!-- menu breadcrumb -->
                     @include('includes.breadcrumb')
-
                 </div>
                 <div class="x_content">
 
@@ -61,13 +59,6 @@
                             <div class="form-group col-sm-5">
                                 <label for="phoneNumber">Telefone* :</label>
                                 <input type="text" id="phoneNumber" name="phoneNumber" value="{{ $user->phoneNumber or old('phoneNumber') }}"
-                                       class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-sm-5">
-                                <label for="cellPhoneNumber">Celular* :</label>
-                                <input type="text" id="cellPhoneNumber" name="cellPhoneNumber" value="{{ $user->cellPhoneNumber or old('cellPhoneNumber') }}"
                                        class="form-control" required>
                             </div>
                         </div>
