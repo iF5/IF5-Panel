@@ -79,6 +79,20 @@ Route::group(['middleware' => 'auth'], function () {
             ['providerId', '[0-9]+']
         ]);*/
     Route::resource('/user-provider', 'Panel\UserProviderController', ['middleware' => ['can:isProvider']]);
+    //EndUsers
+
+    //Pendency
+    Route::get('/pendency/provider', 'Panel\PendencyController@provider')
+        ->middleware('can:onlyAdmin')
+        ->name('pendency.provider');
+
+    Route::get('/pendency/index', 'Panel\PendencyController@provider')
+        ->middleware('can:onlyAdmin')
+        ->name('pendency.index');
+
+
+    //EndPendency
+
 
 });
 

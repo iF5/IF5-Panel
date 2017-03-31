@@ -51,6 +51,22 @@ class ProviderRepository extends Provider
     }
 
     /**
+     * @return mixed
+     */
+    public function findByPendency()
+    {
+        try {
+            return Provider::join('companies_has_providers', function ($join) {
+                return $join->on('providerId', '=', 'providers.id');
+            })
+                ->where('companies_has_providers.status', '=', 0)
+                ->paginate($this->totalPerPage);
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+    /**
      * @param string $cnpj
      * @return mixed
      */
