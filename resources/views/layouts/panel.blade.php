@@ -106,7 +106,7 @@
                                     <a href="#"><i class="fa fa-check"></i>Pendências<span
                                                 class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="#">Prestadores de servi&ccedil;os </a></li>
+                                        <li><a href="{{ route('pendency.provider') }}">Prestadores de servi&ccedil;os </a></li>
                                         <li><a href="#">Funcion&aacute;rios</a></li>
                                     </ul>
                                 </li>
