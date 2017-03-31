@@ -54,42 +54,49 @@
                         <tbody>
 
                         @forelse($providers as $provider)
-                            <tr>
+                            <tr @if(!$provider->status) class="line-light-red" @endif>
                                 <td>
                                     <a href="{{ route('provider.show', ['id' => $provider->id]) }}">{{ $provider->name }}</a>
                                 </td>
                                 <td>{{ $provider->cnpj }}</td>
-                                <td>
-                                    <a href="{{ route('user-provider.identify', ['id' => $provider->id]) }}"
-                                       class="btn btn-primary btn-xs"><span
-                                                class="glyphicon glyphicon-user"></span></a>
-                                </td>
-                                <td>
-                                    <a href="{{ route('employee.identify', [$provider->id]) }}"
-                                       class="btn btn-warning btn-xs"><span
-                                                class="glyphicon glyphicon-list-alt"></span></a>
-
-                                </td>
-                                @can('onlyAdmin')
+                                @if(!$provider->status)
+                                    <td colspan="4">
+                                        Cadastro aguardando aprova&ccedil;&atilde;o
+                                    </td>
+                                @else
                                     <td>
-                                        <a href="{{ route('provider.edit', $provider->id) }}"
-                                           class="btn btn-success btn-xs"><span
-                                                    class="glyphicon glyphicon-pencil"></span></a>
+                                        <a href="{{ route('user-provider.identify', ['id' => $provider->id]) }}"
+                                           class="btn btn-primary btn-xs"><span
+                                                    class="glyphicon glyphicon-user"></span></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('employee.identify', [$provider->id]) }}"
+                                           class="btn btn-warning btn-xs"><span
+                                                    class="glyphicon glyphicon-list-alt"></span></a>
 
                                     </td>
-                                @endcan
-                                <td>
-                                    <a href="#"
-                                       class="btn btn-danger btn-xs modal-delete" data-title="Excluir"
-                                       data-toggle="modal"
-                                       data-target="#delete"
-                                       rel="{{ route('provider.destroy', $provider->id) }}"><span
-                                                class="glyphicon glyphicon-trash"></span></a>
-                                </td>
+                                    @can('onlyAdmin')
+                                        <td>
+                                            <a href="{{ route('provider.edit', $provider->id) }}"
+                                               class="btn btn-success btn-xs"><span
+                                                        class="glyphicon glyphicon-pencil"></span></a>
+
+                                        </td>
+                                    @endcan
+                                    <td>
+                                        <a href="#"
+                                           class="btn btn-danger btn-xs modal-delete" data-title="Excluir"
+                                           data-toggle="modal"
+                                           data-target="#delete"
+                                           rel="{{ route('provider.destroy', $provider->id) }}"><span
+                                                    class="glyphicon glyphicon-trash"></span></a>
+                                    </td>
+                                @endif
+
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" align="center">Nenhum prestador de servi&ccedil;o foi encontrado.</td>
+                                <td colspan="6" align="center">Nenhum prestador de servi&ccedil;o foi encontrado.</td>
                             </tr>
                         @endforelse
 

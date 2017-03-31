@@ -77,7 +77,7 @@
                                     <li><a href="{{ url('dashboard-employee') }}">Funcion&aacute;rios</a></li>
                                 </ul>
                             </li>
-                            <li><a><i class="fa fa-edit"></i> Checklist <span class="fa fa-chevron-down"></span></a>
+                            <li><a><i class="fa fa-check-square-o"></i> Checklist <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                     <li><a href="{{ url('checklist') }}">Upload/Download de arquivos</a></li>
                                     <li><a href="#">Menu 02</a></li>
@@ -93,32 +93,42 @@
                             </li>
 
                             @can('onlyAdmin')
-                            <li>
-                                <a href="{{ route('user-admin.index') }}"><i class="fa fa-users"></i>
-                                    Usu&aacute;rios admin
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('company.index') }}"><i class="fa fa-building-o"></i> Empresas </a>
-                            </li>
+                                <li>
+                                    <a href="{{ route('user-admin.index') }}"><i class="fa fa-users"></i>
+                                        Usu&aacute;rios admin
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('company.index') }}"><i class="fa fa-building-o"></i> Empresas
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-check"></i>Pendências<span
+                                                class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="#">Prestadores de servi&ccedil;os </a></li>
+                                        <li><a href="#">Funcion&aacute;rios</a></li>
+                                    </ul>
+                                </li>
                             @endcan
 
                             @can('onlyCompany')
-                            <li>
-                                <a href="{{ route('user-company.index') }}"><i class="fa fa-users"></i> Usu&aacute;rios
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('provider.index') }}"><i class="fa fa-briefcase"></i> Prestadores de
-                                    servi&ccedil;os </a>
-                            </li>
+                                <li>
+                                    <a href="{{ route('user-company.index') }}"><i class="fa fa-users"></i> Usu&aacute;rios
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('provider.index') }}"><i class="fa fa-briefcase"></i> Prestadores
+                                        de
+                                        servi&ccedil;os </a>
+                                </li>
                             @endcan
 
                             @can('onlyProvider')
-                            <li>
-                                <a href="{{ route('user-provider.index') }}"><i class="fa fa-users"></i> Usu&aacute;rios
-                                </a>
-                            </li>
+                                <li>
+                                    <a href="{{ route('user-provider.index') }}"><i class="fa fa-users"></i> Usu&aacute;rios
+                                    </a>
+                                </li>
                             @endcan
 
                             {{--
@@ -235,8 +245,8 @@
         <!-- /top navigation -->
 
         <!-- page content -->
-        @yield('content')
-                <!-- /page content -->
+    @yield('content')
+    <!-- /page content -->
 
         <!-- footer content -->
         <footer>
@@ -251,7 +261,7 @@
 
 @include('includes.modal')
 
-        <!-- jQuery -->
+<!-- jQuery -->
 <script src="{{ asset('vendors/jquery/dist/jquery.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/jquery.maskedinput.min.js') }}" type="text/javascript"></script>
 <!-- Bootstrap -->

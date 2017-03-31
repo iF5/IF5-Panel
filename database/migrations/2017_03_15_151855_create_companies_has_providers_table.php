@@ -16,6 +16,7 @@ class CreateCompaniesHasProvidersTable extends Migration
         Schema::create('companies_has_providers', function (Blueprint $table) {
             $table->integer('companyId')->unsigned();
             $table->integer('providerId')->unsigned();
+            $table->boolean('status')->default(false);
             $table->primary(['companyId', 'providerId'], 'pk_c_p_id');
         });
     }

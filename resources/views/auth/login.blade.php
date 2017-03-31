@@ -37,7 +37,7 @@
                             <strong>{{ $errors->first('email') }}</strong>
                                     </span>
                         @endif
-                        <input id="login" type="text" class="form-control" name="login" value="{{ old('email') }}"
+                        <input id="login" type="email" class="form-control" name="login" value="{{ old('email') }}"
                                placeholder="Login" required autofocus>
                     </div>
                     <div>
