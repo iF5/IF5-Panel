@@ -16,7 +16,7 @@ class CreateDocumentsTable extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->integer('documentId')->unsigned();
             $table->string('documentName');
-            $table->integer('flagCompany');
+            $table->boolean('flagCompany')->default(false);
             $table->primary(['documentId'], 'pk_d_id');
         });
     }
