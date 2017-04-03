@@ -14,10 +14,14 @@ class CreateDocumentsTable extends Migration
     public function up()
     {
         Schema::create('documents', function (Blueprint $table) {
-            $table->integer('documentId')->unsigned();
-            $table->string('documentName');
-            $table->boolean('flagCompany')->default(false);
-            $table->primary(['documentId'], 'pk_d_id');
+            $table->increments('id')->unsigned();
+            $table->string('name');
+            $table->boolean('isHomologated')->default(false);
+            $table->boolean('isMonthly')->default(false);
+            $table->boolean('isSemester')->default(false);
+            $table->boolean('isYearly')->default(false);
+            $table->boolean('isSolicited')->default(false);
+            $table->boolean('provider')->default(false);
         });
     }
 

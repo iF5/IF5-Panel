@@ -9,7 +9,6 @@ class ChecklistController
 
     public function index()
     {
-        return view('panel.checklist.index');
+        return view('panel.checklist.list');
     }
-
 }
