@@ -51,22 +51,6 @@ class ProviderRepository extends Provider
     }
 
     /**
-     * @return mixed
-     */
-    public function findByPendency()
-    {
-        try {
-            return Provider::join('companies_has_providers', function ($join) {
-                return $join->on('providerId', '=', 'providers.id');
-            })
-                ->where('companies_has_providers.status', '=', 0)
-                ->paginate($this->totalPerPage);
-        } catch (\Exception $e) {
-            throw new ModelNotFoundException;
-        }
-    }
-
-    /**
      * @param string $cnpj
      * @return mixed
      */
@@ -102,6 +86,41 @@ class ProviderRepository extends Provider
     {
         try {
             return (object)Provider::find($id)->original;
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function findByPendency()
+    {
+        try {
+            return Provider::join('companies_has_providers', function ($join) {
+                return $join->on('providerId', '=', 'providers.id');
+            })
+                ->where('companies_has_providers.status', '=', 0)
+                ->paginate($this->totalPerPage);
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+    /**
+     * @param int $id
+     * @param int $companyId
+     * @return mixed
+     */
+    public function findByCompany($id, $companyId){
+        try {
+            return Provider::join('companies_has_providers', function ($join) {
+                return $join->on('companies_has_providers.providerId', '=', 'providers.id');
+            })
+                ->where([
+                    ['providers.id', '=', $id],
+                    ['companies_has_providers.companyId', '=', $companyId]
+                ])->first();
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
