@@ -17,39 +17,12 @@
 
             <div class="col-md-12">
                 <div class="table-responsive">
-                    <div class="col-md-4">
-                        <form action="#" method="post">
-                            <div class="input-group">
-                                <input class="form-control" id="system-search" name="company"
-                                       placeholder="Buscar por empresa"
-                                       required>
-                    <span class="input-group-btn">
-                        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
-                        </button>
-                    </span>
-                            </div>
-                        </form>
-                    </div>
-
+                    
                     <div class="col-md-4">
                         <form action="#" method="post">
                             <div class="input-group">
                                 <input class="form-control" id="system-search" name="company"
                                        placeholder="Buscar por funcion&aacute;rio"
-                                       required>
-                    <span class="input-group-btn">
-                        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
-                        </button>
-                    </span>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="col-md-4">
-                        <form action="#" method="post">
-                            <div class="input-group">
-                                <input class="form-control" id="system-search" name="company"
-                                       placeholder="Buscar por funcion&aacute;rios"
                                        required>
                     <span class="input-group-btn">
                         <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
