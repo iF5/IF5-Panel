@@ -3,6 +3,7 @@
 namespace App\Repositories\Panel;
 
 use App\Models\Employee;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class EmployeeRepository extends Employee
 {
@@ -17,10 +18,14 @@ class EmployeeRepository extends Employee
      */
     public function findLike($providerId, $field, $keyword)
     {
-        return Employee::where([
-            ['providerId', '=', $providerId],
-            [$field, 'like', "%{$keyword}%"]
-        ])->paginate($this->totalPerPage);
+        try {
+            return Employee::where([
+                ['providerId', '=', $providerId],
+                [$field, 'like', "%{$keyword}%"]
+            ])->paginate($this->totalPerPage);
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
     }
 
     /**
@@ -31,11 +36,45 @@ class EmployeeRepository extends Employee
      */
     public function findOrderBy($providerId, $field = 'id', $type = 'desc')
     {
-        return Employee::where([
-            ['providerId', '=', $providerId]
-        ])
-            ->orderBy($field, $type)
-            ->paginate($this->totalPerPage);
+        try {
+            return Employee::where([
+                ['providerId', '=', $providerId]
+            ])
+                ->orderBy($field, $type)
+                ->paginate($this->totalPerPage);
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function findById($id)
+    {
+        try {
+            return (object)Employee::find($id)->original;
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+    /**
+     * @return mixed
+     * @throws ModelNotFoundException
+     */
+    public function findByPendency()
+    {
+        try {
+            return Employee::join('employees_has_companies', function ($join) {
+                return $join->on('employees_has_companies.employeeId', '=', 'employees.id');
+            })
+                ->where('employees_has_companies.status', '=', 0)
+                ->paginate($this->totalPerPage);
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
     }
 
 }

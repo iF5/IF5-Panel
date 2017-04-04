@@ -187,8 +187,10 @@ class ProviderController extends Controller
      */
     public function show($id)
     {
+        $provider = $this->providerRepository->findByCompany($id, $this->getCompanyId());
+
         return view('panel.provider.show', [
-            'provider' => $this->providerRepository->findOrFail($id),
+            'provider' => $provider,
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
     }

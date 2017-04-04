@@ -19,11 +19,11 @@
                     <li class="list-group-item"><strong>CNPJ : </strong> {{ $provider->cnpj }}</li>
                     <li class="list-group-item">
                         <a href="{{ route('provider.edit', $provider->id) }}"
-                           class="btn btn-success btn-xs"><span
+                           class="btn btn-success btn-md"><span
                                     class="glyphicon glyphicon-pencil"></span></a>
 
                         <a href="#"
-                           class="btn btn-danger btn-xs modal-delete" data-title="Excluir"
+                           class="btn btn-danger btn-md modal-delete" data-title="Excluir"
                            data-toggle="modal"
                            data-target="#delete"
                            rel="{{ route('provider.destroy', $provider->id) }}"><span

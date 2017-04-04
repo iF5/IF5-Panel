@@ -82,17 +82,13 @@ Route::group(['middleware' => 'auth'], function () {
     //EndUsers
 
     //Pendency
-    Route::get('/pendency/provider', 'Panel\PendencyController@provider')
-        ->middleware('can:onlyAdmin')
-        ->name('pendency.provider');
-
-    Route::get('/pendency/index', 'Panel\PendencyController@provider')
-        ->middleware('can:onlyAdmin')
-        ->name('pendency.index');
-
-
+    Route::group(['middleware' => 'can:onlyAdmin'], function () {
+        Route::get('/pendency/provider', 'Panel\PendencyController@provider')->name('pendency.provider');
+        Route::get('/pendency/employee', 'Panel\PendencyController@employee')->name('pendency.employee');
+        Route::put('/pendency/{companyId}/{id}/{source}/approve', 'Panel\PendencyController@approve')->name('pendency.approve');
+        Route::get('/pendency/{companyId}/{id}/{source}/show', 'Panel\PendencyController@show')->name('pendency.show');
+    });
     //EndPendency
-
 
 });
 
