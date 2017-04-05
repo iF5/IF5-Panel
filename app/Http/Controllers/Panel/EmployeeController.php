@@ -61,6 +61,8 @@ class EmployeeController extends Controller
             ? $this->employeeRepository->findLike($this->getProviderId(), 'name', $keyword)
             : $this->employeeRepository->findOrderBy($this->getProviderId());
 
+        //dd($employees);
+
         return view('panel.employee.list', compact('keyword', 'employees'));
     }
 
@@ -71,17 +73,13 @@ class EmployeeController extends Controller
      */
     public function create()
     {
+        $companies = $this->employeeRepository->findAllByCompany($this->getProviderId());
+
         return view('panel.employee.form', [
             'employee' => (object)[
                 'providerId' => $this->getProviderId()
             ],
-            'companies' => (object)[
-                1 => 'Locaweb',
-                2 => 'Unimed',
-                3 => 'Allin',
-                4 => 'Tray'
-            ],
-            'hasCompanies' => [2, 4],
+            'companies' => $companies,
             'route' => 'employee.store',
             'method' => 'POST',
             'parameters' => []
@@ -96,11 +94,14 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
+
         $this->validate(
             $request, $this->employeeRepository->validateRules(), $this->employeeRepository->validateMessages()
         );
 
-        $employee = $this->employeeRepository->create($request->all());
+        $data = $request->all();
+        $employee = $this->employeeRepository->create($data);
+        $this->createRelationshipByCompany($employee->id, $data['companies']);
 
         return redirect()->route('employee.create')->with([
             'success' => true,
@@ -131,9 +132,11 @@ class EmployeeController extends Controller
     public function edit($id)
     {
         $employee = $this->employeeRepository->findOrFail($id);
+        $companies = $this->employeeRepository->findAllByCompany($this->getProviderId());
 
         return view('panel.employee.form', [
             'employee' => $employee,
+            'companies' => $companies,
             'route' => 'employee.update',
             'method' => 'PUT',
             'parameters' => [$id]
@@ -153,7 +156,9 @@ class EmployeeController extends Controller
             $request, $this->employeeRepository->validateRules($id), $this->employeeRepository->validateMessages()
         );
 
-        $this->employeeRepository->findOrFail($id)->update($request->all());
+        $data = $request->all();
+        $this->employeeRepository->findOrFail($id)->update($data);
+        $this->createRelationshipByCompany($id, $data['companies']);
 
         return redirect()->route('employee.edit', $id)->with([
             'success' => true,
@@ -172,12 +177,25 @@ class EmployeeController extends Controller
     public function destroy($id)
     {
         $this->employeeRepository->destroy($id);
-        /*
-         $this->relationshipRepository->destroy('employees_has_companies', [
-            'employeeId' => $id,
-            'companyId' => $companyId
+        $this->relationshipRepository->destroy('employees_has_companies', [
+            'employeeId' => $id
         ]);
-        */
+
         return redirect()->route('employee.index');
+    }
+
+    /**
+     * @param int $id
+     * @param array $companies
+     */
+    private function createRelationshipByCompany($id, $companies)
+    {
+        $this->relationshipRepository->destroy('employees_has_companies', ['employeeId' => $id]);
+        foreach ($companies as $key => $value) {
+            $this->relationshipRepository->create('employees_has_companies', [
+                'employeeId' => $id,
+                'companyId' => $value
+            ]);
+        }
     }
 }

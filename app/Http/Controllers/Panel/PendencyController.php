@@ -51,32 +51,27 @@ class PendencyController extends Controller
 
     /**
      * Display a listing of the resource.
+     *
+     * @param $source
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function provider()
+    public function index($source)
     {
-        $providers = $this->providerRepository->findByPendency();
+        if($source = 'provider'){
+            return view('panel.pendency.list', [
+                'source' => 'provider',
+                'data' => $this->providerRepository->findByPendency(),
+                'breadcrumbs' => $this->getBreadcrumb('pendency.index', self::PROVIDER_TITLE)
+            ]);
+        }
 
         return view('panel.pendency.list', [
-            'route' => 'pendency.provider',
-            'source' => 'provider',
-            'keyword' => null,
-            'data' => $providers,
-            'breadcrumbs' => $this->getBreadcrumb('pendency.provider', self::PROVIDER_TITLE)
-        ]);
-    }
-
-    public function employee()
-    {
-        $employees = $this->employeeRepository->findByPendency();
-
-        return view('panel.pendency.list', [
-            'route' => 'pendency.employee',
             'source' => 'employee',
-            'keyword' => null,
-            'data' => $employees,
-            'breadcrumbs' => $this->getBreadcrumb(self::EMPLOYEE_TITLE)
+            'data' => $this->employeeRepository->findByPendency(),
+            'breadcrumbs' => $this->getBreadcrumb('pendency.index', self::EMPLOYEE_TITLE)
         ]);
     }
+
 
     public function show($companyId, $id, $source)
     {
@@ -138,14 +133,15 @@ class PendencyController extends Controller
     }
 
     /**
+     * @param string $source
      * @param string $route
      * @param string $location
      * @return array
      */
-    protected function getBreadcrumb($route = null, $location = null)
+    protected function getBreadcrumb($source, $route = null, $location = null)
     {
         return $this->breadcrumbService
-            ->add('Pend&ecirc;ncias', route($route))
+            ->add('Pend&ecirc;ncias', route($route, ['source' => $source]))
             ->add($location, null, true)
             ->get();
     }

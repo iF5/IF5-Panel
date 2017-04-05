@@ -62,16 +62,41 @@ class EmployeeRepository extends Employee
 
     /**
      * @return mixed
-     * @throws ModelNotFoundException
      */
     public function findByPendency()
     {
         try {
-            return Employee::join('employees_has_companies', function ($join) {
-                return $join->on('employees_has_companies.employeeId', '=', 'employees.id');
-            })
-                ->where('employees_has_companies.status', '=', 0)
+            return Employee::selectRaw('*, 0 AS companyId')
+                ->where('status', '=', 0)
                 ->paginate($this->totalPerPage);
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+    /**
+     * @param int $providerId
+     * @return mixed
+     */
+    public function findAllByCompany($providerId)
+    {
+        try {
+            return \DB::table('companies')
+                ->select(
+                    'companies.id',
+                    'companies.name',
+                    'employees_has_companies.employeeId',
+                    'employees_has_companies.companyId'
+                )
+                ->join('companies_has_providers', function ($join) {
+                    return $join->on('companies_has_providers.companyId', '=', 'companies.id');
+                })
+                ->leftJoin('employees_has_companies', function ($leftJoin) {
+                    return $leftJoin->on('employees_has_companies.companyId', '=', 'companies.id');
+                })
+                ->distinct()
+                ->where('companies_has_providers.providerId', '=', $providerId)
+                ->get();
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }

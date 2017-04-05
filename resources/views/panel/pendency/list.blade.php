@@ -47,11 +47,7 @@
 
                 <div class="clearfix"></div>
                 <!-- Paginacao -->
-                @if($keyword)
-                    {!! $data->appends(['keyword' => $keyword])->links() !!}
-                @else
-                    {!! $data->links() !!}
-                @endif
+                {!! $data->links() !!}
             </div>
         </div>
     </div>

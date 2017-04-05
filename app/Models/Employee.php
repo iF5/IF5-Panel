@@ -24,7 +24,8 @@ class Employee extends Model
     {
         return [
             'name' => 'required|min:2',
-            'cpf' => 'required|unique_multiple:employees,cpf,providerId,id=' . $id
+            'cpf' => 'required|unique_multiple:employees,cpf,providerId,id=' . $id,
+            'companies' => 'required'
         ];
     }
 
@@ -39,7 +40,8 @@ class Employee extends Model
             'name.required' => 'O campo nome é obrigatório.',
             'name.min' => 'O campo nome deve ter no mínimo 2 caracteres.',
             'cpf.required' => 'O campo cpf é obrigatório.',
-            'cpf.unique_multiple' => 'Este CPF já foi cadastrado.'
+            'cpf.unique_multiple' => 'Este CPF já foi cadastrado.',
+            'companies.required' => 'Selecione pelo menos uma empresa.',
         ];
     }
 }
