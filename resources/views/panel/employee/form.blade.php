@@ -36,26 +36,41 @@
                         @include('includes.form-validate')
 
                         <form method="post" action="{{ route($route, $parameters) }}">
+                            <div class="row">
+                                {{ method_field($method) }}
+                                {{ csrf_field() }}
 
-                            {{ method_field($method) }}
-                            {{ csrf_field() }}
+                                <input type="hidden" name="providerId" value="{{ $employee->providerId }}">
 
-                            <input type="hidden" name="providerId" value="{{ $employee->providerId }}">
+                                <div class="form-group col-xs-4">
+                                    <label for="name">Nome* :</label>
+                                    <input type="text" id="name" name="name"
+                                           value="{{ $employee->name or old('name') }}"
+                                           class="form-control" required>
+                                </div>
+                                <div class="form-group col-xs-4">
+                                    <label for="cpf">CPF* : </label>
+                                    <input type="text" id="cpf" name="cpf"
+                                           value="{{ $employee->cpf or old('cpf') }}" class="form-control" required>
+                                </div>
 
-                            <div class="form-group col-xs-4">
-                                <label for="name">Nome* :</label>
-                                <input type="text" id="name" name="name" value="{{ $employee->name or old('name') }}"
-                                       class="form-control" required>
                             </div>
-                            <div class="form-group col-xs-4">
-                                <label for="cpf">CPF* : </label>
-                                <input type="text" id="cpf" name="cpf"
-                                       value="{{ $employee->cpf or old('cpf') }}" class="form-control" required>
+                            <div class="row">
+                                <div class="form-group col-xs-6">
+                                    <label for="companies">Empresas : </label>
+
+                                    <select class="form-control" name="companies[]" multiple>
+                                        @foreach($companies as $key => $value)
+                                            <option value="{{ $key }}" @if(in_array($key, $hasCompanies)) selected @endif>{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
 
-                            <div class="clearfix"></div>
-                            <div class="control-group" style="margin: 30px 0px 0px 12px;">
-                                <button type="submit" class="btn btn-success">Salvar</button>
+                            <div class="row">
+                                <div class="control-group col-xs-4" style="margin-top: 30px;">
+                                    <button type="submit" class="btn btn-success">Salvar</button>
+                                </div>
                             </div>
 
                         </form>

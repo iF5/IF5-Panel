@@ -75,6 +75,13 @@ class EmployeeController extends Controller
             'employee' => (object)[
                 'providerId' => $this->getProviderId()
             ],
+            'companies' => (object)[
+                1 => 'Locaweb',
+                2 => 'Unimed',
+                3 => 'Allin',
+                4 => 'Tray'
+            ],
+            'hasCompanies' => [2, 4],
             'route' => 'employee.store',
             'method' => 'POST',
             'parameters' => []

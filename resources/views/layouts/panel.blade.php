@@ -75,14 +75,13 @@
                                 <ul class="nav child_menu">
                                     <li><a href="{{ url('dashboard') }}">Empresa/Prestador</a></li>
                                     <li><a href="{{ url('dashboard-employee') }}">Funcion&aacute;rios</a></li>
-                                </ul>
-                            </li>
-                            <li><a><i class="fa fa-check-square-o"></i> Checklist <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
                                     <li><a href="{{ url('checklist') }}">Upload/Download de arquivos</a></li>
-                                    <li><a href="#">Menu 02</a></li>
                                 </ul>
                             </li>
+                            <!--
+                            <li><a><i class="fa fa-check-square-o"></i> Checklist <span class="fa fa-chevron-down"></span></a>
+                            </li>
+                            -->
                             <li>
                                 <a href="#"><i class="fa fa-bar-chart-o"></i> Relat&oacute;rios <span
                                             class="fa fa-chevron-down"></span></a>
@@ -129,13 +128,11 @@
                                     <a href="{{ route('user-provider.index') }}"><i class="fa fa-users"></i> Usu&aacute;rios
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-arrow-circle-up"></i> Funcion&aacute;rios </a>
+                                </li>
                             @endcan
 
-                            {{--
-                            <li>
-                                <a href="#"><i class="fa fa-arrow-circle-up"></i> Funcion&aacute;rios </a>
-                            </li>
-                            --}}
                         </ul>
                     </div>
 

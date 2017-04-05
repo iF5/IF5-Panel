@@ -61,7 +61,7 @@ class PendencyController extends Controller
             'source' => 'provider',
             'keyword' => null,
             'data' => $providers,
-            'breadcrumbs' => $this->getBreadcrumb(self::PROVIDER_TITLE)
+            'breadcrumbs' => $this->getBreadcrumb('pendency.provider', self::PROVIDER_TITLE)
         ]);
     }
 
@@ -80,43 +80,17 @@ class PendencyController extends Controller
 
     public function show($companyId, $id, $source)
     {
-        if($source === 'provider'){
-            return view('panel.pendency.show', $this->getDataProvider($companyId, $id));
+        if ($source === 'provider') {
+            return view('panel.provider.show', [
+                'provider' => $this->providerRepository->findByCompany($id, $companyId),
+                'breadcrumbs' => $this->getBreadcrumb('pendency.provider', self::PROVIDER_TITLE)
+            ]);
         }
 
-        return view('panel.pendency.show', $this->getDataEmployee($companyId, $id));
-    }
-
-    protected function getDataProvider($companyId, $id)
-    {
-        $provider = $this->providerRepository->findById($id);
-        return [
-            'route' => 'pendency.provider',
-            'id' => $provider->id,
-            'companyId' => $companyId,
-            'source' => 'provider',
-            'data' => [
-                'Nome' => $provider->name,
-                'CNPJ' => $provider->cnpj
-            ],
-            'breadcrumbs' => $this->getBreadcrumb(self::PROVIDER_TITLE)
-        ];
-    }
-
-    protected function getDataEmployee($companyId, $id)
-    {
-        $employee = $this->employeeRepository->findById($id);
-        return [
-            'route' => 'pendency.employee',
-            'id' => $employee->id,
-            'companyId' => $companyId,
-            'source' => 'employee',
-            'data' => [
-                'Nome' => $employee->name,
-                'CPF' => $employee->cpf
-            ],
-            'breadcrumbs' => $this->getBreadcrumb(self::EMPLOYEE_TITLE)
-        ];
+        return view('panel.employee.show', [
+            'employee' => $this->employeeRepository->findById($id),
+            'breadcrumbs' => $this->getBreadcrumb('pendency.employee', self::EMPLOYEE_TITLE)
+        ]);
     }
 
     /**
@@ -163,15 +137,15 @@ class PendencyController extends Controller
         ]);
     }
 
-
     /**
+     * @param string $route
      * @param string $location
      * @return array
      */
-    protected function getBreadcrumb($location = null)
+    protected function getBreadcrumb($route = null, $location = null)
     {
         return $this->breadcrumbService
-            ->add('Pend&ecirc;ncias', route('pendency.provider'))
+            ->add('Pend&ecirc;ncias', route($route))
             ->add($location, null, true)
             ->get();
     }

@@ -39,7 +39,7 @@ class Employee extends Model
             'name.required' => 'O campo nome é obrigatório.',
             'name.min' => 'O campo nome deve ter no mínimo 2 caracteres.',
             'cpf.required' => 'O campo cpf é obrigatório.',
-            'cpf.unique_multiple' => 'Este funcionário já existe pra este prestador de serviços.'
+            'cpf.unique_multiple' => 'Este CPF já foi cadastrado.'
         ];
     }
 }

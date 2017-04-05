@@ -13,14 +13,6 @@
                 <!-- menu breadcrumb -->
                 @include('includes.breadcrumb')
             </div>
-
-            <div class="col-md-6">
-                <!-- menu form-search -->
-                @include('includes.form-search')
-            </div>
-
-            <div class="col-md-6"></div>
-
             <div class="col-md-12" style="margin-top: 20px;">
                 <table id="provider-table" class="table table-bordred table-striped">
                     <thead>
@@ -41,7 +33,7 @@
                                    data-target="#update"
                                    rel="{{ route('pendency.approve', ['companyId' => $row->companyId, 'id' => $row->id, 'source' => $source]) }}"
                                    rev="Tem certeza que deseja aprovar este registro?"><span
-                                            class="glyphicon glyphicon-check"></span></a>
+                                            class="glyphicon glyphicon-thumbs-up"></span></a>
                             </td>
                         </tr>
                     @empty
