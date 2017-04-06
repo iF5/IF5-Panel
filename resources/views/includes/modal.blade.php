@@ -35,7 +35,7 @@
 
 <!-- modal-update -->
 
-<div class="modal fade" id="update" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+<div class="modal fade" id="update" tabindex="-1" role="dialog" aria-labelledby="update" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -63,3 +63,40 @@
 </div>
 
 <!-- /modal-update -->
+
+<!-- modal-upload -->
+
+<div class="modal fade" id="upload" tabindex="-1" role="dialog" aria-labelledby="upload" aria-hidden="true"
+     data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="" class="close"><span class="glyphicon glyphicon-remove"></span></a>
+                <h4 class="modal-title custom_align" id="Heading">Upload</h4>
+            </div>
+            <div class="modal-body">
+
+                <div id="dzSuccess"></div>
+
+                <form method="post" action="http://localhost:4545/IF5-Panel/public/profile/upload" class="dropzone" id="dzModalUpload"
+                      enctype="multipart/form-data">
+                    {{ csrf_field() }}
+                    <div class="dz-message">
+                        Clique aqui para selecionar ou arraste e solte o(s) arquivo(s)
+                    </div>
+
+                    <div class="dropzone-previews"></div>
+
+                    <button type="submit" id="submitModalUpload" class="btn btn-success" style="cursor: pointer;">Enviar
+                    </button>
+                </form>
+
+            </div>
+            <div class="modal-footer ">
+                <a href="" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span> Fechar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- /modal-upload -->

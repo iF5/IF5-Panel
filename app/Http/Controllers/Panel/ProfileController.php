@@ -21,6 +21,13 @@ class ProfileController extends Controller
     private $breadcrumbService;
 
 
+    private $extensions = [
+        'jpeg',
+        'jpg',
+        'png',
+        'gif'
+    ];
+
     public function __construct(
         UserRepository $userRepository,
         BreadcrumbService $breadcrumbService
@@ -113,11 +120,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function upload()
-    {
-
-    }
-
     /**
      * @param string $location
      * @return array
@@ -132,6 +134,32 @@ class ProfileController extends Controller
         }
 
         return $this->breadcrumbService->add('Meu Perfil', null, true)->get();
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function upload(Request $request)
+    {
+        $file = $request->file('file');
+        $extension = $file->getClientOriginalExtension();
+
+        if (!in_array($extension, $this->extensions)) {
+            return response()->json([
+                'message' => 'Só são permitidos arquivos do tipo ' . implode(', ', $this->extensions) .'.'
+            ]);
+        }
+
+        $dir = public_path() . '/images/profile/';
+        $name = sprintf('%s.%s', sha1($this->getId()), $extension);
+        $file->move($dir, $name);
+        $this->userRepository->find($this->getId())->update(['image' => $name]);
+
+        return response()->json([
+            'message' => "O arquivo {$file->getClientOriginalName()} foi enviado com sucesso!"
+        ]);
+
     }
 
 }
