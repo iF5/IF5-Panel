@@ -57,18 +57,18 @@ class PendencyController extends Controller
      */
     public function index($source)
     {
-        if($source = 'provider'){
+        if ($source === 'provider') {
             return view('panel.pendency.list', [
-                'source' => 'provider',
+                'source' => $source,
                 'data' => $this->providerRepository->findByPendency(),
-                'breadcrumbs' => $this->getBreadcrumb('pendency.index', self::PROVIDER_TITLE)
+                'breadcrumbs' => $this->getBreadcrumb($source, self::PROVIDER_TITLE)
             ]);
         }
 
         return view('panel.pendency.list', [
-            'source' => 'employee',
+            'source' => $source,
             'data' => $this->employeeRepository->findByPendency(),
-            'breadcrumbs' => $this->getBreadcrumb('pendency.index', self::EMPLOYEE_TITLE)
+            'breadcrumbs' => $this->getBreadcrumb($source, self::EMPLOYEE_TITLE)
         ]);
     }
 
@@ -78,13 +78,13 @@ class PendencyController extends Controller
         if ($source === 'provider') {
             return view('panel.provider.show', [
                 'provider' => $this->providerRepository->findByCompany($id, $companyId),
-                'breadcrumbs' => $this->getBreadcrumb('pendency.provider', self::PROVIDER_TITLE)
+                'breadcrumbs' => $this->getBreadcrumb($source, self::PROVIDER_TITLE)
             ]);
         }
 
         return view('panel.employee.show', [
             'employee' => $this->employeeRepository->findById($id),
-            'breadcrumbs' => $this->getBreadcrumb('pendency.employee', self::EMPLOYEE_TITLE)
+            'breadcrumbs' => $this->getBreadcrumb($source, self::EMPLOYEE_TITLE)
         ]);
     }
 
@@ -97,51 +97,26 @@ class PendencyController extends Controller
     public function approve($companyId, $id, $source)
     {
         if ($source === 'provider') {
-            $this->approveProvider($companyId, $id);
-            return redirect()->route('pendency.provider');
+            $this->relationshipRepository->update('companies_has_providers', ['status' => 1], [
+                'companyId' => $companyId,
+                'providerId' => $id
+            ]);
+            return redirect()->route('pendency.index', ['source' => $source]);
         }
 
-        $this->approveEmployee($companyId, $id);
-        return redirect()->route('pendency.employee');
-
-    }
-
-    /**
-     * @param int $companyId
-     * @param int $providerId
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    protected function approveProvider($companyId, $providerId)
-    {
-        $this->relationshipRepository->update('companies_has_providers', ['status' => 1], [
-            'companyId' => $companyId,
-            'providerId' => $providerId
-        ]);
-    }
-
-    /**
-     * @param int $companyId
-     * @param int $employeeId
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    protected function approveEmployee($companyId, $employeeId)
-    {
-        $this->relationshipRepository->update('employees_has_companies', ['status' => 1], [
-            'employeeId' => $employeeId,
-            'companyId' => $companyId
-        ]);
+        $this->employeeRepository->find($id)->update(['status' => 1]);
+        return redirect()->route('pendency.index', ['source' => $source]);
     }
 
     /**
      * @param string $source
-     * @param string $route
      * @param string $location
      * @return array
      */
-    protected function getBreadcrumb($source, $route = null, $location = null)
+    protected function getBreadcrumb($source, $location = null)
     {
         return $this->breadcrumbService
-            ->add('Pend&ecirc;ncias', route($route, ['source' => $source]))
+            ->add('Pend&ecirc;ncias', route('pendency.index', ['source' => $source]))
             ->add($location, null, true)
             ->get();
     }

@@ -11,7 +11,10 @@ class Employee extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'name', 'cpf', 'providerId'
+        'name',
+        'cpf',
+        'providerId',
+        'status'
     ];
 
     /**

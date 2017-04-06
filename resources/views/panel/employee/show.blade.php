@@ -38,7 +38,7 @@
                                class="btn btn-success btn-md modal-update" title="Aprovar"
                                data-toggle="modal"
                                data-target="#update"
-                               rel="{{ route('pendency.approve', ['companyId' => $employee->companyId, 'id' => $employee->id, 'source' => 'employee']) }}"
+                               rel="{{ route('pendency.approve', ['companyId' => 0, 'id' => $employee->id, 'source' => 'employee']) }}"
                                rev="Tem certeza que deseja aprovar este registro?"><span
                                         class="glyphicon glyphicon-thumbs-up"></span></a>
                         @else
