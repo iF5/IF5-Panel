@@ -23,7 +23,8 @@
                 <li class="list-group-item"><strong>Cargo : </strong> {{ $user->jobRole }}</li>
                 <li class="list-group-item"><strong>Setor : </strong> {{ $user->department }}</li>
                 <li class="list-group-item"><strong>Telefone : </strong> {{ $user->phoneNumber }}</li>
-                <li class="list-group-item"><strong>Celular : </strong> {{ $user->cellPhoneNumber }}</li>
+                <li class="list-group-item"><strong>Celular : </strong> {{ $user->cellPhoneNumber }} {{ \Carbon\Carbon::parse($user->test)->format('Y/m/d') }}</li>
+                <li class="list-group-item"><strong>Data de cadastro : </strong> {{ \Carbon\Carbon::parse($user->createdAt)->format('d/m/Y') }}</li>
 
                 <li class="list-group-item">
                     @if($routePrefix === 'profile')
@@ -57,52 +58,6 @@
         </div>
     </div>
 </div>
-<script src="{{ asset('js/dropzone.js') }}" type="text/javascript"></script>
-<script type="text/javascript">
-    Dropzone.options.dzModalUpload = {
-
-        autoProcessQueue: false,
-        uploadMultiple: false,
-        maxFilesize: 500,
-        maxFiles: 1,
-
-        init: function () {
-
-            var submitButton = document.querySelector('#submitModalUpload');
-            var dzModalUpload = this;
-
-            submitButton.addEventListener('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                dzModalUpload.processQueue();
-            });
-
-            this.on('addedfile', function (file) {
-                var removeButton = Dropzone.createElement(config.buttonXsRemove);
-                var _this = this;
-
-                removeButton.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    _this.removeFile(file);
-                });
-
-                file.previewElement.appendChild(removeButton);
-                document.getElementById('dzSuccess').innerHTML = '';
-            });
-
-            this.on('complete', function (file) {
-                dzModalUpload.removeFile(file);
-            });
-
-            this.on("success", function (file, serverResponse) {
-                var resp = JSON.parse(JSON.stringify(serverResponse));
-                document.getElementById('dzSuccess').innerHTML = resp.message;
-            });
-        }
-
-    };
-</script>
 
 <!-- /page content -->
 @endsection

@@ -322,10 +322,14 @@
 <script src="{{ asset('vendors/pdfmake/build/pdfmake.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('vendors/pdfmake/build/vfs_fonts.js') }}" type="text/javascript"></script>
 
+<script src="{{ asset('js/dropzone.js') }}" type="text/javascript"></script>
+
 <!-- Custom Theme Scripts -->
 <script src="{{ asset('build/js/custom.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/if5.js') }}" type="text/javascript"></script>
 
 </body>
 </html>
+
+
 

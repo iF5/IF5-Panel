@@ -50,8 +50,10 @@ class ProfileController extends Controller
      */
     public function index()
     {
+        $user = $this->userRepository->findById($this->getId());
+
         return view('panel.user.show', [
-            'user' => $this->userRepository->findById($this->getId()),
+            'user' => $user,
             'routePrefix' => 'profile',
             'breadcrumbs' => $this->getBreadcrumb()
         ]);
@@ -144,22 +146,25 @@ class ProfileController extends Controller
     {
         $file = $request->file('file');
         $extension = $file->getClientOriginalExtension();
-
         if (!in_array($extension, $this->extensions)) {
             return response()->json([
-                'message' => 'Só são permitidos arquivos do tipo ' . implode(', ', $this->extensions) .'.'
+                'message' => 'Só são permitidos arquivos do tipo ' . implode(', ', $this->extensions) . '.'
             ]);
         }
 
         $dir = public_path() . '/images/profile/';
         $name = sprintf('%s.%s', sha1($this->getId()), $extension);
-        $file->move($dir, $name);
+        $isMoved = $file->move($dir, $name);
+        if (!$isMoved) {
+            return response()->json([
+                'message' => "Falha ao enviar o arquivo <b>{$file->getClientOriginalName()}</b> por favor tente novamente!"
+            ]);
+        }
+
         $this->userRepository->find($this->getId())->update(['image' => $name]);
-
         return response()->json([
-            'message' => "O arquivo {$file->getClientOriginalName()} foi enviado com sucesso!"
+            'message' => "O arquivo <b>{$file->getClientOriginalName()}</b> foi enviado com sucesso!"
         ]);
-
     }
 
 }
