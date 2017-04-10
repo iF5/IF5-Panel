@@ -61,13 +61,22 @@ class UserAdminController extends Controller implements UserInterface
     }
 
     /**
+     * @param string $location
      * @return array
      */
-    public function getBreadcrumb()
+    public function getBreadcrumb($location = null)
     {
+        if ($location) {
+            return $this->breadcrumbService
+                ->add('Usu&aacute;rios administradores', route("user-{$this->getRole()}.index"))
+                ->add($location, null, true)
+                ->get();
+        }
+
         return $this->breadcrumbService
             ->add("Usu&aacute;rios administradores", null, true)
             ->get();
+
     }
 
 }

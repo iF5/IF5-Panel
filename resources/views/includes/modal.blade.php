@@ -76,7 +76,7 @@
             </div>
             <div class="modal-body">
 
-                <div id="dz-modal-success"></div>
+                <div id="dz-modal-message"></div>
 
                 <form id="dz-modal-upload" method="post" action="" class="dropzone" enctype="multipart/form-data">
                     {{ csrf_field() }}

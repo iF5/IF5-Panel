@@ -14,7 +14,7 @@ function Upload(options) {
 
     var _options = {
         formElement: options.formElement || null,
-        successElement: options.successElement || null,
+        messageElement: options.messageElement || null,
         submitElement: options.submitElement || null,
         url: options.url || '/upload',
         autoProcessQueue: options.autoProcessQueue || false,
@@ -35,7 +35,7 @@ function Upload(options) {
         init: function () {
 
             var submitElement = document.querySelector(_options.submitElement);
-            var successElement = document.querySelector(_options.successElement);
+            var messageElement = document.querySelector(_options.messageElement);
             var dz = this;
 
             submitElement.addEventListener('click', function (e) {
@@ -63,7 +63,7 @@ function Upload(options) {
                 });
 
                 file.previewElement.appendChild(removeButton);
-                successElement.innerHTML = ''
+                messageElement.innerHTML = ''
             });
 
             this.on('complete', function (file) {
@@ -72,7 +72,7 @@ function Upload(options) {
 
             this.on('success', function (file, serverResponse) {
                 var response = JSON.parse(JSON.stringify(serverResponse));
-                successElement.innerHTML = response.message;
+                messageElement.innerHTML = response.message;
             });
         }
 
@@ -101,7 +101,7 @@ $(function () {
         new Upload({
             formElement: '#dz-modal-upload',
             submitElement: '#dz-modal-submit',
-            successElement: '#dz-modal-success',
+            messageElement: '#dz-modal-message',
             url: this.rel
         });
     });
@@ -109,4 +109,7 @@ $(function () {
     //Masks
     $('#cnpj').mask('99.999.999/9999-99');
     $('#cpf').mask('999.999.999-99');
+    $('#phone').mask('99 9999-9999');
+    $('#phone').mask('99 9999-9999');
+    $('#cellPhone').mask('99 99999-9999');
 });

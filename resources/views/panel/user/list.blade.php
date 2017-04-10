@@ -42,7 +42,13 @@
                 <table id="users-table" class="table table-bordred table-striped">
                     <thead>
                     <th>Nome</th>
+                    <th>Cpf</th>
+                    <th>Cargo</th>
+                    <th>Setor</th>
+                    <th>Telefone</th>
                     <th>E-mail</th>
+                    <th></th>
+                    <th></th>
                     </thead>
                     <tbody>
 
@@ -51,6 +57,10 @@
                             <td>
                                 <a href="{{ route($route . '.show', $user->id) }}">{{ $user->name }}</a>
                             </td>
+                            <td>{{ $user->cpf }}</td>
+                            <td>{{ $user->jobRole }}</td>
+                            <td>{{ $user->department }}</td>
+                            <td>{{ $user->phone }}</td>
                             <td>{{ $user->email }}</td>
                             <td>
                                 <a href="{{ route($route . '.edit', $user->id) }}"

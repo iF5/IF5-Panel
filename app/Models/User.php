@@ -23,14 +23,14 @@ class User extends Authenticatable
         'cpf',
         'jobRole',
         'department',
-        'phoneNumber',
-        'cellPhoneNumber',
+        'phone',
+        'cellPhone',
         'email',
         'password',
         'role',
         'image',
         'createdAt',
-        'updateAt',
+        'updatedAt',
         'companyId',
         'providerId'
     ];
@@ -53,12 +53,12 @@ class User extends Authenticatable
     public function validateRules($id = null)
     {
         return [
-            'name' => 'required|min:3',
-            'cpf' => 'required',
+            'name' => 'required',
+            'cpf' => 'required|unique_multiple:users,cpf,id=' . $id,
             'jobRole' => 'required',
             'department' => 'required',
-            'phoneNumber' => 'required',
-            'cellPhoneNumber' => 'required',
+            'phone' => 'required',
+            'cellPhone' => 'required',
             'email' => 'email|unique_multiple:users,email,id=' . $id,
             'password' => 'required|min:6|max:14'
         ];
@@ -74,11 +74,11 @@ class User extends Authenticatable
         return [
             'name.required' => 'O campo nome é obrigatório.',
             'cpf.required' => 'O campo cpf é obrigatório.',
+            'cpf.unique_multiple' => 'O cpf já existe.',
             'jobRole.required' => 'O campo cargo é obrigatório.',
             'department.required' => 'O campo setor é obrigatório.',
-            'phoneNumber.required' => 'O campo telefone é obrigatório.',
-            'cellPhoneNumber.required' => 'O campo celular é obrigatório.',
-            'name.min' => 'O campo nome deve ter no mínimo 4 caracteres.',
+            'phone.required' => 'O campo telefone é obrigatório.',
+            'cellPhone.required' => 'O campo celular é obrigatório.',
             'email.email' => 'O campo e-mail deve ser um endereço de e-mail válido.',
             'email.unique_multiple' => 'O e-mail já existe.',
             'password.required' => 'O campo senha é obrigatório.',

@@ -57,15 +57,15 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-5">
-                                <label for="phoneNumber">Telefone* :</label>
-                                <input type="text" id="phoneNumber" name="phoneNumber" value="{{ $user->phoneNumber or old('phoneNumber') }}"
+                                <label for="phone">Telefone* :</label>
+                                <input type="text" id="phone" name="phone" value="{{ $user->phone or old('phone') }}"
                                        class="form-control" required>
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-5">
-                                <label for="cellPhoneNumber">Celular* :</label>
-                                <input type="text" id="cellPhoneNumber" name="cellPhoneNumber" value="{{ $user->cellPhoneNumber or old('cellPhoneNumber') }}"
+                                <label for="cellPhone">Celular* :</label>
+                                <input type="text" id="cellPhone" name="cellPhone" value="{{ $user->cellPhone or old('cellPhone') }}"
                                        class="form-control" required>
                             </div>
                         </div>
