@@ -33,7 +33,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('dashboard-employee', 'Panel\DashboardController@employee');
 
     //Ckecklist
-    Route::get('{id}/checklist', 'Panel\ChecklistController@index')->middleware('can:onlyAdmin')->name('checklist.index');
+    Route::get('{id}/{docTypeId}/checklist', 'Panel\ChecklistController@index')->middleware('can:onlyAdmin')->name('checklist.index');
 
     //Report
     Route::get('report', 'Panel\ReportController@index')->name('report.index');

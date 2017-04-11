@@ -9,6 +9,24 @@ class DocumentRepository extends Document
 {
     protected $totalPerPage = 20;
 
+    private $initialDate;
+
+    private $finalDate;
+
+    private function rangeDates()
+    {
+        $preDate = date("Y-m");
+        $this->initialDate = $preDate . "-01";
+        $this->finalDate = $preDate . "-31";
+    }
+
+    private function getDocTypeField($docTypeId)
+    {
+        $fields = array(1 => "isMonthly", 2 => "isYearly", 3 => "isSolicited", 4 => "isHomologated", 5=> "isSemester");
+
+        return $fields[$docTypeId];
+    }
+
     public function getAllDocuments()
     {
         try {
@@ -20,18 +38,27 @@ class DocumentRepository extends Document
         }
     }
 
+
     /**
      * @return mixed
      * @throws ModelNotFoundException
      */
-    public function findByEmployee($id)
+    public function findByEmployee($id, $docTypeId)
     {
         try {
-            return DB::table('documents')
-                     ->select(DB::raw('documents.*, employees_has_documents.*'))
-                    ->leftJoin('employees_has_documents', 'employees_has_documents.employeeId', '=', 'documents.id')
-                    ->leftJoin('employees', 'employees.id', '=', 'employees_has_documents.employeeId',
-                                                                            'and', 'employees.id', '=', $id)->get();
+            $this->rangeDates();
+            $docTypeField = $this->getDocTypeField($docTypeId);
+
+            return DB::select(DB::raw("SELECT d.*, ehd.* FROM documents as d
+                                LEFT JOIN employees_has_documents as ehd ON
+                                d.id = ehd.documentId AND
+                                referenceDate >= '$this->initialDate' AND referenceDate <= '$this->finalDate'
+                                LEFT JOIN employees as e ON
+                                e.id = ehd.employeeId AND e.id=$id
+                                WHERE
+                                d.$docTypeField = 1
+                                ORDER BY d.id;"));
+
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
