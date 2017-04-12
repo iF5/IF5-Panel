@@ -77,7 +77,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" align="center">Nenhum usu&aacute;rio foi encontrado.</td>
+                            <td colspan="8" align="center">Nenhum usu&aacute;rio foi encontrado.</td>
                         </tr>
                     @endforelse
 

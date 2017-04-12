@@ -88,7 +88,7 @@ class CompanyController extends Controller
 
         return redirect()->route('company.create')->with([
             'success' => true,
-            'message' => 'Empresa cadastrada com sucesso!',
+            'message' => 'Cliente cadastrado com sucesso!',
             'route' => 'company.show',
             'id' => $company->id
         ]);
@@ -155,7 +155,7 @@ class CompanyController extends Controller
 
         return redirect()->route('company.edit', $id)->with([
             'success' => true,
-            'message' => 'Empresa atualizada com sucesso!',
+            'message' => 'Cliente atualizado com sucesso!',
             'route' => 'company.show',
             'id' => $id
         ]);
@@ -184,11 +184,11 @@ class CompanyController extends Controller
     {
         if ($location) {
             return $this->breadcrumbService
-                ->add('Empresas', route('company.index'))
+                ->add('Clientes', route('company.index'))
                 ->add($location, null, true)->get();
         }
 
-        return $this->breadcrumbService->add('Empresas', null, true)->get();
+        return $this->breadcrumbService->add('Clientes', null, true)->get();
     }
 
 }

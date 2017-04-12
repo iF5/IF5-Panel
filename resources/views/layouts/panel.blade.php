@@ -73,7 +73,7 @@
                         <ul class="nav side-menu">
                             <li><a><i class="fa fa-home"></i> Dashboard <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
-                                    <li><a href="{{ url('dashboard') }}">Empresa/Prestador</a></li>
+                                    <li><a href="{{ url('dashboard') }}">Cliente/Prestador</a></li>
                                     <li><a href="{{ url('dashboard-employee') }}">Funcion&aacute;rios</a></li>
                                     <li><a href="{{ url('checklist') }}">Upload/Download de arquivos</a></li>
                                 </ul>
@@ -98,7 +98,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('company.index') }}"><i class="fa fa-building-o"></i> Empresas
+                                <a href="{{ route('company.index') }}"><i class="fa fa-building-o"></i> Clientes
                                 </a>
                             </li>
                             <li>
