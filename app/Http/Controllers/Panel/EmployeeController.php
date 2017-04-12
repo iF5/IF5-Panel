@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Repositories\Panel\EmployeeRepository;
 use App\Repositories\Panel\RelationshipRepository;
+use App\Services\BreadcrumbService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -20,13 +21,21 @@ class EmployeeController extends Controller
      */
     private $relationshipRepository;
 
+    /**
+     * @var BreadcrumbService
+     */
+    private $breadcrumbService;
+
     public function __construct(
         EmployeeRepository $employeeRepository,
-        RelationshipRepository $relationshipRepository
+        RelationshipRepository $relationshipRepository,
+        BreadcrumbService $breadcrumbService
     )
     {
         $this->employeeRepository = $employeeRepository;
         $this->relationshipRepository = $relationshipRepository;
+        $this->breadcrumbService = $breadcrumbService;
+
     }
 
     /**
@@ -56,14 +65,18 @@ class EmployeeController extends Controller
      */
     public function index()
     {
+        $this->getBreadcrumb();
+
         $keyword = \Request::input('keyword');
         $employees = ($keyword)
             ? $this->employeeRepository->findLike($this->getProviderId(), 'name', $keyword)
             : $this->employeeRepository->findOrderBy($this->getProviderId());
 
-        //dd($employees);
-
-        return view('panel.employee.list', compact('keyword', 'employees'));
+        return view('panel.employee.list', [
+            'keyword' => $keyword,
+            'breadcrumbs' => $this->getBreadcrumb(),
+            'employees' => $employees
+        ]);
     }
 
     /**
@@ -82,7 +95,8 @@ class EmployeeController extends Controller
             'companies' => $companies,
             'route' => 'employee.store',
             'method' => 'POST',
-            'parameters' => []
+            'parameters' => [],
+            'breadcrumbs' => $this->getBreadcrumb('Cadastrar')
         ]);
     }
 
@@ -120,7 +134,10 @@ class EmployeeController extends Controller
     public function show($id)
     {
         $employee = $this->employeeRepository->find($id);
-        return view('panel.employee.show', compact('employee'));
+        return view('panel.employee.show', [
+            'employee' => $employee,
+            'breadcrumbs' => $this->getBreadcrumb('Visualizar')
+        ]);
     }
 
     /**
@@ -139,7 +156,8 @@ class EmployeeController extends Controller
             'companies' => $companies,
             'route' => 'employee.update',
             'method' => 'PUT',
-            'parameters' => [$id]
+            'parameters' => [$id],
+            'breadcrumbs' => $this->getBreadcrumb('Atualizar')
         ]);
     }
 
@@ -197,5 +215,29 @@ class EmployeeController extends Controller
                 'companyId' => $value
             ]);
         }
+    }
+
+    /**
+     * @param string $location
+     * @return array
+     */
+    protected function getBreadcrumb($location = null)
+    {
+        if (\Session::has('company')) {
+            $company = \Session::get('company');
+            $data['Clientes'] = route('company.index');
+            $data[$company->name] = route('company.show', $company->id);
+        }
+
+        if (\Session::has('provider')) {
+            $provider = \Session::get('provider');
+            $data['Prestadores de servi&ccedil;os'] = route('provider.index');
+            $data[$provider->name] = route('provider.show', $provider->id);
+        }
+
+        $data['Funcion&aacute;rios'] = route('employee.index');
+        $data[$location] = null;
+
+        return $this->breadcrumbService->push($data)->get();
     }
 }

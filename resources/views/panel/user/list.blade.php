@@ -14,23 +14,8 @@
                 @include('includes.breadcrumb')
             </div>
             <div class="col-md-6">
-                <form action="{{ route($route . '.index') }}" method="get">
-                    <div class="input-group">
-                        @if($keyword)
-                            <span class="input-group-addon">
-                                <a href="{{ route($route . '.index') }}" title="Limpar busca">
-                                    <i class="glyphicon glyphicon-remove"></i>
-                                </a>
-                            </span>
-                        @endif
-                        <input class="form-control" type="text" id="keyword" name="keyword" placeholder="Buscar por"
-                               value="{{ $keyword }}" required>
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
-                                </button>
-                            </span>
-                    </div>
-                </form>
+                <!-- form the search -->
+                @include('includes.form-search')
             </div>
 
             <div class="col-md-6">

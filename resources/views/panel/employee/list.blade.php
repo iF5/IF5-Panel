@@ -10,38 +10,13 @@
     <div class="row">
         <div class="x_panel">
             <div class="x_title">
-                <h2>
-                    <a href="{{ route('company.index') }}">
-                        <span class="text-primary">Empresas</span>
-                    </a>
-                    <span class="glyphicon glyphicon-chevron-right"></span>
-                    <a href="{{ route('provider.index') }}">
-                        <span class="text-primary">Prestadores de servi&ccedil;os</span>
-                    </a>
-                    <span class="glyphicon glyphicon-chevron-right"></span>
-                    Funcion&aacute;rios
-                </h2>
-                <div class="clearfix"></div>
+                <!-- menu breadcrumb -->
+                @include('includes.breadcrumb')
             </div>
 
             <div class="col-md-6">
-                <form action="{{ route('employee.index') }}" method="get">
-                    <div class="input-group">
-                        @if($keyword)
-                            <span class="input-group-addon">
-                                <a href="{{ route('employee.index') }}" title="Limpar busca">
-                                    <i class="glyphicon glyphicon-remove"></i>
-                                </a>
-                            </span>
-                        @endif
-                        <input class="form-control" type="text" id="keyword" name="keyword" placeholder="Buscar por"
-                               value="{{ $keyword }}" required>
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
-                                </button>
-                            </span>
-                    </div>
-                </form>
+                <!-- form the search -->
+                @include('includes.form-search')
             </div>
 
             <div class="col-md-6">

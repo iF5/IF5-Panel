@@ -262,7 +262,7 @@ class ProviderController extends Controller
         if (\Session::has('company')) {
             $company = \Session::get('company');
             $this->breadcrumbService
-                ->add('Empresas', route('company.index'))
+                ->add('Clientes', route('company.index'))
                 ->add($company->name, route('company.show', $company->id));
         }
 

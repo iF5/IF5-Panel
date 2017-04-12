@@ -1,8 +1,8 @@
-<form action="{{ route($route) }}" method="get">
+<form action="{{ route(\Route::getCurrentRoute()->getName()) }}" method="get">
     <div class="input-group">
         @if($keyword)
             <span class="input-group-addon">
-                                <a href="{{ route($route) }}" title="Limpar busca">
+                                <a href="{{ route(\Route::getCurrentRoute()->getName()) }}" title="Limpar busca">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </a>
                             </span>
