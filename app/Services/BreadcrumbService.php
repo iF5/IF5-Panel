@@ -22,28 +22,15 @@ class BreadcrumbService
             'link' => $link,
             'active' => $active,
         ];
-
         return $this;
     }
 
     /**
-     * @return array
+     * Push all breadcrumbs
+     *
+     * @param array $data
+     * @return $this
      */
-    public function get()
-    {
-        $row = $this->row;
-        $this->row = [];
-        return $row;
-    }
-
-    public function getLast()
-    {
-        if (count($this->row) > 0) {
-            return end($this->row);
-        }
-        return false;
-    }
-
     public function push(array $data)
     {
         foreach ($data as $key => $value) {
@@ -54,12 +41,31 @@ class BreadcrumbService
 
         $last = $this->getLast();
         if ($last) {
-            $label = $last->label;
             array_pop($this->row);
-            $this->add($label, null, true);
+            $this->add($last->label, null, true);
         }
-
         return $this;
+    }
+
+    /**
+     * @return object
+     */
+    public function get()
+    {
+        $row = $this->row;
+        $this->row = [];
+        return $row;
+    }
+
+    /**
+     * @return bool|mixed
+     */
+    public function getLast()
+    {
+        if (count($this->row) > 0) {
+            return end($this->row);
+        }
+        return false;
     }
 
 }

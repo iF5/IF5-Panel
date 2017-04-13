@@ -182,13 +182,10 @@ class CompanyController extends Controller
      */
     protected function getBreadcrumb($location = null)
     {
-        if ($location) {
-            return $this->breadcrumbService
-                ->add('Clientes', route('company.index'))
-                ->add($location, null, true)->get();
-        }
-
-        return $this->breadcrumbService->add('Clientes', null, true)->get();
+        return $this->breadcrumbService->push([
+            'Clientes' => route('company.index'),
+            $location => null
+        ])->get();
     }
 
 }

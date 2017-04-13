@@ -67,7 +67,7 @@ class Company extends Model
             'number.required' => 'O campo numero é obrigatório.',
             'addressComplement.required' => 'O campo complemento é obrigatório.',
             'phone.required' => 'O campo telefone é obrigatório.',            
-            'email.required' => 'required'
+            'email.required' => 'O campo e-mail é obrigatório.'
         ];
     }
 

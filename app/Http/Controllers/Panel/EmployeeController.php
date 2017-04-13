@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Repositories\Panel\EmployeeRepository;
+use App\Repositories\Panel\ProviderRepository;
 use App\Repositories\Panel\RelationshipRepository;
 use App\Services\BreadcrumbService;
 use Illuminate\Http\Request;
@@ -22,6 +23,11 @@ class EmployeeController extends Controller
     private $relationshipRepository;
 
     /**
+     * @var ProviderRepository
+     */
+    private $providerRepository;
+
+    /**
      * @var BreadcrumbService
      */
     private $breadcrumbService;
@@ -29,22 +35,24 @@ class EmployeeController extends Controller
     public function __construct(
         EmployeeRepository $employeeRepository,
         RelationshipRepository $relationshipRepository,
+        ProviderRepository $providerRepository,
         BreadcrumbService $breadcrumbService
     )
     {
         $this->employeeRepository = $employeeRepository;
         $this->relationshipRepository = $relationshipRepository;
+        $this->providerRepository = $providerRepository;
         $this->breadcrumbService = $breadcrumbService;
 
     }
 
     /**
-     * @param int $providerId
+     * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function identify($providerId)
+    public function identify($id)
     {
-        \Session::put('providerId', $providerId);
+        \Session::put('provider', $this->providerRepository->findById($id));
         return redirect()->route('employee.index');
     }
 
@@ -54,7 +62,7 @@ class EmployeeController extends Controller
     protected function getProviderId()
     {
         return (in_array(\Auth::user()->role, ['admin', 'company']))
-            ? \Session::get('providerId')
+            ? \Session::get('provider')->id
             : \Auth::user()->providerId;
     }
 
@@ -225,8 +233,10 @@ class EmployeeController extends Controller
     {
         if (\Session::has('company')) {
             $company = \Session::get('company');
-            $data['Clientes'] = route('company.index');
-            $data[$company->name] = route('company.show', $company->id);
+            $data = [
+                'Clientes' => route('company.index'),
+                $company->name => route('company.show', $company->id)
+            ];
         }
 
         if (\Session::has('provider')) {

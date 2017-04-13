@@ -115,9 +115,9 @@ class PendencyController extends Controller
      */
     protected function getBreadcrumb($source, $location = null)
     {
-        return $this->breadcrumbService
-            ->add('Pend&ecirc;ncias', route('pendency.index', ['source' => $source]))
-            ->add($location, null, true)
-            ->get();
+        return $this->breadcrumbService->push([
+            'Pend&ecirc;ncias' => route('pendency.index', ['source' => $source]),
+            $location => null
+        ])->get();
     }
 }

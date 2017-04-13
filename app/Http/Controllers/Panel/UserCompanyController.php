@@ -95,18 +95,15 @@ class UserCompanyController extends Controller implements UserInterface
     {
         if (\Session::has('company')) {
             $company = \Session::get('company');
-            $this->breadcrumbService->add('Empresas', route('company.index'));
-            $this->breadcrumbService->add($company->name, route('company.show', $company->id));
+            $data = [
+                'Empresas' => route('company.index'),
+                $company->name => route('company.show', $company->id)
+            ];
         }
 
-        if ($location) {
-            return $this->breadcrumbService
-                ->add('Usu&aacute;rios', route("user-{$this->getRole()}.index"))
-                ->add($location, null, true)
-                ->get();
-        }
-
-        return $this->breadcrumbService->add('Usu&aacute;rios', null, true)->get();
+        $data['Usu&aacute;rios'] = route("user-{$this->getRole()}.index");
+        $data[$location] = null;
+        return $this->breadcrumbService->push($data)->get();
     }
 
 }

@@ -20,13 +20,10 @@ class ProfileController extends Controller
      */
     private $breadcrumbService;
 
-
-    private $extensions = [
-        'jpeg',
-        'jpg',
-        'png',
-        'gif'
-    ];
+    /**
+     * @var array
+     */
+    private $extensions = ['jpeg', 'jpg', 'png', 'gif'];
 
     public function __construct(
         UserRepository $userRepository,
@@ -123,22 +120,6 @@ class ProfileController extends Controller
     }
 
     /**
-     * @param string $location
-     * @return array
-     */
-    protected function getBreadcrumb($location = null)
-    {
-        if ($location) {
-            return $this->breadcrumbService
-                ->add('Meu Perfil', route('profile.index'))
-                ->add($location, null, true)
-                ->get();
-        }
-
-        return $this->breadcrumbService->add('Meu Perfil', null, true)->get();
-    }
-
-    /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -165,6 +146,18 @@ class ProfileController extends Controller
         return response()->json([
             'message' => "O arquivo <b>{$file->getClientOriginalName()}</b> foi enviado com sucesso!"
         ]);
+    }
+
+    /**
+     * @param string $location
+     * @return array
+     */
+    protected function getBreadcrumb($location = null)
+    {
+        return $this->breadcrumbService->push([
+            'Meu Perfil' => route('profile.index'),
+            $location => null
+        ])->get();
     }
 
 }

@@ -261,19 +261,15 @@ class ProviderController extends Controller
     {
         if (\Session::has('company')) {
             $company = \Session::get('company');
-            $this->breadcrumbService
-                ->add('Clientes', route('company.index'))
-                ->add($company->name, route('company.show', $company->id));
+            $data = [
+                'Clientes' => route('company.index'),
+                $company->name => route('company.show', $company->id)
+            ];
         }
 
-        if ($location) {
-            return $this->breadcrumbService
-                ->add('Prestadores de servi&ccedil;os', route('provider.index'))
-                ->add($location, null, true)
-                ->get();
-        }
-
-        return $this->breadcrumbService->add('Prestadores de servi&ccedil;os', null, true)->get();
+        $data['Prestadores de servi&ccedil;os'] = route('provider.index');
+        $data[$location] = null;
+        return $this->breadcrumbService->push($data)->get();
     }
 
 }
