@@ -35,6 +35,8 @@ class ChecklistController
 
     private $documents;
 
+    private $docTypeId;
+
     public function __construct(
         EmployeeRepository $employeesRepository,
         DocumentRepository $documentRepository,
@@ -48,19 +50,51 @@ class ChecklistController
         $this->breadcrumbService = $breadcrumbService;
     }
 
-    public function index($id)
+    public function index($id, $docTypeId)
     {
+        $this->docTypeId = $docTypeId;
         $this->employee = $this->employeesRepository->findById($id);
-        $this->documents = $this->documentRepository->findByEmployee($id);
+        $this->documents = $this->documentRepository->findByEmployee($id, $docTypeId);
 
-        //dd($this->documentStruct());
+        $documentStruct = $this->documentStruct();
+        $this->activeTab($documentStruct);
 
-        return view('panel.checklist.index',  $this->documentStruct());
+        //dd($documentStruct);
+
+        return view('panel.checklist.index',  $documentStruct);
+    }
+
+    private function activeTab(&$struct)
+    {
+        $struct = array_merge($struct, array(
+            "activeMontly" => "",
+            "activeYearly" => "",
+            "activeSolicited" => "",
+            "activeHomologated" => "",
+            "activeSemester" => ""
+        ));
+        switch($this->docTypeId){
+            case 1:
+                $struct['activeMontly'] = "active";
+            break;
+            case 2:
+                $struct['activeYearly'] = "active";
+            break;
+            case 3:
+                $struct['activeSolicited'] = "active";
+            break;
+            case 4:
+                $struct['activeHomologated'] = "active";
+            break;
+            case 5:
+                $struct['activeSemester'] = "active";
+            break;
+        }
     }
 
     private function documentStruct()
     {
-        $struct['employee_name'] = $this->employee->name;
+        $struct['employee'] = $this->employee;
         $struct['documents']     = $this->documents;
         return $struct;
     }
