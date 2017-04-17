@@ -52,9 +52,9 @@ class DocumentRepository extends Document
             return DB::select(DB::raw("SELECT d.*, ehd.* FROM documents as d
                                 LEFT JOIN employees_has_documents as ehd ON
                                 d.id = ehd.documentId AND
-                                referenceDate >= '$this->initialDate' AND referenceDate <= '$this->finalDate'
+                                referenceDate >= '$this->initialDate' AND referenceDate <= '$this->finalDate'  AND ehd.employeeId = $id
                                 LEFT JOIN employees as e ON
-                                e.id = ehd.employeeId AND e.id=$id
+                                e.id = ehd.employeeId
                                 WHERE
                                 d.$docTypeField = 1
                                 ORDER BY d.id;"));
