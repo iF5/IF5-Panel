@@ -16,18 +16,18 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->string('name');
-            $table->string('cpf');
+            $table->string('cpf')->unique();
             $table->string('jobRole');
             $table->string('department');
-            $table->string('phoneNumber');
-            $table->string('cellPhoneNumber');
+            $table->string('phone');
+            $table->string('cellPhone');
             $table->string('email')->unique();
             $table->string('password');
             $table->string('role');
             $table->string('image')->default('no-profile-image.jpg');
             //$table->boolean('isAllPrivileges')->default(false);
-            $table->timestamp('createdAt')->nullable();
-            $table->timestamp('updatedAt')->nullable();
+            $table->dateTime('createdAt');
+            $table->dateTime('updatedAt');
             $table->integer('companyId')->default(0);
             $table->integer('providerId')->default(0);
             $table->rememberToken();

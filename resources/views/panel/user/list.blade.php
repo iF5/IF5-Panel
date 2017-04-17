@@ -14,23 +14,8 @@
                 @include('includes.breadcrumb')
             </div>
             <div class="col-md-6">
-                <form action="{{ route($route . '.index') }}" method="get">
-                    <div class="input-group">
-                        @if($keyword)
-                            <span class="input-group-addon">
-                                <a href="{{ route($route . '.index') }}" title="Limpar busca">
-                                    <i class="glyphicon glyphicon-remove"></i>
-                                </a>
-                            </span>
-                        @endif
-                        <input class="form-control" type="text" id="keyword" name="keyword" placeholder="Buscar por"
-                               value="{{ $keyword }}" required>
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
-                                </button>
-                            </span>
-                    </div>
-                </form>
+                <!-- form the search -->
+                @include('includes.form-search')
             </div>
 
             <div class="col-md-6">
@@ -42,7 +27,13 @@
                 <table id="users-table" class="table table-bordred table-striped">
                     <thead>
                     <th>Nome</th>
+                    <th>Cpf</th>
+                    <th>Cargo</th>
+                    <th>Setor</th>
+                    <th>Telefone</th>
                     <th>E-mail</th>
+                    <th></th>
+                    <th></th>
                     </thead>
                     <tbody>
 
@@ -51,6 +42,10 @@
                             <td>
                                 <a href="{{ route($route . '.show', $user->id) }}">{{ $user->name }}</a>
                             </td>
+                            <td>{{ $user->cpf }}</td>
+                            <td>{{ $user->jobRole }}</td>
+                            <td>{{ $user->department }}</td>
+                            <td>{{ $user->phone }}</td>
                             <td>{{ $user->email }}</td>
                             <td>
                                 <a href="{{ route($route . '.edit', $user->id) }}"
@@ -67,7 +62,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" align="center">Nenhum usu&aacute;rio foi encontrado.</td>
+                            <td colspan="8" align="center">Nenhum usu&aacute;rio foi encontrado.</td>
                         </tr>
                     @endforelse
 

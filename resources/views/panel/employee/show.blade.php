@@ -10,22 +10,8 @@
         <div class="row">
             <div class="x_panel">
                 <div class="x_title">
-                    <h2>
-                        <a href="{{ route('company.index') }}">
-                            <span class="text-primary">Empresas</span>
-                        </a>
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                        <a href="{{ route('provider.index') }}">
-                            <span class="text-primary">Prestadores de servi&ccedil;os</span>
-                        </a>
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                        <a href="{{ route('employee.index') }}">
-                            <span class="text-primary">Funcion&aacute;rios</span>
-                        </a>
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                        {{ $employee->name }}
-                    </h2>
-                    <div class="clearfix"></div>
+                    <!-- menu breadcrumb -->
+                    @include('includes.breadcrumb')
                 </div>
 
                 <ul class="list-group">

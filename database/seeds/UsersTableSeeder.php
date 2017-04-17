@@ -22,8 +22,10 @@ class UsersTableSeeder extends Seeder
             'cpf' => '000.000.000-00',
             'jobRole' => 'gerente',
             'department' => 'TI',
-            'phoneNumber' => '0000-0000',
-            'cellPhoneNumber' => '00000-0000',
+            'phone' => '11 0000-0000',
+            'cellPhone' => '11 90000-0000',
+            'createdAt' => (new \DateTime())->format('Y-m-d H:i:s'),
+            'updatedAt' => (new \DateTime())->format('Y-m-d H:i:s')
             //'isAllPrivileges' => true
         ]);
     }

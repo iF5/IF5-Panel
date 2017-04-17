@@ -25,7 +25,7 @@ class CreateCompaniesTable extends Migration
             $table->string('number');
             $table->string('addressComplement');
             $table->string('phone');
-            $table->string('fax');
+            $table->string('fax')->nullable();
             $table->string('email');
             $table->unique(['name', 'cnpj']);
         });

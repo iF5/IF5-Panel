@@ -46,15 +46,20 @@ trait UserTrait
     }
 
     /**
-     * @param array $data
-     * @return array
+     * @param string $data
+     * @param string $action
+     * @return mixed
      */
-    protected function formRequest($data)
+    protected function formRequest($data, $action = null)
     {
         $data['password'] = bcrypt($data['password']);
         $data['role'] = $this->getRole();
         $data['companyId'] = $this->getCompanyId();
         $data['providerId'] = $this->getProviderId();
+        if ($action === 'store') {
+            $data['createdAt'] = (new \DateTime())->format('Y-m-d H:i:s');
+        }
+        $data['updatedAt'] = (new \DateTime())->format('Y-m-d H:i:s');
         //$data['isAllPrivileges'] = isset($data['isAllPrivileges']) ? true : false;
 
         return $data;
@@ -68,7 +73,7 @@ trait UserTrait
      */
     public function store(Request $request)
     {
-        $data = $this->formRequest($request->all());
+        $data = $this->formRequest($request->all(), 'store');
         $this->validate(
             $request, $this->getUser()->validateRules(), $this->getUser()->validateMessages()
         );
@@ -126,6 +131,7 @@ trait UserTrait
     public function update(Request $request, $id)
     {
         $data = $this->formRequest($request->all());
+
         $this->validate(
             $request, $this->getUser()->validateRules($id), $this->getUser()->validateMessages()
         );

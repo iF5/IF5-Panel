@@ -34,10 +34,8 @@ class Company extends Model
     public function validateRules($id = null)
     {
         return [
-            'name' => 'required|min:2',
+            'name' => 'required',
             'cnpj' => 'required|unique_multiple:companies,cnpj,name,id=' . $id,
-            'name' => 'required|min:2|max:14',
-            'cnpj' => 'required',
             'stateInscription' => 'required',
             'municipalInscription' => 'required',
             'mainCnae' => 'required',
@@ -59,7 +57,6 @@ class Company extends Model
     {
         return [
             'name.required' => 'O campo nome é obrigatório.',
-            'name.min' => 'O campo nome deve ter no mínimo 2 caracteres.',
             'cnpj.required' => 'O campo cnpj é obrigatório.',
             'cnpj.unique_multiple' => 'O nome e o cnpj da empresa já existe.',
             'stateInscription.required' => 'O campo inscrição estadual é obrigatório.',
@@ -70,7 +67,7 @@ class Company extends Model
             'number.required' => 'O campo numero é obrigatório.',
             'addressComplement.required' => 'O campo complemento é obrigatório.',
             'phone.required' => 'O campo telefone é obrigatório.',            
-            'email.required' => 'required'
+            'email.required' => 'O campo e-mail é obrigatório.'
         ];
     }
 

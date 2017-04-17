@@ -86,15 +86,7 @@ class UserProviderController extends Controller implements UserInterface
         return (\Session::has('provider')) ? \Session::get('provider')->id : \Auth::user()->providerId;
     }
 
-    /**
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function identify($id)
-    {
-        \Session::put('provider', $this->providerRepository->findById($id));
-        return redirect()->route("user-{$this->getRole()}.index");
-    }
+    use Illuminate\Http\Request;
 
     /**
      * @param string $location
@@ -105,21 +97,17 @@ class UserProviderController extends Controller implements UserInterface
         if (\Session::has('company') && \Session::has('provider')) {
             $company = \Session::get('company');
             $provider = \Session::get('provider');
-            $this->breadcrumbService
-                ->add('Empresas', route('company.index'))
-                ->add($company->name, route('company.show', $company->id))
-                ->add('Prestadores de servi&ccedil;os', route('provider.index'))
-                ->add($provider->name, route('provider.show', $provider->id));
+            $data = [
+                'Empresas' => route('company.index'),
+                $company->name => route('company.show', $company->id),
+                'Prestadores de servi&ccedil;os' => route('provider.index'),
+                $provider->name => route('provider.show', $provider->id)
+            ];
         }
 
-        if ($location) {
-            return $this->breadcrumbService
-                ->add('Usu&aacute;rios', route("user-{$this->getRole()}.index"))
-                ->add($location, null, true)
-                ->get();
-        }
-
-        return $this->breadcrumbService->add('Usu&aacute;rios', null, true)->get();
+        $data['Usu&aacute;rios'] = route("user-{$this->getRole()}.index");
+        $data[$location] = null;
+        return $this->breadcrumbService->push($data)->get();
     }
 
 }

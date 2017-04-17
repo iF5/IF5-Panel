@@ -1,6 +1,6 @@
 @extends('layouts.panel')
 
-@section('title', 'Gest&atilde;o de empresa')
+@section('title', 'Gest&atilde;o de cliente')
 
 @section('content')
         <!-- page content -->
@@ -15,28 +15,12 @@
             </div>
 
             <div class="col-md-6">
-                <form action="{{ route('company.index') }}" method="get">
-                    <div class="input-group">
-                        @if($keyword)
-                            <span class="input-group-addon">
-                                <a href="{{ route('company.index') }}" title="Limpar busca">
-                                    <i class="glyphicon glyphicon-remove"></i>
-                                </a>
-                            </span>
-                        @endif
-                        <input class="form-control" type="text" id="keyword" name="keyword" placeholder="Buscar por"
-                               value="{{ $keyword }}" required>
-
-                            <span class="input-group-btn">
-                                <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
-                                </button>
-                            </span>
-                    </div>
-                </form>
+                <!-- form the search -->
+                @include('includes.form-search')
             </div>
 
             <div class="col-md-6">
-                <a class="btn btn-success" href="{{ route('company.create') }}"> Cadastrar nova empresa +</a>
+                <a class="btn btn-success" href="{{ route('company.create') }}"> Cadastrar novo cliente +</a>
             </div>
 
             <div class="col-md-12" style="margin-top: 20px;">
@@ -97,7 +81,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" align="center">Nenhuma empresa foi encontrada.</td>
+                            <td colspan="6" align="center">Nenhum cliente foi encontrado.</td>
                         </tr>
                     @endforelse
 

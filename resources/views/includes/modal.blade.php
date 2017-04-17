@@ -76,10 +76,9 @@
             </div>
             <div class="modal-body">
 
-                <div id="dzSuccess"></div>
+                <div id="dz-modal-message"></div>
 
-                <form method="post" action="http://localhost:4545/IF5-Panel/public/profile/upload" class="dropzone" id="dzModalUpload"
-                      enctype="multipart/form-data">
+                <form id="dz-modal-upload" method="post" action="" class="dropzone" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="dz-message">
                         Clique aqui para selecionar ou arraste e solte o(s) arquivo(s)
@@ -87,7 +86,7 @@
 
                     <div class="dropzone-previews"></div>
 
-                    <button type="submit" id="submitModalUpload" class="btn btn-success" style="cursor: pointer;">Enviar
+                    <button type="submit" id="dz-modal-submit" class="btn btn-success" style="cursor: pointer;">Enviar
                     </button>
                 </form>
 

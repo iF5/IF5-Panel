@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Repositories\Panel\EmployeeRepository;
+use App\Repositories\Panel\ProviderRepository;
 use App\Repositories\Panel\RelationshipRepository;
+use App\Services\BreadcrumbService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -20,22 +22,37 @@ class EmployeeController extends Controller
      */
     private $relationshipRepository;
 
+    /**
+     * @var ProviderRepository
+     */
+    private $providerRepository;
+
+    /**
+     * @var BreadcrumbService
+     */
+    private $breadcrumbService;
+
     public function __construct(
         EmployeeRepository $employeeRepository,
-        RelationshipRepository $relationshipRepository
+        RelationshipRepository $relationshipRepository,
+        ProviderRepository $providerRepository,
+        BreadcrumbService $breadcrumbService
     )
     {
         $this->employeeRepository = $employeeRepository;
         $this->relationshipRepository = $relationshipRepository;
+        $this->providerRepository = $providerRepository;
+        $this->breadcrumbService = $breadcrumbService;
+
     }
 
     /**
-     * @param int $providerId
+     * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function identify($providerId)
+    public function identify($id)
     {
-        \Session::put('providerId', $providerId);
+        \Session::put('provider', $this->providerRepository->findById($id));
         return redirect()->route('employee.index');
     }
 
@@ -45,7 +62,7 @@ class EmployeeController extends Controller
     protected function getProviderId()
     {
         return (in_array(\Auth::user()->role, ['admin', 'company']))
-            ? \Session::get('providerId')
+            ? \Session::get('provider')->id
             : \Auth::user()->providerId;
     }
 
@@ -56,14 +73,18 @@ class EmployeeController extends Controller
      */
     public function index()
     {
+        $this->getBreadcrumb();
+
         $keyword = \Request::input('keyword');
         $employees = ($keyword)
             ? $this->employeeRepository->findLike($this->getProviderId(), 'name', $keyword)
             : $this->employeeRepository->findOrderBy($this->getProviderId());
 
-        //dd($employees);
-
-        return view('panel.employee.list', compact('keyword', 'employees'));
+        return view('panel.employee.list', [
+            'keyword' => $keyword,
+            'breadcrumbs' => $this->getBreadcrumb(),
+            'employees' => $employees
+        ]);
     }
 
     /**
@@ -82,7 +103,8 @@ class EmployeeController extends Controller
             'companies' => $companies,
             'route' => 'employee.store',
             'method' => 'POST',
-            'parameters' => []
+            'parameters' => [],
+            'breadcrumbs' => $this->getBreadcrumb('Cadastrar')
         ]);
     }
 
@@ -120,7 +142,10 @@ class EmployeeController extends Controller
     public function show($id)
     {
         $employee = $this->employeeRepository->find($id);
-        return view('panel.employee.show', compact('employee'));
+        return view('panel.employee.show', [
+            'employee' => $employee,
+            'breadcrumbs' => $this->getBreadcrumb('Visualizar')
+        ]);
     }
 
     /**
@@ -139,7 +164,8 @@ class EmployeeController extends Controller
             'companies' => $companies,
             'route' => 'employee.update',
             'method' => 'PUT',
-            'parameters' => [$id]
+            'parameters' => [$id],
+            'breadcrumbs' => $this->getBreadcrumb('Atualizar')
         ]);
     }
 
@@ -197,5 +223,31 @@ class EmployeeController extends Controller
                 'companyId' => $value
             ]);
         }
+    }
+
+    /**
+     * @param string $location
+     * @return array
+     */
+    protected function getBreadcrumb($location = null)
+    {
+        if (\Session::has('company')) {
+            $company = \Session::get('company');
+            $data = [
+                'Clientes' => route('company.index'),
+                $company->name => route('company.show', $company->id)
+            ];
+        }
+
+        if (\Session::has('provider')) {
+            $provider = \Session::get('provider');
+            $data['Prestadores de servi&ccedil;os'] = route('provider.index');
+            $data[$provider->name] = route('provider.show', $provider->id);
+        }
+
+        $data['Funcion&aacute;rios'] = route('employee.index');
+        $data[$location] = null;
+
+        return $this->breadcrumbService->push($data)->get();
     }
 }
