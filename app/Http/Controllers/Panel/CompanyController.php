@@ -26,6 +26,11 @@ class CompanyController extends Controller
      */
     private $breadcrumbService;
 
+    /**
+     * @var array
+     */
+    private $states;
+
     public function __construct(
         CompanyRepository $companyRepository,
         RelationshipRepository $relationshipRepository,
@@ -35,6 +40,7 @@ class CompanyController extends Controller
         $this->companyRepository = $companyRepository;
         $this->relationshipRepository = $relationshipRepository;
         $this->breadcrumbService = $breadcrumbService;
+        $this->states = \Config::get('states');
     }
 
     /**
@@ -56,6 +62,18 @@ class CompanyController extends Controller
         ]);
     }
 
+    protected function formRequest($data, $action = null)
+    {
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+
+        $data['updatedAt'] = $now;
+        if ($action === 'store') {
+            $data['createdAt'] = $now;
+        }
+
+        return $data;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -65,6 +83,7 @@ class CompanyController extends Controller
     {
         return view('panel.company.form', [
             'company' => $this->companyRepository,
+            'states' => $this->states,
             'route' => 'company.store',
             'method' => 'POST',
             'parameters' => [],
@@ -84,7 +103,8 @@ class CompanyController extends Controller
             $request, $this->companyRepository->validateRules(), $this->companyRepository->validateMessages()
         );
 
-        $company = $this->companyRepository->create($request->all());
+        $data = $this->formRequest($request->all(), 'store');
+        $company = $this->companyRepository->create($data);
 
         return redirect()->route('company.create')->with([
             'success' => true,
@@ -113,8 +133,10 @@ class CompanyController extends Controller
     public function show($id)
     {
         $company = $this->companyRepository->find($id);
+
         return view('panel.company.show', [
             'company' => $company,
+            'states' => $this->states,
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
     }
@@ -131,6 +153,7 @@ class CompanyController extends Controller
 
         return view('panel.company.form', [
             'company' => $company,
+            'states' => $this->states,
             'route' => 'company.update',
             'method' => 'PUT',
             'parameters' => [$id],
@@ -151,7 +174,8 @@ class CompanyController extends Controller
             $request, $this->companyRepository->validateRules($id), $this->companyRepository->validateMessages()
         );
 
-        $this->companyRepository->findOrFail($id)->update($request->all());
+        $data = $this->formRequest($request->all());
+        $this->companyRepository->findOrFail($id)->update($data);
 
         return redirect()->route('company.edit', $id)->with([
             'success' => true,
