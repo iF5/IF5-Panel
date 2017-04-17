@@ -21,10 +21,10 @@
 
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="{{$activeMontly}}"><a href="#montly" aria-controls="montly" role="tab" data-toggle="tab">Mensal</a></li>
-                        <li role="presentation" class="{{$activeYearly}}"><a href="#yearly" aria-controls="yearly" role="tab" data-toggle="tab">Anual</a></li>
-                        <li role="presentation" class="{{$activeSolicited}}"><a href="#solicited" aria-controls="solicited" role="tab" data-toggle="tab">Quando solicitado</a></li>
-                        <li role="presentation" class="{{$activeHomologated}}"><a href="#homologated" aria-controls="homologated" role="tab" data-toggle="tab">Homologaçao</a></li>
+                        <li role="presentation" class="{{$activeMontly}}"><a href="{{route('checklist.index', ['id'=>$employee->id, 'docTypeId'=>1])}}">Mensal</a></li>
+                        <li role="presentation" class="{{$activeYearly}}"><a href="{{route('checklist.index', ['id'=>$employee->id, 'docTypeId'=>2])}}">Anual</a></li>
+                        <li role="presentation" class="{{$activeSolicited}}"><a href="{{route('checklist.index', ['id'=>$employee->id, 'docTypeId'=>3])}}">Quando solicitado</a></li>
+                        <li role="presentation" class="{{$activeHomologated}}"><a href="{{route('checklist.index', ['id'=>$employee->id, 'docTypeId'=>4])}}">Homologaçao</a></li>
                     </ul>
                     <!-- Tab panes -->
                     <div class="tab-content">
@@ -32,7 +32,7 @@
                             <div class="table-responsive">
                                 <table id="checklist-table" class="table table-bordred table-striped">
                                     <thead>
-                                    <th>{{ucfirst($employee_name)}}</th>
+                                    <th>{{ucfirst($employee->name)}}</th>
                                     <th>Status</th>
                                     <th>Referencia</th>
                                     <th>Envio</th>
@@ -89,32 +89,10 @@
                                 </table>
                             </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="yearly">
-                            b
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="solicited">
-                            c
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="homologated">
-                            d
-                        </div>
                     </div>
 
                 </div>
 
-
-                <div class="table-responsive">
-
-
-                    <div class="clearfix"></div>
-
-                    <div class="col-md-16">As ações abaixo agendarão a compactação dos arquivos e deixará disponivel no
-                        repositório para download.
-                    </div>
-                    <div class="col-md-16" style="margin-top: 20px;">Baixar todos os documentos de {{$employee_name}} <a
-                                class="btn btn-primary" href="#"> Baixar tudo</a></div>
-
-                </div>
             </div>
         </div>
     </div>

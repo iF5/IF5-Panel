@@ -94,7 +94,7 @@ class ChecklistController
 
     private function documentStruct()
     {
-        $struct['employee_name'] = $this->employee->name;
+        $struct['employee'] = $this->employee;
         $struct['documents']     = $this->documents;
         return $struct;
     }
