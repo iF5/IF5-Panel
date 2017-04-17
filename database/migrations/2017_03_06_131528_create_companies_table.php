@@ -16,17 +16,25 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->string('name');
+            $table->string('fantasyName');
+            $table->string('activityBranch');
             $table->string('cnpj');
             $table->string('stateInscription');
             $table->string('municipalInscription');
             $table->string('mainCnae');
-            $table->string('activityBranch');
-            $table->string('cep');
-            $table->string('number');
-            $table->string('addressComplement');
             $table->string('phone');
-            $table->string('fax')->nullable();
+            $table->string('fax');
+            $table->string('cep');
+            $table->string('street');
+            $table->string('number');
+            $table->string('district');
+            $table->string('city');
+            $table->string('state');
+            $table->string('responsibleName');
+            $table->string('cellPhone')->nullable();
             $table->string('email');
+            $table->dateTime('createdAt');
+            $table->dateTime('updatedAt');
             $table->unique(['name', 'cnpj']);
         });
     }

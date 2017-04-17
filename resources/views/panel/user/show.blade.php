@@ -24,8 +24,10 @@
                 <li class="list-group-item"><strong>Setor : </strong> {{ $user->department }}</li>
                 <li class="list-group-item"><strong>Telefone : </strong> {{ $user->phone }}</li>
                 <li class="list-group-item"><strong>Celular : </strong> {{ $user->cellPhone }}</li>
-                <li class="list-group-item"><strong>Cadastrado em : </strong> {{ \Carbon\Carbon::parse($user->createdAt)->format('d/m/Y H:i:s') }}</li>
-                <li class="list-group-item"><strong>&Uacute;ltima atualiza&ccedil;&atilde;o : </strong> {{ \Carbon\Carbon::parse($user->updatedAt)->format('d/m/Y H:i:s') }}</li>
+                <li class="list-group-item"><strong>Cadastrado em
+                        : </strong> {{ \Carbon\Carbon::parse($user->createdAt)->format('d/m/Y H:i:s') }}</li>
+                <li class="list-group-item"><strong>&Uacute;ltima atualiza&ccedil;&atilde;o
+                        : </strong> {{ \Carbon\Carbon::parse($user->updatedAt)->format('d/m/Y H:i:s') }}</li>
                 <li class="list-group-item">
                     @if($routePrefix === 'profile')
 

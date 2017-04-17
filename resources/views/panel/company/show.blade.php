@@ -16,17 +16,35 @@
 
             <ul class="list-group">
                 <li class="list-group-item"><strong>Nome : </strong> {{ $company->name }}</li>
+                <li class="list-group-item"><strong>Nome Fantasia : </strong> {{ $company->fantasyName }}</li>
+                <li class="list-group-item"><strong>Ramo de Atividade : </strong> {{ $company->activityBranch }}</li>
+
+
                 <li class="list-group-item"><strong>CNPJ : </strong> {{ $company->cnpj }}</li>
                 <li class="list-group-item"><strong>Inscrição Estadual : </strong> {{ $company->stateInscription }}</li>
-                <li class="list-group-item"><strong>Inscrição Municipal : </strong> {{ $company->municipalInscription }}</li>
+                <li class="list-group-item"><strong>Inscrição Municipal : </strong> {{ $company->municipalInscription }}
+                </li>
+
                 <li class="list-group-item"><strong>CNAE Principal : </strong> {{ $company->mainCnae }}</li>
-                <li class="list-group-item"><strong>Ramo de Atividade : </strong> {{ $company->activityBranch }}</li>
-                <li class="list-group-item"><strong>CEP : </strong> {{ $company->cep }}</li>
-                <li class="list-group-item"><strong>Número : </strong> {{ $company->number }}</li>
-                <li class="list-group-item"><strong>Complemento : </strong> {{ $company->addressComplement }}</li>
                 <li class="list-group-item"><strong>Telefone : </strong> {{ $company->phone }}</li>
                 <li class="list-group-item"><strong>Fax : </strong> {{ $company->fax }}</li>
-                <li class="list-group-item"><strong>E-mail do Responsável: </strong> {{ $company->email }}</li>
+
+                <li class="list-group-item"><strong>CEP : </strong> {{ $company->cep }}</li>
+                <li class="list-group-item"><strong>Logradouro : </strong> {{ $company->street }}</li>
+                <li class="list-group-item"><strong>Número : </strong> {{ $company->number }}</li>
+
+                <li class="list-group-item"><strong>Bairro : </strong> {{ $company->district }}</li>
+                <li class="list-group-item"><strong>Cidade : </strong> {{ $company->city }}</li>
+                <li class="list-group-item"><strong>UF : </strong> {{ $states[$company->state] }}</li>
+
+                <li class="list-group-item"><strong>Nome responsável : </strong> {{ $company->responsibleName }}</li>
+                <li class="list-group-item"><strong>Celular: </strong> {{ $company->cellPhone }}</li>
+                <li class="list-group-item"><strong>E-mail: </strong> {{ $company->email }}</li>
+
+                <li class="list-group-item"><strong>Cadastrado em
+                        : </strong> {{ \Carbon\Carbon::parse($company->createdAt)->format('d/m/Y H:i:s') }}</li>
+                <li class="list-group-item"><strong>&Uacute;ltima atualiza&ccedil;&atilde;o
+                        : </strong> {{ \Carbon\Carbon::parse($company->updatedAt)->format('d/m/Y H:i:s') }}</li>
                 <li class="list-group-item">
 
                     <a href="{{ route('user-company.identify', $company->id) }}"

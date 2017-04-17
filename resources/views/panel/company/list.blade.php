@@ -26,7 +26,8 @@
             <div class="col-md-12" style="margin-top: 20px;">
                 <table id="users-table" class="table table-bordred table-striped">
                     <thead>
-                    <th>Nome</th>
+                    <th>Razão Social</th>
+                    <th>Nome Fantasia</th>
                     <th>Cnpj</th>
                     <th>Ramo de Atividade</th>
                     <th>Telefone</th>
@@ -42,6 +43,7 @@
                             <td>
                                 <a href="{{ route('company.show', ['id' => $company->id]) }}">{{ $company->name }}</a>
                             </td>
+                            <td>{{ $company->fantasyName }}</td>
                             <td>{{ $company->cnpj }}</td>
                             <td>{{ $company->activityBranch }}</td>
                             <td>{{ $company->phone }}</td>
@@ -81,7 +83,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" align="center">Nenhum cliente foi encontrado.</td>
+                            <td colspan="9" align="center">Nenhum cliente foi encontrado.</td>
                         </tr>
                     @endforelse
 

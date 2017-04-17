@@ -2,9 +2,7 @@
 
 namespace App\Policies;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Support\Facades\Config;
 
 class RolePolicy
 {
@@ -22,8 +20,8 @@ class RolePolicy
 
     public function __construct()
     {
-        $this->roles = Config::get('roles.canAccess');
-        $this->role = Auth::user()->role;
+        $this->roles = \Config::get('roles.canAccess');
+        $this->role = \Auth::user()->role;
     }
 
     /**
