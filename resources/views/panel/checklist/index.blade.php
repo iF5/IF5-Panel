@@ -45,9 +45,9 @@
                                         <tr>
                                             <td>{{$docs->name}}</td>
                                             <td>
-                                                @if ($docs->status == 1)
+                                                @if ($docs->status == 1 and $docs->validated == 1)
                                                     Enviado
-                                                @elseif ($docs->status == 2)
+                                                @elseif ($docs->status == 2 or $docs->validated == 0)
                                                     Reenviar
                                                 @else
                                                     Pendente
@@ -77,7 +77,7 @@
                                             </td>
                                             <td>
 
-                                                @if ($docs->validated == 1)
+                                                @if ($docs->validated == 1 and $docs->status == 1)
                                                     Baixar
                                                 @else
                                                     Enviar
