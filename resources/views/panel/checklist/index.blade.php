@@ -47,7 +47,7 @@
                                             <td>
                                                 @if ($docs->status == 1 and $docs->validated == 1)
                                                     Enviado
-                                                @elseif ($docs->status == 2 or $docs->validated == 0)
+                                                @elseif ($docs->status == 2 and $docs->validated == 0)
                                                     Reenviar
                                                 @else
                                                     Pendente
