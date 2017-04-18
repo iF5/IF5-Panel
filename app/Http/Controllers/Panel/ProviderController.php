@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panel;
 use App\Repositories\Panel\CompanyRepository;
 use App\Repositories\Panel\RelationshipRepository;
 use App\Repositories\Panel\ProviderRepository;
+use App\Repositories\Panel\UserRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\BreadcrumbService;
@@ -22,6 +23,11 @@ class ProviderController extends Controller
     private $companyRepository;
 
     /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
      * @var RelationshipRepository
      */
     private $relationshipRepository;
@@ -31,18 +37,25 @@ class ProviderController extends Controller
      */
     private $breadcrumbService;
 
+    /**
+     * @var array
+     */
+    private $states;
 
     public function __construct(
         ProviderRepository $providerRepository,
         CompanyRepository $companyRepository,
+        UserRepository $userRepository,
         RelationshipRepository $relationshipRepository,
         BreadcrumbService $breadcrumbService
     )
     {
         $this->providerRepository = $providerRepository;
         $this->companyRepository = $companyRepository;
+        $this->userRepository = $userRepository;
         $this->relationshipRepository = $relationshipRepository;
         $this->breadcrumbService = $breadcrumbService;
+        $this->states = \Config::get('states');
     }
 
     /**
@@ -124,11 +137,12 @@ class ProviderController extends Controller
             return redirect()->route('provider.associate');
         }
 
+        $this->providerRepository->cnpj = \Session::get('cnpj');
+        $this->providerRepository->cnpjHidden = true;
+
         return view('panel.provider.form', [
-            'provider' => (object)[
-                'cnpj' => \Session::get('cnpj'),
-                'cnpjHidden' => true
-            ],
+            'provider' => $this->providerRepository,
+            'states' => $this->states,
             'method' => 'POST',
             'route' => 'provider.store',
             'parameters' => [],
@@ -136,9 +150,15 @@ class ProviderController extends Controller
         ]);
     }
 
-    protected function formRequest($data)
+    protected function formRequest($data, $action = null)
     {
         $data['companyId'] = $this->getCompanyId();
+        $data['name'] = $data['responsibleName'];
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+        if ($action === 'store') {
+            $data['createdAt'] = $now;
+        }
+        $data['updatedAt'] = $now;
         return $data;
     }
 
@@ -154,12 +174,16 @@ class ProviderController extends Controller
             $request, $this->providerRepository->validateRules(), $this->providerRepository->validateMessages()
         );
 
-        $data = $this->formRequest($request->all());
+        $data = $this->formRequest($request->all(), 'store');
         $provider = $this->providerRepository->create($data);
         $this->relationshipRepository->create('companies_has_providers', [
             'companyId' => $this->getCompanyId(),
             'providerId' => $provider->id
         ]);
+
+        $data['providerId'] = $provider->id;
+        $data['providerId'] = $provider->id;
+        $this->userRepository->create($data);
 
         \Session::remove('cnpj');
         return redirect()
@@ -191,6 +215,7 @@ class ProviderController extends Controller
 
         return view('panel.provider.show', [
             'provider' => $provider,
+            'states' => $this->states,
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
     }
@@ -205,6 +230,7 @@ class ProviderController extends Controller
     {
         return view('panel.provider.form', [
             'provider' => $this->providerRepository->findOrFail($id),
+            'states' => $this->states,
             'route' => 'provider.update',
             'method' => 'PUT',
             'parameters' => [$id],
