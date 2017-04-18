@@ -49,12 +49,18 @@
                                 <td>
                                     <a href="{{ route('employee.edit', $employee->id) }}"
                                        class="btn btn-success btn-xs"><span
-                                                class="glyphicon glyphicon-pencil"></span></a>
+                                                class="glyphicon glyphicon-pencil" title="Editar"></span></a>
+
+                                </td>
+                                <td>
+                                    <a href="{{ route('checklist.index', ['id'=>$employee->id, 'docTypeId'=>1])}}"
+                                       class="btn btn-success btn-xs"><span
+                                                class="glyphicon glyphicon-cloud-upload" title="Check List de Documentos"></span></a>
 
                                 </td>
                                 <td>
                                     <a href="#"
-                                       class="btn btn-danger btn-xs modal-delete" data-title="Excluir"
+                                       class="btn btn-danger btn-xs modal-delete" title="Excluir"
                                        data-toggle="modal"
                                        data-target="#delete"
                                        rel="{{ route('employee.destroy', $employee->id) }}"><span

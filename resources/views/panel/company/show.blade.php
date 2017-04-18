@@ -35,7 +35,7 @@
 
                 <li class="list-group-item"><strong>Bairro : </strong> {{ $company->district }}</li>
                 <li class="list-group-item"><strong>Cidade : </strong> {{ $company->city }}</li>
-                <li class="list-group-item"><strong>UF : </strong> {{ $states[$company->state] }}</li>
+                <li class="list-group-item"><strong>UF : </strong> {{ $company->state }}</li>
 
                 <li class="list-group-item"><strong>Nome responsável : </strong> {{ $company->responsibleName }}</li>
                 <li class="list-group-item"><strong>Celular: </strong> {{ $company->cellPhone }}</li>

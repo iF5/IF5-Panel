@@ -71,25 +71,23 @@
                 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                     <div class="menu_section">
                         <ul class="nav side-menu">
-                            <li><a><i class="fa fa-home"></i> Dashboard <span class="fa fa-chevron-down"></span></a>
+                            <!--<li><a><i class="fa fa-home"></i> Dashboard <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                     <li><a href="{{ url('dashboard') }}">Cliente/Prestador</a></li>
                                     <li><a href="{{ url('dashboard-employee') }}">Funcion&aacute;rios</a></li>
-                                    <li><a href="{{ url('checklist') }}">Upload/Download de arquivos</a></li>
                                 </ul>
-                            </li>
+                            </li>-->
                             <!--
                             <li><a><i class="fa fa-check-square-o"></i> Checklist <span class="fa fa-chevron-down"></span></a>
                             </li>
                             -->
-                            <li>
+                            <!--<li>
                                 <a href="#"><i class="fa fa-bar-chart-o"></i> Relat&oacute;rios <span
                                             class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                     <li><a href="{{ url('report') }}">Upload</a></li>
-                                    <li><a href="#">Menu 02</a></li>
                                 </ul>
-                            </li>
+                            </li>-->
 
                             @can('onlyAdmin')
                             <li>
