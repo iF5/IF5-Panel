@@ -106,6 +106,26 @@ $(function () {
         });
     });
 
+    //Api correios
+    $('#cep').on('blur', function () {
+        var cep = this.value.replace('-', '');
+        $.ajax({
+            url: 'http://correiosapi.apphb.com/cep/' + cep,
+            dataType: 'jsonp',
+            crossDomain: true,
+            contentType: 'application/json',
+            success: function (data) {
+                $('#street').val(data.logradouro);
+                $('#district').val(data.bairro);
+                $('#city').val(data.cidade);
+                $('#state').val(data.estado);
+            }
+        });
+        
+        //5552,68
+        //103
+    });
+
     //Masks
     $('#cnpj').mask('99.999.999/9999-99');
     $('#cpf').mask('999.999.999-99');
