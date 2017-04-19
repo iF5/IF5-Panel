@@ -45,7 +45,7 @@
             <div class="left_col scroll-view">
                 <div class="navbar nav_title" style="border: 0;">
                     {{--<a href="{{ url('dashboard') }}" class="site_title"><i class="fa fa-paw"></i> <span>IF5</span></a>--}}
-                    <a href="{{ url('dashboard') }}" class="site_title">
+                    <a href="{{ url('home') }}" class="site_title">
                         <img src="{{ asset('images/if5-logo.jpg') }}" width="120" alt="IF5">
                     </a>
                 </div>

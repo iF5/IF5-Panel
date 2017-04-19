@@ -86,7 +86,17 @@ class UserProviderController extends Controller implements UserInterface
         return (\Session::has('provider')) ? \Session::get('provider')->id : \Auth::user()->providerId;
     }
 
-    use Illuminate\Http\Request;
+    /**
+     * Usability of the administrator to identify the content
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function identify($id)
+    {
+        \Session::put('provider', $this->providerRepository->findById($id));
+        return redirect()->route("user-{$this->getRole()}.index");
+    }
 
     /**
      * @param string $location

@@ -13,6 +13,21 @@ class Employee extends Model
     protected $fillable = [
         'name',
         'cpf',
+        'rg',
+        'ctps',
+        'birthDate',
+        'street',
+        'district',
+        'city',
+        'state',
+        'jobRole',
+        'salaryCap',
+        'hiringDate',
+        'endingDate',
+        'pis',
+        'workingHours',
+        'workRegime',
+        'hasChildren',
         'providerId',
         'status'
     ];

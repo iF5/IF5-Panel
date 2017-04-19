@@ -59,13 +59,7 @@ class Provider extends Model
             'city' => 'required',
             'state' => 'required',
             'responsibleName' => 'required',
-
-            'cpf' => 'required|unique_multiple:users,cpf,id=' . $userId,
-            'jobRole' => 'required',
-            'department' => 'required',
-            'email' => 'email|unique_multiple:users,email,id=' . $userId,
-            'password' => 'required|min:6|max:14'
-
+            'email' => 'email'
         ];
     }
 
@@ -94,16 +88,7 @@ class Provider extends Model
             'city.required' => 'O campo cidade é obrigatório.',
             'state.required' => 'O campo UF é obrigatório.',
             'responsibleName.required' => 'O campo nome responsável é obrigatório.',
-
-            'cpf.required' => 'O campo cpf é obrigatório.',
-            'cpf.unique_multiple' => 'O cpf já existe.',
-            'jobRole.required' => 'O campo cargo é obrigatório.',
-            'department.required' => 'O campo setor é obrigatório.',
-            'email.email' => 'O campo e-mail deve ser um endereço de e-mail válido.',
-            'email.unique_multiple' => 'O e-mail já existe.',
-            'password.required' => 'O campo senha é obrigatório.',
-            'password.min' => 'O campo senha deve ter mínimo de 6 e no máximo 14 caracteres.',
-            'password.max' => 'O campo senha deve ter mínimo de 6 e no máximo 14 caracteres.'
+            'email.email' => 'O campo e-mail deve ser um endereço de e-mail válido.'
         ];
     }
 

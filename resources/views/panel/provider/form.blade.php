@@ -46,10 +46,10 @@
                         </div>
 
                         <div class="form-group col-xs-4">
-                            @if(isset($provider->cnpjHidden))
+                            @if($provider->cnpjHidden)
                                 <label>CNPJ* :</label>
-                                <input type="text" value="{{ $provider->cnpj }}" class="form-control" disabled>
-                                <input type="hidden" name="cnpj" value="{{ $provider->cnpj }}">
+                                <input type="text" value="{{ $provider->cnpj or old('cnpj')}}" class="form-control" disabled>
+                                <input type="hidden" name="cnpj" value="{{ $provider->cnpj or old('cnpj') }}">
                             @else
                                 <label for="cpnj">CNPJ* : </label>
                                 <input type="text" id="cnpj" name="cnpj"
@@ -130,10 +130,6 @@
                             </select>
                         </div>
 
-                        <div class="form-group col-xs-12">
-                            <h2>Dados do respons&aacute;vel :</h2>
-                        </div>
-
                         <div class="form-group col-xs-4">
                             <label for="responsibleName">Nome * :</label>
                             <input type="responsibleName" id="responsibleName" name="responsibleName"
@@ -141,33 +137,14 @@
                                    class="form-control" required>
                         </div>
                         <div class="form-group col-xs-4">
-                            <label for="cpf">CPF * :</label>
-                            <input type="cpf" id="cpf" name="cpf"
-                                   value=""
-                                   class="form-control" required>
-                        </div>
-                        <div class="form-group col-xs-4">
-                            <label for="jobRole">Cargo * :</label>
-                            <input type="jobRole" id="jobRole" name="jobRole"
-                                   value=""
-                                   class="form-control" required>
-                        </div>
-
-                        <div class="form-group col-xs-4">
-                            <label for="department">Setor * :</label>
-                            <input type="department" id="department" name="department"
-                                   value=""
-                                   class="form-control" required>
+                            <label for="cellPhone">Celular :</label>
+                            <input type="cellPhone" id="cellPhone" name="cellPhone"
+                                   value="{{ $provider->cellPhone or old('cellPhone') }}"
+                                   class="form-control">
                         </div>
                         <div class="form-group col-xs-4">
                             <label for="email">E-mail * :</label>
                             <input type="email" id="email" name="email"
-                                   value="{{ $provider->email or old('email') }}"
-                                   class="form-control" required>
-                        </div>
-                        <div class="form-group col-xs-4">
-                            <label for="password">Senha * :</label>
-                            <input type="password" id="password" name="password"
                                    value="{{ $provider->email or old('email') }}"
                                    class="form-control" required>
                         </div>

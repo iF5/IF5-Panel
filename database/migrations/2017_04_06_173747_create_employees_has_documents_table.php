@@ -21,7 +21,7 @@ class CreateEmployeesHasDocumentsTable extends Migration
             $table->dateTime('sendDate');
             $table->dateTime('receivedDate');
             $table->boolean('validated')->default(false);
-            $table->primary(['employeeId', 'documetId'], 'pk_e_c_id');
+            $table->primary(['employeeId', 'documentId'], 'pk_e_c_id');
         });
     }
 

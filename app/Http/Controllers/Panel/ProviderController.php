@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Panel;
 use App\Repositories\Panel\CompanyRepository;
 use App\Repositories\Panel\RelationshipRepository;
 use App\Repositories\Panel\ProviderRepository;
-use App\Repositories\Panel\UserRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\BreadcrumbService;
+use App\Http\Traits\AuthTrait;
 
 class ProviderController extends Controller
 {
+    use AuthTrait;
+
     /**
      * @var ProviderRepository
      */
@@ -21,11 +23,6 @@ class ProviderController extends Controller
      * @var CompanyRepository
      */
     private $companyRepository;
-
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
 
     /**
      * @var RelationshipRepository
@@ -45,14 +42,12 @@ class ProviderController extends Controller
     public function __construct(
         ProviderRepository $providerRepository,
         CompanyRepository $companyRepository,
-        UserRepository $userRepository,
         RelationshipRepository $relationshipRepository,
         BreadcrumbService $breadcrumbService
     )
     {
         $this->providerRepository = $providerRepository;
         $this->companyRepository = $companyRepository;
-        $this->userRepository = $userRepository;
         $this->relationshipRepository = $relationshipRepository;
         $this->breadcrumbService = $breadcrumbService;
         $this->states = \Config::get('states');
@@ -152,13 +147,12 @@ class ProviderController extends Controller
 
     protected function formRequest($data, $action = null)
     {
-        $data['companyId'] = $this->getCompanyId();
-        $data['name'] = $data['responsibleName'];
         $now = (new \DateTime())->format('Y-m-d H:i:s');
         if ($action === 'store') {
             $data['createdAt'] = $now;
         }
         $data['updatedAt'] = $now;
+        $data['companyId'] = $this->getCompanyId();
         return $data;
     }
 
@@ -178,12 +172,9 @@ class ProviderController extends Controller
         $provider = $this->providerRepository->create($data);
         $this->relationshipRepository->create('companies_has_providers', [
             'companyId' => $this->getCompanyId(),
-            'providerId' => $provider->id
+            'providerId' => $provider->id,
+            'status' => $this->isAdmin()
         ]);
-
-        $data['providerId'] = $provider->id;
-        $data['providerId'] = $provider->id;
-        $this->userRepository->create($data);
 
         \Session::remove('cnpj');
         return redirect()
@@ -198,10 +189,11 @@ class ProviderController extends Controller
      * @param int $id
      * @return int
      */
-    private function checkId($id)
+    /*private function checkId($id)
     {
         return (in_array(\Auth::user()->role, ['admin', 'company'])) ? $id : \Auth::user()->providerId;
     }
+    */
 
     /**
      * Display the specified resource.
@@ -228,8 +220,11 @@ class ProviderController extends Controller
      */
     public function edit($id)
     {
+        $provider = $this->providerRepository->findOrFail($id);
+        $provider->cnpjHidden = ($this->isAdmin() || $this->isProvider()) ? false : true;
+
         return view('panel.provider.form', [
-            'provider' => $this->providerRepository->findOrFail($id),
+            'provider' => $provider,
             'states' => $this->states,
             'route' => 'provider.update',
             'method' => 'PUT',
@@ -247,16 +242,12 @@ class ProviderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //$id = $this->checkId($id);
-
         $this->validate(
             $request, $this->providerRepository->validateRules(), $this->providerRepository->validateMessages()
         );
 
         $data = $this->formRequest($request->all());
-        $this->providerRepository
-            ->findOrFail($id)
-            ->update($data);
+        $this->providerRepository->findOrFail($id)->update($data);
 
         return redirect()->route('provider.edit', $id)->with([
             'success' => true,

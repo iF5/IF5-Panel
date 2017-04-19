@@ -121,9 +121,6 @@ $(function () {
                 $('#state').val(data.estado);
             }
         });
-        
-        //5552,68
-        //103
     });
 
     //Masks

@@ -19,6 +19,11 @@ class DashboardController extends Controller
 
     }
 
+    public function home()
+    {
+        return view('panel.dashboard.home');
+    }
+
     public function employee()
     {
         return view('panel.dashboard.employee');

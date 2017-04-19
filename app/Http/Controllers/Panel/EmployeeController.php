@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Http\Traits\AuthTrait;
 use App\Repositories\Panel\EmployeeRepository;
 use App\Repositories\Panel\ProviderRepository;
 use App\Repositories\Panel\RelationshipRepository;
@@ -11,6 +12,8 @@ use App\Http\Controllers\Controller;
 
 class EmployeeController extends Controller
 {
+
+    use AuthTrait;
 
     /**
      * @var EmployeeRepository
@@ -116,12 +119,12 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-
         $this->validate(
             $request, $this->employeeRepository->validateRules(), $this->employeeRepository->validateMessages()
         );
 
         $data = $request->all();
+        $data['status'] = $this->isAdmin();
         $employee = $this->employeeRepository->create($data);
         $this->createRelationshipByCompany($employee->id, $data['companies']);
 

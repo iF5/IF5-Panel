@@ -28,7 +28,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('profile/upload', 'Panel\ProfileController@upload')->name('profile.upload');
 
     //Dashboard
-    Route::get('home', 'Panel\DashboardController@index');
+    Route::get('home', 'Panel\DashboardController@home');
     Route::get('dashboard', 'Panel\DashboardController@index');
     Route::get('dashboard-employee', 'Panel\DashboardController@employee');
 

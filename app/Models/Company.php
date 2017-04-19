@@ -58,7 +58,7 @@ class Company extends Model
             'city' => 'required',
             'state' => 'required',
             'responsibleName' => 'required',
-            'email' => 'required'
+            'email' => 'email'
         ];
     }
 
@@ -87,7 +87,7 @@ class Company extends Model
             'city.required' => 'O campo cidade é obrigatório.',
             'state.required' => 'O campo UF é obrigatório.',
             'responsibleName.required' => 'O campo nome responsável é obrigatório.',
-            'email.required' => 'O campo e-mail é obrigatório.'
+            'email.email' => 'O campo e-mail deve ser um endereço de e-mail válido.'
         ];
     }
 
