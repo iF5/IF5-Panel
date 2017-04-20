@@ -106,6 +106,17 @@ $(function () {
         });
     });
 
+    $('.modal-document-upload').on('click', function () {
+        new Upload({
+            formElement: '#dz-modal-upload',
+            submitElement: '#dz-modal-submit',
+            messageElement: '#dz-modal-message',
+            url: this.rel
+            //maxFilesize: 500,
+            //data: {}
+        });
+    });
+
     //Api correios
     $('#cep').on('blur', function () {
         var cep = this.value.replace('-', '');

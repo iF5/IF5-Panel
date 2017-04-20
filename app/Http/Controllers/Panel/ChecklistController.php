@@ -37,6 +37,8 @@ class ChecklistController
 
     private $docTypeId;
 
+    private $extensions = ['pdf'];
+
     public function __construct(
         EmployeeRepository $employeesRepository,
         DocumentRepository $documentRepository,
@@ -90,6 +92,30 @@ class ChecklistController
                 $struct['activeSemester'] = "active";
             break;
         }
+    }
+
+    public function upload(Request $request){
+        $file = $request->file('file');
+        $extension = $file->getClientOriginalExtension();
+        if (!in_array($extension, $this->extensions)) {
+            return response()->json([
+                'message' => 'Só são permitidos arquivos do tipo ' . implode(', ', $this->extensions) . '.'
+            ]);
+        }
+
+        $dir = storage_path() . '/upload/documents/';
+        $name = sprintf('%s.%s', sha1(1), $extension);
+        $isMoved = $file->move($dir, $name);
+        if (!$isMoved) {
+            return response()->json([
+                'message' => "Falha ao enviar o arquivo <b>{$file->getClientOriginalName()}</b> por favor tente novamente!"
+            ]);
+        }
+
+        /*$this->userRepository->find($this->getId())->update(['image' => $name]);*/
+        return response()->json([
+            'message' => "O arquivo <b>{$file->getClientOriginalName()}</b> foi enviado com sucesso!"
+        ]);
     }
 
     private function documentStruct()

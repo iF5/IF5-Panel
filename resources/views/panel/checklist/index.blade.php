@@ -80,7 +80,12 @@
                                                 @if ($docs->validated == 1 and $docs->status == 1)
                                                     Baixar
                                                 @else
-                                                    Enviar
+
+                                                    <a href=""
+                                                       class="btn btn-primary btn-md modal-document-upload" title="Imagem" data-toggle="modal"
+                                                       data-target="#upload" rel="{{ route('checklist.upload') }}">
+                                                        Enviar
+                                                    </a>
                                                 @endif
                                             </td>
                                         </tr>
