@@ -130,4 +130,7 @@ $(function () {
     $('#phone').mask('99 9999-9999');
     $('#cellPhone').mask('99 99999-9999');
     $('#cep').mask('99999-999');
+    $('#rg').mask('99.999.999-9');
+    $('.dateMask').mask('99/99/9999');
+    $('.moneyMask').maskMoney({showSymbol:true, symbol:'R$', decimal:',', thousands:'.'});
 });

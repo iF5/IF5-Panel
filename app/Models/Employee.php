@@ -41,8 +41,21 @@ class Employee extends Model
     public function validateRules($id = NULL)
     {
         return [
-            'name' => 'required|min:2',
+            'name' => 'required',
             'cpf' => 'required|unique_multiple:employees,cpf,providerId,id=' . $id,
+            'rg' => 'required',
+            'ctps' => 'required',
+            'birthDate' => 'required',
+            'street' => 'required',
+            'district' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'jobRole' => 'required',
+            'salaryCap' => 'required',
+            'hiringDate' => 'required',
+            'pis' => 'required',
+            'workingHours' => 'required',
+            'workRegime' => 'required',
             'companies' => 'required'
         ];
     }
@@ -56,10 +69,23 @@ class Employee extends Model
     {
         return [
             'name.required' => 'O campo nome é obrigatório.',
-            'name.min' => 'O campo nome deve ter no mínimo 2 caracteres.',
             'cpf.required' => 'O campo cpf é obrigatório.',
             'cpf.unique_multiple' => 'Este CPF já foi cadastrado.',
-            'companies.required' => 'Selecione pelo menos uma empresa.',
+            'rg' => 'O campo rg é obrigatório.',
+            'ctps' => 'O campo ctps é obrigatório.',
+            'birthDate' => 'O campo data de nascimento é obrigatório.',
+            'street' => 'O campo endereço é obrigatório.',
+            'district' => 'O campo bairro é obrigatório.',
+            'city' => 'O campo cidade é obrigatório.',
+            'state' => 'O campo estado é obrigatório.',
+            'jobRole' => 'O campo função é obrigatório.',
+            'salaryCap' => 'O campo piso salarial é obrigatório.',
+            'hiringDate' => 'O campo data contratação é obrigatório.',
+            'pis' => 'O campo número do pis é obrigatório.',
+            'workingHours' => 'O campo jornada de trabalho é obrigatório.',
+            'workRegime' => 'O campo regime de trabalho é obrigatório.',
+            'companies' => 'O campo * é obrigatório.',
+            'companies.required' => 'Selecione pelo menos uma empresa.'
         ];
     }
 }
