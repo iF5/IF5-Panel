@@ -34,7 +34,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Ckecklist
     Route::get('{id}/{docTypeId}/checklist', 'Panel\ChecklistController@index')->middleware('can:onlyAdmin')->name('checklist.index');
-    Route::post('upload', 'Panel\ChecklistController@upload')->middleware('can:onlyAdmin')->name('checklist.upload');
+    Route::post('upload/{documentId}', 'Panel\ChecklistController@upload')->middleware('can:onlyAdmin')->name('checklist.upload');
+    //Route::put('{id}/{docTypeId}/checklist/update/{documentId}', 'Panel\ChecklistController@update')->middleware('can:onlyAdmin')->name('checklist.update');
 
     //Report
     Route::get('report', 'Panel\ReportController@index')->name('report.index');

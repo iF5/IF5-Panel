@@ -117,6 +117,21 @@ $(function () {
         });
     });
 
+    //checklist trigger
+    $('.document-validated-select').on('blur', function(){
+        var optionChecked = $("option:checked").val();
+        //$( this ).parent().get( 0 ).submit();
+        /*var newForm = jQuery('<form>', {
+            'action': $(location).attr('href'),
+            'method': 'post'
+        }).append(jQuery('<input>', {
+            'name': 'documentValidated',
+            'value': optionChecked,
+            'type': 'hidden'
+        }));
+        newForm.submit();*/
+    });
+
     //Api correios
     $('#cep').on('blur', function () {
         var cep = this.value.replace('-', '');

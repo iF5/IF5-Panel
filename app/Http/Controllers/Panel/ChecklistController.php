@@ -58,12 +58,19 @@ class ChecklistController
         $this->employee = $this->employeesRepository->findById($id);
         $this->documents = $this->documentRepository->findByEmployee($id, $docTypeId);
 
+        session(['employeeId' => $this->employee->id]);
+
         $documentStruct = $this->documentStruct();
         $this->activeTab($documentStruct);
 
-        //dd($documentStruct);
-
         return view('panel.checklist.index',  $documentStruct);
+    }
+
+    private function documentStruct()
+    {
+        $struct['employee'] = $this->employee;
+        $struct['documents']     = $this->documents;
+        return $struct;
     }
 
     private function activeTab(&$struct)
@@ -94,7 +101,8 @@ class ChecklistController
         }
     }
 
-    public function upload(Request $request){
+    public function upload(Request $request, $documentId){
+
         $file = $request->file('file');
         $extension = $file->getClientOriginalExtension();
         if (!in_array($extension, $this->extensions)) {
@@ -103,26 +111,37 @@ class ChecklistController
             ]);
         }
 
+        $employeeId = session('employeeId');
+
+        $finalFileName = sha1($employeeId . "-" . $documentId);
+        $originalFileName = $file->getClientOriginalName();
+
         $dir = storage_path() . '/upload/documents/';
-        $name = sprintf('%s.%s', sha1(1), $extension);
+        $name = sprintf('%s.%s', $finalFileName, $extension);
         $isMoved = $file->move($dir, $name);
         if (!$isMoved) {
             return response()->json([
-                'message' => "Falha ao enviar o arquivo <b>{$file->getClientOriginalName()}</b> por favor tente novamente!"
+                'message' => "Falha ao enviar o arquivo <b>{$originalFileName}</b> por favor tente novamente!"
             ]);
         }
 
-        /*$this->userRepository->find($this->getId())->update(['image' => $name]);*/
+        $documentData = [
+            ['employeeId' => $employeeId,
+             'documentId' => $documentId,
+             'status' => 1,
+             'referenceDate' => '2017-04-01',
+             'finalFileName' => $finalFileName,
+             'originalFileName' => $originalFileName]
+        ];
+
+        $this->documentRepository->saveDocuments($documentData);
         return response()->json([
-            'message' => "O arquivo <b>{$file->getClientOriginalName()}</b> foi enviado com sucesso!"
+            'message' => "O arquivo <b>{$originalFileName}</b> foi enviado com sucesso!"
         ]);
     }
 
-    private function documentStruct()
+    public function update()
     {
-        $struct['employee'] = $this->employee;
-        $struct['documents']     = $this->documents;
-        return $struct;
-    }
 
+    }
 }

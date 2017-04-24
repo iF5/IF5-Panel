@@ -16,11 +16,13 @@ class CreateEmployeesHasDocumentsTable extends Migration
         Schema::create('employees_has_documents', function (Blueprint $table) {
             $table->integer('employeeId')->unsigned();
             $table->integer('documentId')->unsigned();
-            $table->enum('status',[1,2,3]);
-            $table->date('referenceDate');
-            $table->dateTime('sendDate');
-            $table->dateTime('receivedDate');
+            $table->enum('status',[1,2,3])->default(1);
+            $table->date('referenceDate')->nullable();
+            $table->dateTime('sendDate')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTime('receivedDate')->nullable();
             $table->boolean('validated')->default(false);
+            $table->string('finalFileName');
+            $table->string('originalFileName');
             $table->primary(['employeeId', 'documentId'], 'pk_e_c_id');
         });
     }

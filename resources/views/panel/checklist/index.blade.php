@@ -21,10 +21,18 @@
 
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="{{$activeMontly}}"><a href="{{route('checklist.index', ['id'=>$employee->id, 'docTypeId'=>1])}}">Mensal</a></li>
-                        <li role="presentation" class="{{$activeYearly}}"><a href="{{route('checklist.index', ['id'=>$employee->id, 'docTypeId'=>2])}}">Anual</a></li>
-                        <li role="presentation" class="{{$activeSolicited}}"><a href="{{route('checklist.index', ['id'=>$employee->id, 'docTypeId'=>3])}}">Quando solicitado</a></li>
-                        <li role="presentation" class="{{$activeHomologated}}"><a href="{{route('checklist.index', ['id'=>$employee->id, 'docTypeId'=>4])}}">Homologaçao</a></li>
+                        <li role="presentation" class="{{$activeMontly}}"><a
+                                    href="{{route('checklist.index', ['id'=>$employee->id, 'docTypeId'=>1])}}">Mensal</a>
+                        </li>
+                        <li role="presentation" class="{{$activeYearly}}"><a
+                                    href="{{route('checklist.index', ['id'=>$employee->id, 'docTypeId'=>2])}}">Anual</a>
+                        </li>
+                        <li role="presentation" class="{{$activeSolicited}}"><a
+                                    href="{{route('checklist.index', ['id'=>$employee->id, 'docTypeId'=>3])}}">Quando
+                                solicitado</a></li>
+                        <li role="presentation" class="{{$activeHomologated}}"><a
+                                    href="{{route('checklist.index', ['id'=>$employee->id, 'docTypeId'=>4])}}">Homologaçao</a>
+                        </li>
                     </ul>
                     <!-- Tab panes -->
                     <div class="tab-content">
@@ -69,11 +77,26 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                @if ($docs->validated == 1)
-                                                    Sim
-                                                @else
-                                                    Nao
-                                                @endif
+                                                @can('onlyProvider')
+                                                    @if ($docs->validated == 1)
+                                                        Sim
+                                                    @else
+                                                        Nao
+                                                    @endif
+                                                @endcan
+
+                                                @can('onlyAdmin')
+                                                <form class="document-validated-form" method="post" name="document-validated-form" id="{{$docs->documentId}}">
+                                                    <select class="document-validated-select" name="document-validated-select">
+                                                        <option @if ($docs->validated == 1) selected @endif value="1">Sim</option>
+                                                        <option @if ($docs->validated == 0) selected @endif value="0">N&atilde;o</option>
+                                                    </select>
+                                                    <input class="employeeId" type="hidden" name="employeeId" value="{{$docs->employeeId}}">
+                                                    <input class="documentId" type="hidden" name="documentId" value="{{$docs->documentId}}">
+                                                    <input class="referenceDate" type="hidden" name="referenceDate" value="{{$docs->referenceDate}}">
+                                                </form>
+                                                @endcan
+
                                             </td>
                                             <td>
 
@@ -82,8 +105,10 @@
                                                 @else
 
                                                     <a href=""
-                                                       class="btn btn-primary btn-md modal-document-upload" title="Imagem" data-toggle="modal"
-                                                       data-target="#upload" rel="{{ route('checklist.upload') }}">
+                                                       class="btn btn-primary btn-md modal-document-upload"
+                                                       title="Imagem" data-toggle="modal"
+                                                       data-target="#upload"
+                                                       rel="{{ route('checklist.upload', ['documentId'=>$docs->id]) }}">
                                                         Enviar
                                                     </a>
                                                 @endif

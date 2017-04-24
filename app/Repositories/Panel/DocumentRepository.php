@@ -34,7 +34,8 @@ class DocumentRepository extends Document
                 ['provider', '=', 0]
             ])->get();
         } catch (\Exception $e) {
-            throw new ModelNotFoundException;
+            echo $e->getMessage();
+            return false;
         }
     }
 
@@ -60,7 +61,18 @@ class DocumentRepository extends Document
                                 ORDER BY d.id;"));
 
         } catch (\Exception $e) {
-            throw new ModelNotFoundException;
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    public function saveDocuments($data)
+    {
+        try {
+            return DB::table('employees_has_documents')->insert($data);
+        } catch(\Exception $e) {
+            echo $e->getMessage();
+            return false;
         }
     }
 }
