@@ -111,7 +111,8 @@ class ProviderController extends Controller
         if ($request->isMethod('post') && $request->get('action') === 'associate') {
             $this->relationshipRepository->create('companies_has_providers', [
                 'companyId' => $this->getCompanyId(),
-                'providerId' => $request->get('providerId')
+                'providerId' => $request->get('providerId'),
+                'status' => $this->isAdmin()
             ]);
             $success = true;
             \Session::remove('cnpj');

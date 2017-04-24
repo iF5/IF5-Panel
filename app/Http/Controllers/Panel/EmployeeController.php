@@ -104,6 +104,7 @@ class EmployeeController extends Controller
         }
         $data['updatedAt'] = $now;
         $data['salaryCap'] = str_replace(['.', ','], ['', '.'], $data['salaryCap']);
+        //$data['salaryCap'] = number_format($data['salaryCap'], 2, ',', '');
         $data['status'] = $this->isAdmin();
         return $data;
     }
@@ -116,6 +117,7 @@ class EmployeeController extends Controller
     public function create()
     {
         $this->employeeRepository->providerId = $this->getProviderId();
+        $this->employeeRepository->hasChildren = 0;
         $companies = $this->employeeRepository->findAllByCompany($this->getProviderId());
 
         return view('panel.employee.form', [
@@ -162,8 +164,11 @@ class EmployeeController extends Controller
     public function show($id)
     {
         $employee = $this->employeeRepository->find($id);
+        $companies = $this->employeeRepository->findAllByCompany($this->getProviderId());
+
         return view('panel.employee.show', [
             'employee' => $employee,
+            'companies' => $companies,
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
     }

@@ -38,38 +38,6 @@ class CreateEmployeesTable extends Migration
             $table->dateTime('updatedAt');
             $table->unique(['cpf', 'providerId']);
         });
-
-        /**
-         *
-        Dados pessoais:
-
-        Nome:
-        CPF:
-        RG:
-
-        CTPS Número
-        Data de nascimento:
-        Endereço:
-
-        Bairro:
-        Cidade:
-        Estado:
-
-
-        Dados profissionais:
-
-        Função
-        Piso Salarial
-        Data contratação
-
-        data da rescisão
-        número do PIS
-        jornada de trabalho = (diurno/noturno)
-
-        regime de trabalho = (padrão ou 12x36)
-        filhos menores (sim/não)
-        empresas alocadas
-         */
     }
 
     /**
