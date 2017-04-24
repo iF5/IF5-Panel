@@ -29,7 +29,9 @@ class Employee extends Model
         'workRegime',
         'hasChildren',
         'providerId',
-        'status'
+        'status',
+        'createdAt',
+        'updatedAt'
     ];
 
     /**
@@ -88,4 +90,27 @@ class Employee extends Model
             'companies.required' => 'Selecione pelo menos uma empresa.'
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function allWorkingHours()
+    {
+        return [
+            'Diurno',
+            'Noturno'
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function allWorkRegime()
+    {
+        return [
+            'Padrão',
+            '12x36'
+        ];
+    }
+
 }

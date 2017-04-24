@@ -81,8 +81,12 @@
                                 </div>
                                 <div class="form-group col-xs-4">
                                     <label for="state">Estado * : </label>
-                                    <input type="text" id="state" name="state"
-                                           value="{{ $employee->state or old('state') }}" class="form-control" required>
+                                    <select type="text" id="state" name="state" class="form-control">
+                                        @foreach($states as $key => $value)
+                                            <option value="{{ $key }}"
+                                                    @if($employee->state === $key) selected @endif>{{ $value }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 <div class="form-group col-xs-12">
@@ -98,7 +102,8 @@
                                 <div class="form-group col-xs-4">
                                     <label for="salaryCap">Piso salarial * : </label>
                                     <input type="text" id="salaryCap" name="salaryCap"
-                                           value="{{ $employee->salaryCap or old('salaryCap') }}" class="form-control moneyMask"
+                                           value="{{ $employee->salaryCap or old('salaryCap') }}"
+                                           class="form-control moneyMask"
                                            required>
                                 </div>
                                 <div class="form-group col-xs-4">
@@ -112,7 +117,7 @@
                                     <label for="endingDate">Data da rescisão * : </label>
                                     <input type="text" id="endingDate" name="endingDate"
                                            value="{{ $employee->endingDate or old('endingDate') }}"
-                                           class="form-control dateMask" required>
+                                           class="form-control dateMask">
                                 </div>
                                 <div class="form-group col-xs-4">
                                     <label for="pis">Número do PIS * : </label>
@@ -121,29 +126,40 @@
                                 </div>
                                 <div class="form-group col-xs-4">
                                     <label for="workingHours">Jornada de trabalho * : </label>
-                                    <input type="text" id="workingHours" name="workingHours"
-                                           value="{{ $employee->workingHours or old('workingHours') }}"
-                                           class="form-control" required>
+                                    <select id="workingHours" name="workingHours" class="form-control">
+                                        @foreach($employee->allWorkingHours() as $workingHours)
+                                            <option value="{{ $workingHours }}"
+                                                    @if($workingHours === $employee->workingHours) selected @endif>{{ $workingHours }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 <div class="form-group col-xs-4">
                                     <label for="workRegime">Regime de trabalho * : </label>
-                                    <input type="text" id="workRegime" name="workRegime"
-                                           value="{{ $employee->workRegime or old('workRegime') }}" class="form-control"
-                                           required>
+                                    <select id="workRegime" name="workRegime" class="form-control">
+                                        @foreach($employee->allWorkRegime() as $workRegime)
+                                            <option value="{{ $workRegime }}"
+                                                    @if($workRegime === $employee->workRegime) selected @endif>{{ $workRegime }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="form-group col-xs-4">
-                                    <label for="hasChildren">Filhos menores * : </label>
-                                    <input type="radio" name="hasChildren"
-                                           value="" class="form-control">
+                                    <label>Filhos menores * : </label>
+                                    <div>
+                                        <div class="radio-inline">
+                                            <label><input type="radio" name="hasChildren" value="1">Sim</label>
+                                        </div>
+                                        <div class="radio-inline">
+                                            <label><input type="radio" name="hasChildren"
+                                                          checked="checked" value="0">N&atilde;o</label>
+                                        </div>
+                                    </div>
                                 </div>
 
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-xs-6">
-                                    <label for="companies">Empresas alocadas : </label>
-                                    <select class="form-control" id="companies" name="companies[]"
-                                            size="{{ count($companies) }}" multiple>
+                                <div class="form-group col-xs-4">
+                                    <label for="companies">Empresas alocadas * : </label>
+                                    <select id="companies" name="companies[]" size="{{ count($companies) }}"
+                                            class="form-control" multiple>
                                         @foreach($companies as $company)
                                             <option value="{{ $company->id }}"
                                                     @if($company->companyId && $method = 'PUT') selected @endif>{{ $company->name }}</option>

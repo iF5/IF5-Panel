@@ -144,4 +144,5 @@ $(function () {
     $('#rg').mask('99.999.999-9');
     $('.dateMask').mask('99/99/9999');
     $('.moneyMask').maskMoney({showSymbol:true, symbol:'R$', decimal:',', thousands:'.'});
+    $('#pis').mask('999.99999.99-9');
 });

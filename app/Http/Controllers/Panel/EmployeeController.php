@@ -35,6 +35,11 @@ class EmployeeController extends Controller
      */
     private $breadcrumbService;
 
+    /**
+     * @var array
+     */
+    private $states;
+
     public function __construct(
         EmployeeRepository $employeeRepository,
         RelationshipRepository $relationshipRepository,
@@ -46,6 +51,7 @@ class EmployeeController extends Controller
         $this->relationshipRepository = $relationshipRepository;
         $this->providerRepository = $providerRepository;
         $this->breadcrumbService = $breadcrumbService;
+        $this->states = \Config::get('states');
 
     }
 
@@ -90,6 +96,18 @@ class EmployeeController extends Controller
         ]);
     }
 
+    protected function formRequest($data, $action = null)
+    {
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+        if ($action === 'store') {
+            $data['createdAt'] = $now;
+        }
+        $data['updatedAt'] = $now;
+        $data['salaryCap'] = str_replace(['.', ','], ['', '.'], $data['salaryCap']);
+        $data['status'] = $this->isAdmin();
+        return $data;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -97,12 +115,12 @@ class EmployeeController extends Controller
      */
     public function create()
     {
+        $this->employeeRepository->providerId = $this->getProviderId();
         $companies = $this->employeeRepository->findAllByCompany($this->getProviderId());
 
         return view('panel.employee.form', [
-            'employee' => (object)[
-                'providerId' => $this->getProviderId()
-            ],
+            'employee' => $this->employeeRepository,
+            'states' => $this->states,
             'companies' => $companies,
             'route' => 'employee.store',
             'method' => 'POST',
@@ -123,8 +141,7 @@ class EmployeeController extends Controller
             $request, $this->employeeRepository->validateRules(), $this->employeeRepository->validateMessages()
         );
 
-        $data = $request->all();
-        $data['status'] = $this->isAdmin();
+        $data = $this->formRequest($request->all(), 'store');
         $employee = $this->employeeRepository->create($data);
         $this->createRelationshipByCompany($employee->id, $data['companies']);
 
@@ -164,6 +181,7 @@ class EmployeeController extends Controller
 
         return view('panel.employee.form', [
             'employee' => $employee,
+            'states' => $this->states,
             'companies' => $companies,
             'route' => 'employee.update',
             'method' => 'PUT',
@@ -185,7 +203,7 @@ class EmployeeController extends Controller
             $request, $this->employeeRepository->validateRules($id), $this->employeeRepository->validateMessages()
         );
 
-        $data = $request->all();
+        $data = $this->formRequest($request->all());
         $this->employeeRepository->findOrFail($id)->update($data);
         $this->createRelationshipByCompany($id, $data['companies']);
 

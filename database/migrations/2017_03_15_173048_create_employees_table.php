@@ -26,14 +26,16 @@ class CreateEmployeesTable extends Migration
             $table->string('state');
             $table->string('jobRole');
             $table->decimal('salaryCap', 10, 2);
-            $table->dateTime('hiringDate');
-            $table->dateTime('endingDate')->nullable();
+            $table->string('hiringDate');
+            $table->string('endingDate')->nullable();
             $table->string('pis');
             $table->string('workingHours');
             $table->string('workRegime');
             $table->boolean('hasChildren')->default(false);
             $table->integer('providerId');
             $table->boolean('status')->default(false);
+            $table->dateTime('createdAt');
+            $table->dateTime('updatedAt');
             $table->unique(['cpf', 'providerId']);
         });
 
