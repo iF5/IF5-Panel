@@ -86,24 +86,43 @@
                                                 @endcan
 
                                                 @can('onlyAdmin')
-                                                <form class="document-validated-form" method="post" name="document-validated-form" id="{{$docs->documentId}}">
-                                                    <select class="document-validated-select" name="document-validated-select">
-                                                        <option @if ($docs->validated == 1) selected @endif value="1">Sim</option>
-                                                        <option @if ($docs->validated == 0) selected @endif value="0">N&atilde;o</option>
-                                                    </select>
-                                                    <input class="employeeId" type="hidden" name="employeeId" value="{{$docs->employeeId}}">
-                                                    <input class="documentId" type="hidden" name="documentId" value="{{$docs->documentId}}">
-                                                    <input class="referenceDate" type="hidden" name="referenceDate" value="{{$docs->referenceDate}}">
-                                                </form>
+                                                    <!-- BEGIN ONLY ADMIN -->
+
+                                                    <form class="document-validated-form"name="document-validated-form" id="{{$docs->documentId}}">
+
+                                                        @if ($docs->validated == 0 and $docs->status == 1)
+                                                            <a href=""
+                                                               class="btn btn-warning btn-md modal-document-validated"
+                                                               title="Validar Documento">Validar
+                                                            </a>
+                                                        @elseif($docs->validated == 1 and $docs->status == 1)
+                                                            Sim
+                                                        @endif
+
+                                                        <input class="employeeId" type="hidden" name="employeeId" value="{{$docs->employeeId}}">
+                                                        <input class="documentId" type="hidden" name="documentId" value="{{$docs->documentId}}">
+                                                        <input class="referenceDate" type="hidden" name="referenceDate" value="{{$docs->referenceDate}}">
+                                                    </form>
+                                                    <!-- END ONLY ADMIN -->
+                                                @endcan
+
+
+                                                @can('onlyProvider')
+                                                    <!-- BEGIN ONLY PROVIDER -->
+                                                    @if ($docs->validated == 1) Sim @endif
+                                                    @if ($docs->validated == 0) N&atilde;o @endif
+                                                    <!-- END ONLY PROVIDER -->
                                                 @endcan
 
                                             </td>
                                             <td>
-
                                                 @if ($docs->validated == 1 and $docs->status == 1)
-                                                    Baixar
+                                                    <a href=""
+                                                       class="btn btn-success btn-md modal-document-download"
+                                                       title="Imagem">
+                                                        Baixar
+                                                    </a>
                                                 @else
-
                                                     <a href=""
                                                        class="btn btn-primary btn-md modal-document-upload"
                                                        title="Imagem" data-toggle="modal"

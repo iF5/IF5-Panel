@@ -134,14 +134,25 @@ class ChecklistController
              'originalFileName' => $originalFileName]
         ];
 
-        $this->documentRepository->saveDocuments($documentData);
+        $this->documentRepository->saveDocument($documentData);
         return response()->json([
             'message' => "O arquivo <b>{$originalFileName}</b> foi enviado com sucesso!"
         ]);
     }
 
-    public function update()
+    public function update($employeeId, $documentId, $referenceDate)
     {
-
+        //dd("$employeeId - $documentId - $referenceDate");
+        $documentData = [
+            'employeeId' => $employeeId,
+            'documentId' => $documentId,
+            'referenceDate' => $referenceDate
+        ];
+        if($this->documentRepository->updateDocument($documentData)) {
+            $return = array("status" => "success");
+        }else{
+            $return = array("status" => "fail");
+        }
+        return json_encode($return);
     }
 }

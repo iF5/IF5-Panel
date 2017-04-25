@@ -66,10 +66,24 @@ class DocumentRepository extends Document
         }
     }
 
-    public function saveDocuments($data)
+    public function saveDocument($data)
     {
         try {
             return DB::table('employees_has_documents')->insert($data);
+        } catch(\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    public function updateDocument($data)
+    {
+        try {
+            return DB::table('employees_has_documents')
+                ->where('employeeId', $data['employeeId'])
+                ->where('documentId', $data['documentId'])
+                ->where('referenceDate', $data['referenceDate'])
+                ->update(['validated' => 1]);
         } catch(\Exception $e) {
             echo $e->getMessage();
             return false;

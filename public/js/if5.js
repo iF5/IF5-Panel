@@ -118,18 +118,30 @@ $(function () {
     });
 
     //checklist trigger
-    $('.document-validated-select').on('blur', function(){
-        var optionChecked = $("option:checked").val();
-        //$( this ).parent().get( 0 ).submit();
-        /*var newForm = jQuery('<form>', {
-            'action': $(location).attr('href'),
-            'method': 'post'
-        }).append(jQuery('<input>', {
-            'name': 'documentValidated',
-            'value': optionChecked,
-            'type': 'hidden'
-        }));
-        newForm.submit();*/
+    $('.modal-document-validated').on('click', function(event){
+
+        event.preventDefault();
+
+
+        var employeeId = $( this ).parent().children(".employeeId").val();
+        var documentId = $( this ).parent().children(".documentId").val();
+        var referenceDate = $( this ).parent().children(".referenceDate").val();
+
+
+        var currentUrl = $(location).attr('href');
+        var finalUrl = currentUrl.replace(/[0-9]+\/[0-9]+\/checklist/i, "update");
+        finalUrl = finalUrl + "/" + employeeId + "/" + documentId + "/" + referenceDate;
+        $.ajax({
+            url: finalUrl,
+            type: "GET",
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (data) {
+                if(data.status == "success"){
+                    location.reload();
+                }
+            }
+        });
     });
 
     //Api correios
