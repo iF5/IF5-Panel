@@ -47,7 +47,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/provider/{id}/identify', 'Panel\ProviderController@identify')
         ->middleware('can:onlyAdmin')
         ->name('provider.identify');
-        //->where('companyId', '[0-9]+');
+    //->where('companyId', '[0-9]+');
 
     Route::match(['GET', 'POST'], '/provider/associate', 'Panel\ProviderController@associate')
         ->middleware('can:isCompany')
@@ -75,10 +75,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/user/provider/{id}/identify', 'Panel\UserProviderController@identify')
         ->middleware('can:onlyAdmin')
         ->name('user-provider.identify');
-        /*->where([
-            ['companyId', '[0-9]+'],
-            ['providerId', '[0-9]+']
-        ]);*/
+    /*->where([
+        ['companyId', '[0-9]+'],
+        ['providerId', '[0-9]+']
+    ]);*/
     Route::resource('/user-provider', 'Panel\UserProviderController', ['middleware' => ['can:isProvider']]);
     //EndUsers
 
@@ -89,6 +89,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/pendency/{companyId}/{id}/{source}/show', 'Panel\PendencyController@show')->name('pendency.show');
     });
     //EndPendency
+
+    //Notification
+    Route::get('notification', 'Panel\NotificationController@load')->name('notification.load');
+    //EndNotification
 
 });
 
