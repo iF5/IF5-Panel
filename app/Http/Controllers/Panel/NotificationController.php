@@ -32,13 +32,14 @@ class NotificationController
 
         foreach ($this->notifications as $notification) {
             $notificationMethod = $this->$notification();
-            if ($notificationMethod['total'] > 0) {
+            //if ($notificationMethod['total'] > 0) {
                 $data['total'] = ($data['total'] + $notificationMethod['total']);
                 $data['items'][] = $notificationMethod;
-            }
+            //}
         }
 
-        return \Response::json($data);
+        //return \Response::json($data);
+        return $data;
     }
 
     /**
@@ -48,7 +49,7 @@ class NotificationController
     {
         return [
             'link' => route('pendency.index', ['source' => 'provider']),
-            'label' => 'Pend&ecirc;ncias prestadores de servi&ccedil;os',
+            'label' => 'Pend&ecirc;ncias de prestadores de servi&ccedil;os',
             'total' => $this->notificationRepository->countByStatus('companies_has_providers')
         ];
     }

@@ -90,10 +90,6 @@ Route::group(['middleware' => 'auth'], function () {
     });
     //EndPendency
 
-    //Notification
-    Route::get('notification', 'Panel\NotificationController@load')->name('notification.load');
-    //EndNotification
-
 });
 
 //Errors
