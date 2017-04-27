@@ -106,27 +106,35 @@ $(function () {
         });
     });
 
+    //On upload employee documents
     $('.modal-document-upload').on('click', function () {
-        new Upload({
-            formElement: '#dz-modal-upload',
-            submitElement: '#dz-modal-submit',
-            messageElement: '#dz-modal-message',
-            url: this.rel
-            //maxFilesize: 500,
-            //data: {}
-        });
+        var date = $("#" + this.id).val();
+
+        if(date != "") {
+            var arrDate = date.split("/");
+            date = arrDate[2] + "-" + arrDate[1] + "-" + arrDate[0];
+
+            new Upload({
+                formElement: '#dz-modal-upload',
+                submitElement: '#dz-modal-submit',
+                messageElement: '#dz-modal-message',
+                url: this.rel + "/" + date
+                //maxFilesize: 500,
+                //data: {}
+            });
+        }else{
+            alert("Preencha a data de referencia.");
+            return false;
+        }
     });
 
     //checklist trigger
     $('.modal-document-validated').on('click', function(event){
-
         event.preventDefault();
-
 
         var employeeId = $( this ).parent().children(".employeeId").val();
         var documentId = $( this ).parent().children(".documentId").val();
         var referenceDate = $( this ).parent().children(".referenceDate").val();
-
 
         var currentUrl = $(location).attr('href');
         var finalUrl = currentUrl.replace(/[0-9]+\/[0-9]+\/checklist/i, "update");
@@ -172,4 +180,5 @@ $(function () {
     $('.dateMask').mask('99/99/9999');
     $('.moneyMask').maskMoney({showSymbol:false, symbol:'R$', decimal:',', thousands:'.'});
     $('#pis').mask('999.99999.99-9');
+    $('.date').mask('99/99/9999');
 });

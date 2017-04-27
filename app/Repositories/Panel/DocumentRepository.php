@@ -69,7 +69,17 @@ class DocumentRepository extends Document
     public function saveDocument($data)
     {
         try {
-            return DB::table('employees_has_documents')->insert($data);
+            //return DB::table('employees_has_documents')->insert($data);
+            DB::insert(DB::raw("INSERT INTO employees_has_documents
+                            (employeeId, documentId, referenceDate, finalFileName, originalFileName)
+                            VALUES(
+                            ".$data['employeeId'].", " . $data['documentId'] . ",
+                            '". $data['referenceDate'] ."', '" . $data['finalFileName'] . "', '" . $data['originalFileName'] . "'
+                            ) ON DUPLICATE KEY UPDATE
+                            referencedate='". $data['referenceDate']."',
+                            reSendDate=current_timestamp(),
+                            finalFileName='" . $data['finalFileName']. "',
+                            originalFileName='" . $data['originalFileName'] . "' "));
         } catch(\Exception $e) {
             echo $e->getMessage();
             return false;

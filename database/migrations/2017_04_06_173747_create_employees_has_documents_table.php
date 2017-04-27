@@ -19,11 +19,12 @@ class CreateEmployeesHasDocumentsTable extends Migration
             $table->enum('status',[1,2,3])->default(1);
             $table->date('referenceDate')->nullable();
             $table->dateTime('sendDate')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->dateTime('reSendDate')->nullable();
             $table->dateTime('receivedDate')->nullable();
             $table->boolean('validated')->default(false);
             $table->string('finalFileName');
             $table->string('originalFileName');
-            $table->primary(['employeeId', 'documentId'], 'pk_e_c_id');
+            $table->primary(['employeeId', 'documentId', 'referenceDate'], 'pk_e_c_id');
         });
     }
 

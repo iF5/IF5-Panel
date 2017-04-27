@@ -101,7 +101,7 @@ class ChecklistController
         }
     }
 
-    public function upload(Request $request, $documentId){
+    public function upload(Request $request, $documentId, $referenceDate){
 
         $file = $request->file('file');
         $extension = $file->getClientOriginalExtension();
@@ -113,7 +113,7 @@ class ChecklistController
 
         $employeeId = session('employeeId');
 
-        $finalFileName = sha1($employeeId . "-" . $documentId);
+        $finalFileName = sha1($employeeId . "-" . $documentId . "-". $referenceDate);
         $originalFileName = $file->getClientOriginalName();
 
         $dir = storage_path() . '/upload/documents/';
@@ -125,14 +125,13 @@ class ChecklistController
             ]);
         }
 
-        $documentData = [
+        $documentData =
             ['employeeId' => $employeeId,
              'documentId' => $documentId,
              'status' => 1,
-             'referenceDate' => '2017-04-01',
+             'referenceDate' => $referenceDate,
              'finalFileName' => $finalFileName,
-             'originalFileName' => $originalFileName]
-        ];
+             'originalFileName' => $originalFileName];
 
         $this->documentRepository->saveDocument($documentData);
         return response()->json([

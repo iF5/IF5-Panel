@@ -63,7 +63,18 @@
                                             </td>
                                             <td>
                                                 @if ($docs->referenceDate)
-                                                    {{date('d/m/Y', strtotime($docs->referenceDate))}}
+                                                    <input class="date"
+                                                           data-date-format="mm/dd/yyyy"
+                                                           name="date"
+                                                           style="width: 100px;"
+                                                           value="{{date('d/m/Y', strtotime($docs->referenceDate))}}"
+                                                           id="{{$docs->id}}">
+                                                @else
+                                                    <input class="date"
+                                                           data-date-format="mm/dd/yyyy"
+                                                           name="date"
+                                                           style="width: 100px;"
+                                                           id="{{$docs->id}}">
                                                 @endif
                                             </td>
                                             <td>
@@ -88,7 +99,7 @@
                                                 @can('onlyAdmin')
                                                     <!-- BEGIN ONLY ADMIN -->
 
-                                                    <form class="document-validated-form"name="document-validated-form" id="{{$docs->documentId}}">
+                                                    <form class="document-validated-form"name="document-validated-form" id="{{$docs->id}}">
 
                                                         @if ($docs->validated == 0 and $docs->status == 1)
                                                             <a href=""
@@ -127,7 +138,7 @@
                                                        class="btn btn-primary btn-md modal-document-upload"
                                                        title="Imagem" data-toggle="modal"
                                                        data-target="#upload"
-                                                       rel="{{ route('checklist.upload', ['documentId'=>$docs->id]) }}">
+                                                       rel="{{ route('checklist.upload', ['documentId'=>$docs->id, 'referenceDate'=>'']) }}" id="{{$docs->id}}">
                                                         Enviar
                                                     </a>
                                                 @endif
