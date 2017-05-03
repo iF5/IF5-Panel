@@ -45,7 +45,7 @@
                                     <th>Referencia</th>
                                     <th>Envio</th>
                                     <th>Processado</th>
-                                    <th>Validado</th>
+                                    <th>Status</th>
                                     <th>A&ccedil;&otilde;es</th>
                                     </thead>
                                     <tbody>
@@ -63,18 +63,20 @@
                                             </td>
                                             <td>
                                                 @if ($docs->referenceDate)
-                                                    <input class="date"
-                                                           data-date-format="mm/dd/yyyy"
+                                                    <input class="referenceDateField"
+                                                           data-date-format="mm/yyyy"
                                                            name="date"
+                                                           title="Mes e Ano"
                                                            style="width: 100px;"
-                                                           value="{{date('d/m/Y', strtotime($docs->referenceDate))}}"
-                                                           id="{{$docs->id}}">
+                                                           value="{{date('m/Y', strtotime($docs->referenceDate))}}"
+                                                           id="referenceDateField-{{$docs->id}}">
                                                 @else
-                                                    <input class="date"
-                                                           data-date-format="mm/dd/yyyy"
+                                                    <input class="referenceDateField"
+                                                           data-date-format="mm/yyyy"
                                                            name="date"
+                                                           title="Mes e Ano"
                                                            style="width: 100px;"
-                                                           id="{{$docs->id}}">
+                                                           id="referenceDateField-{{$docs->id}}">
                                                 @endif
                                             </td>
                                             <td>
@@ -90,16 +92,16 @@
                                             <td>
                                                 @can('onlyProvider')
                                                     @if ($docs->validated == 1)
-                                                        Sim
+                                                        Validado
                                                     @else
-                                                        Nao
+                                                        Invalidado
                                                     @endif
                                                 @endcan
 
                                                 @can('onlyAdmin')
                                                     <!-- BEGIN ONLY ADMIN -->
 
-                                                    <form class="document-validated-form"name="document-validated-form" id="{{$docs->id}}">
+                                                    <form class="document-validated-form" name="document-validated-form" id="document-validated-form-{{$docs->id}}">
 
                                                         @if ($docs->validated == 0 and $docs->status == 1)
                                                             <a href=""
@@ -107,12 +109,16 @@
                                                                title="Validar Documento">Validar
                                                             </a>
                                                         @elseif($docs->validated == 1 and $docs->status == 1)
-                                                            Sim
+                                                            <a href=""
+                                                               class="btn btn-danger btn-md modal-document-invalidated"
+                                                               title="invalidar Documento">Invalidar
+                                                            </a>
                                                         @endif
 
                                                         <input class="employeeId" type="hidden" name="employeeId" value="{{$docs->employeeId}}">
                                                         <input class="documentId" type="hidden" name="documentId" value="{{$docs->documentId}}">
                                                         <input class="referenceDate" type="hidden" name="referenceDate" value="{{$docs->referenceDate}}">
+                                                        <input class="finalFileName" type="hidden" name="finalFileName" value="{{$docs->finalFileName}}">
                                                     </form>
                                                     <!-- END ONLY ADMIN -->
                                                 @endcan
@@ -130,15 +136,16 @@
                                                 @if ($docs->validated == 1 and $docs->status == 1)
                                                     <a href=""
                                                        class="btn btn-success btn-md modal-document-download"
-                                                       title="Imagem">
+                                                       title="Download documento"
+                                                       id="modal-document-download-{{$docs->id}}">
                                                         Baixar
                                                     </a>
                                                 @else
                                                     <a href=""
                                                        class="btn btn-primary btn-md modal-document-upload"
-                                                       title="Imagem" data-toggle="modal"
+                                                       title="Enviar documento" data-toggle="modal"
                                                        data-target="#upload"
-                                                       rel="{{ route('checklist.upload', ['documentId'=>$docs->id, 'referenceDate'=>'']) }}" id="{{$docs->id}}">
+                                                       rel="{{ route('checklist.upload', ['documentId'=>$docs->id, 'referenceDate'=>'']) }}" id="modal-document-upload-{{$docs->id}}">
                                                         Enviar
                                                     </a>
                                                 @endif

@@ -93,7 +93,7 @@ class DocumentRepository extends Document
                 ->where('employeeId', $data['employeeId'])
                 ->where('documentId', $data['documentId'])
                 ->where('referenceDate', $data['referenceDate'])
-                ->update(['validated' => 1]);
+                ->update(['validated' => $data['status']]);
         } catch(\Exception $e) {
             echo $e->getMessage();
             return false;

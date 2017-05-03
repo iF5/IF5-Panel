@@ -108,11 +108,12 @@ $(function () {
 
     //On upload employee documents
     $('.modal-document-upload').on('click', function () {
-        var date = $("#" + this.id).val();
+        var myId = this.id.replace("modal-document-upload-", "");
+        var date = $("#referenceDateField-" + myId).val();
 
         if(date != "") {
             var arrDate = date.split("/");
-            date = arrDate[2] + "-" + arrDate[1] + "-" + arrDate[0];
+            date = arrDate[1] + "-" + arrDate[0];
 
             new Upload({
                 formElement: '#dz-modal-upload',
@@ -128,7 +129,7 @@ $(function () {
         }
     });
 
-    //checklist trigger
+    //On validate documents
     $('.modal-document-validated').on('click', function(event){
         event.preventDefault();
 
@@ -138,7 +139,7 @@ $(function () {
 
         var currentUrl = $(location).attr('href');
         var finalUrl = currentUrl.replace(/[0-9]+\/[0-9]+\/checklist/i, "update");
-        finalUrl = finalUrl + "/" + employeeId + "/" + documentId + "/" + referenceDate;
+        finalUrl = finalUrl + "/" + employeeId + "/" + documentId + "/" + referenceDate + "/1";
         $.ajax({
             url: finalUrl,
             type: "GET",
@@ -150,6 +151,45 @@ $(function () {
                 }
             }
         });
+    });
+
+    //On validate documents
+    $('.modal-document-invalidated').on('click', function(event){
+        event.preventDefault();
+
+        var employeeId = $( this ).parent().children(".employeeId").val();
+        var documentId = $( this ).parent().children(".documentId").val();
+        var referenceDate = $( this ).parent().children(".referenceDate").val();
+
+        var currentUrl = $(location).attr('href');
+        var finalUrl = currentUrl.replace(/[0-9]+\/[0-9]+\/checklist/i, "update");
+        finalUrl = finalUrl + "/" + employeeId + "/" + documentId + "/" + referenceDate + "/0";
+        $.ajax({
+            url: finalUrl,
+            type: "GET",
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (data) {
+                if(data.status == "success"){
+                    location.reload();
+                }
+            }
+        });
+    });
+
+    //On validate documents
+    $('.modal-document-download').on('click', function(event){
+        event.preventDefault();
+
+        var myId = this.id.replace("modal-document-download-", "");
+        var employeeId = $("#document-validated-form-" + myId).children(".employeeId").val();
+        var referenceDate = $("#document-validated-form-" + myId).children(".referenceDate").val();
+        var finalFileName = $("#document-validated-form-" + myId).children(".finalFileName").val();
+
+        var currentUrl = $(location).attr('href');
+        var finalUrl = currentUrl.replace(/[0-9]+\/[0-9]+\/checklist/i, "download");
+        finalUrl = finalUrl + "/" + employeeId + "/" + referenceDate + "/" + finalFileName;
+        window.location = finalUrl;
     });
 
     //Api correios
@@ -180,5 +220,5 @@ $(function () {
     $('.dateMask').mask('99/99/9999');
     $('.moneyMask').maskMoney({showSymbol:false, symbol:'R$', decimal:',', thousands:'.'});
     $('#pis').mask('999.99999.99-9');
-    $('.date').mask('99/99/9999');
+    $('.referenceDateField').mask('99/9999');
 });
