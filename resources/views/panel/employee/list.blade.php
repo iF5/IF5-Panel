@@ -28,7 +28,10 @@
                 <table id="provider-table" class="table table-bordred table-striped">
                     <thead>
                     <th>Nome</th>
-                    <th>Cpf</th>
+                    <th>CPF</th>
+                    <th>Função</th>
+                    <th>Data de contratação</th>
+                    <th></th>
                     <th></th>
                     <th></th>
                     </thead>
@@ -41,21 +44,23 @@
                                 </a>
                             </td>
                             <td>{{ $employee->cpf }}</td>
+                            <td>{{ $employee->jobRole }}</td>
+                            <td>{{ $employee->hiringDate }}</td>
                             @if(!$employee->status)
-                                <td colspan="4">
+                                <td colspan="3">
                                     Cadastro aguardando aprova&ccedil;&atilde;o
                                 </td>
                             @else
                                 <td>
-                                    <a href="{{ route('employee.edit', $employee->id) }}"
-                                       class="btn btn-success btn-xs"><span
-                                                class="glyphicon glyphicon-pencil" title="Editar"></span></a>
-
-                                </td>
-                                <td>
                                     <a href="{{ route('checklist.index', ['id'=>$employee->id, 'docTypeId'=>1])}}"
                                        class="btn btn-success btn-xs"><span
                                                 class="glyphicon glyphicon-cloud-upload" title="Check List de Documentos"></span></a>
+
+                                </td>
+                                <td>
+                                    <a href="{{ route('employee.edit', $employee->id) }}"
+                                       class="btn btn-success btn-xs"><span
+                                                class="glyphicon glyphicon-pencil" title="Editar"></span></a>
 
                                 </td>
                                 <td>
@@ -70,7 +75,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" align="center">Nenhum funcion&aacute;rio foi encontrado.</td>
+                            <td colspan="7" align="center">Nenhum funcion&aacute;rio foi encontrado.</td>
                         </tr>
                     @endforelse
                     </tbody>

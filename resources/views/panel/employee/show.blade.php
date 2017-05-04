@@ -41,7 +41,12 @@
                         @if($company->companyId) <br />&nbsp;&nbsp;{{ $company->name }} @endif
                     @endforeach
                 </li>
-
+                <li class="list-group-item"><strong>Status
+                        : </strong> {{ ($employee->status)? 'Ok' : 'Aguardando aprovação' }}</li>
+                <li class="list-group-item"><strong>Cadastrado em
+                        : </strong> {{ \Carbon\Carbon::parse($employee->createdAt)->format('d/m/Y H:i:s') }}</li>
+                <li class="list-group-item"><strong>&Uacute;ltima atualiza&ccedil;&atilde;o
+                        : </strong> {{ \Carbon\Carbon::parse($employee->updatedAt)->format('d/m/Y H:i:s') }}</li>
 
                 <li class="list-group-item">
                     @if(!$employee->status && \Auth::user()->role === 'admin')

@@ -103,7 +103,8 @@
                                 <a href="#"><i class="fa fa-check"></i>Pendências<span
                                             class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
-                                    <li><a href="{{ route('pendency.index', ['source' => 'provider']) }}">Prestadores de
+                                    <li><a href="{{ route('pendency.index', ['source' => 'provider']) }}">Prestadores
+                                            de
                                             servi&ccedil;os </a></li>
                                     <li><a href="{{ route('pendency.index', ['source' => 'employee']) }}">Funcion&aacute;rios</a>
                                     </li>
@@ -170,71 +171,27 @@
                             </ul>
                         </li>
 
+                        @can('onlyAdmin')
                         <li role="presentation" class="dropdown">
                             <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown"
                                aria-expanded="false">
                                 <i class="fa fa-envelope-o"></i>
-                                <span class="badge bg-green">6</span>
+                                @if(app('NotificationController')->load()['total'] > 0)
+                                    <span class="badge bg-green">{{ app('NotificationController')->load()['total'] }}</span>
+                                @endif
                             </a>
                             <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                <li>
-                                    <a>
-                                        <span class="image"><img src="images/img.jpg" alt="Profile Image"/></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a>
-                                        <span class="image"><img src="images/img.jpg" alt="Profile Image"/></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a>
-                                        <span class="image"><img src="images/img.jpg" alt="Profile Image"/></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a>
-                                        <span class="image"><img src="images/img.jpg" alt="Profile Image"/></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <div class="text-center">
-                                        <a>
-                                            <strong>See All Alerts</strong>
-                                            <i class="fa fa-angle-right"></i>
+                                @foreach(app('NotificationController')->load()['items'] as $items)
+                                    <li>
+                                        <a href="{{ $items['link'] }}">
+                                            <span>{{ $items['label'] }}</span>
+                                            <span class="time">{{ $items['total'] }}</span>
                                         </a>
-                                    </div>
-                                </li>
+                                    </li>
+                                @endforeach
                             </ul>
                         </li>
+                        @endcan
                     </ul>
                 </nav>
             </div>
