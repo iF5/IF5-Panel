@@ -52,11 +52,13 @@ class ChecklistController
         $this->breadcrumbService = $breadcrumbService;
     }
 
-    public function index($id, $docTypeId)
+    public function index(Request $request, $id, $docTypeId)
     {
+        $this->referenceDate = $request->input('referenceDateSearch');
+
         $this->docTypeId = $docTypeId;
         $this->employee = $this->employeesRepository->findById($id);
-        $this->documents = $this->documentRepository->findByEmployee($id, $docTypeId);
+        $this->documents = $this->documentRepository->findByEmployee($id, $docTypeId, $this->referenceDate);
 
         session(['employee' => $this->employee]);
 
@@ -71,7 +73,10 @@ class ChecklistController
     private function documentStruct()
     {
         $struct['employee'] = $this->employee;
+        $struct['docTypeId'] = $this->docTypeId;
         $struct['documents']     = $this->documents;
+        $struct['referenceDate'] = $this->referenceDate ? $this->referenceDate : "";
+        $struct['breadcrumbs'] = $this->getBreadcrumb();
         return $struct;
     }
 
@@ -122,7 +127,7 @@ class ChecklistController
         $finalFileName = sha1($employeeId . "-" . $documentId . "-". $referenceDate);
         $originalFileName = $file->getClientOriginalName();
 
-        $dir = storage_path() . "/upload/documents/{$providerId}/{$employeeId}/{$date['year']}/{$date['month']}";
+        $dir = storage_path() . "/upload/documents/{$providerId}/{$employeeId}/{$documentId}/{$date['year']}/{$date['month']}";
         if(!file_exists($dir)){
             mkdir($dir, 0777, true);
         }
@@ -158,6 +163,7 @@ class ChecklistController
             'referenceDate' => $referenceDate,
             'status' => $status
         ];
+
         if($this->documentRepository->updateDocument($documentData)) {
             $return = array("status" => "success");
         }else{
@@ -166,12 +172,12 @@ class ChecklistController
         return json_encode($return);
     }
 
-    public function download($employeeId, $referenceDate, $finalFileName)
+    public function download($employeeId, $documentId, $referenceDate, $finalFileName)
     {
         $date = $this->explodeDate($referenceDate);
         $providerId = session('provider')->id;
 
-        $path = storage_path() . "/upload/documents/{$providerId}/{$employeeId}/{$date['year']}/{$date['month']}/{$finalFileName}";
+        $path = storage_path() . "/upload/documents/{$providerId}/{$employeeId}/{$documentId}/{$date['year']}/{$date['month']}/{$finalFileName}";
         return response()->download($path);
     }
 
@@ -182,6 +188,28 @@ class ChecklistController
         $arrayDate['month'] = (key_exists(1, $explodeData)) ?  $explodeData[1]: "";
         $arrayDate['day'] = (key_exists(2, $explodeData)) ?  $explodeData[2]: "";
         return $arrayDate;
+    }
+
+    protected function getBreadcrumb()
+    {
+        if (\Session::has('company')) {
+            $company = \Session::get('company');
+            $data = [
+                'Clientes' => route('company.index'),
+                $company->name => route('company.show', $company->id)
+            ];
+        }
+
+        if (\Session::has('provider')) {
+            $provider = \Session::get('provider');
+            $data['Prestadores de servi&ccedil;os'] = route('provider.index');
+            $data[$provider->name] = route('provider.show', $provider->id);
+        }
+
+        $data['Funcion&aacute;rios'] = route('employee.index');
+        $data['Documentos'] = null;
+
+        return $this->breadcrumbService->push($data)->get();
     }
 
 }

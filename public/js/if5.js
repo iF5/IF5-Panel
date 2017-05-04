@@ -132,16 +132,8 @@ $(function () {
     //On validate documents
     $('.modal-document-validated').on('click', function(event){
         event.preventDefault();
-
-        var employeeId = $( this ).parent().children(".employeeId").val();
-        var documentId = $( this ).parent().children(".documentId").val();
-        var referenceDate = $( this ).parent().children(".referenceDate").val();
-
-        var currentUrl = $(location).attr('href');
-        var finalUrl = currentUrl.replace(/[0-9]+\/[0-9]+\/checklist/i, "update");
-        finalUrl = finalUrl + "/" + employeeId + "/" + documentId + "/" + referenceDate + "/1";
         $.ajax({
-            url: finalUrl,
+            url: this.href,
             type: "GET",
             dataType: 'json',
             contentType: 'application/json',
@@ -156,16 +148,8 @@ $(function () {
     //On validate documents
     $('.modal-document-invalidated').on('click', function(event){
         event.preventDefault();
-
-        var employeeId = $( this ).parent().children(".employeeId").val();
-        var documentId = $( this ).parent().children(".documentId").val();
-        var referenceDate = $( this ).parent().children(".referenceDate").val();
-
-        var currentUrl = $(location).attr('href');
-        var finalUrl = currentUrl.replace(/[0-9]+\/[0-9]+\/checklist/i, "update");
-        finalUrl = finalUrl + "/" + employeeId + "/" + documentId + "/" + referenceDate + "/0";
         $.ajax({
-            url: finalUrl,
+            url: this.href,
             type: "GET",
             dataType: 'json',
             contentType: 'application/json',
@@ -177,19 +161,20 @@ $(function () {
         });
     });
 
-    //On validate documents
+    //On download documents
     $('.modal-document-download').on('click', function(event){
         event.preventDefault();
 
-        var myId = this.id.replace("modal-document-download-", "");
+        /*var myId = this.id.replace("modal-document-download-", "");
         var employeeId = $("#document-validated-form-" + myId).children(".employeeId").val();
+        var documentId = $("#document-validated-form-" + myId).children(".documentId").val();
         var referenceDate = $("#document-validated-form-" + myId).children(".referenceDate").val();
         var finalFileName = $("#document-validated-form-" + myId).children(".finalFileName").val();
 
         var currentUrl = $(location).attr('href');
         var finalUrl = currentUrl.replace(/[0-9]+\/[0-9]+\/checklist/i, "download");
-        finalUrl = finalUrl + "/" + employeeId + "/" + referenceDate + "/" + finalFileName;
-        window.location = finalUrl;
+        finalUrl = finalUrl + "/" + employeeId + "/" + documentId + "/" + referenceDate + "/" + finalFileName;*/
+        window.location = this.href;
     });
 
     //Api correios
@@ -221,4 +206,5 @@ $(function () {
     $('.moneyMask').maskMoney({showSymbol:false, symbol:'R$', decimal:',', thousands:'.'});
     $('#pis').mask('999.99999.99-9');
     $('.referenceDateField').mask('99/9999');
+    $('#referenceDateSearch').mask('99/9999');
 });

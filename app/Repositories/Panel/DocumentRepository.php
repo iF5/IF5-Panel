@@ -13,11 +13,19 @@ class DocumentRepository extends Document
 
     private $finalDate;
 
-    private function rangeDates()
+    private function rangeDates($referenceDate = false)
     {
-        $preDate = date("Y-m");
+        if($referenceDate){
+            if(preg_match('/[0-9]{2}\/[0-9]{4}/', $referenceDate)){
+                $arrDate = explode("/", $referenceDate);
+                $preDate = $arrDate[1] . "-" . $arrDate[0];
+            }
+        }else {
+            $preDate = date("Y-m");
+        }
         $this->initialDate = $preDate . "-01";
         $this->finalDate = $preDate . "-31";
+
     }
 
     private function getDocTypeField($docTypeId)
@@ -44,22 +52,26 @@ class DocumentRepository extends Document
      * @return mixed
      * @throws ModelNotFoundException
      */
-    public function findByEmployee($id, $docTypeId)
+    public function findByEmployee($id, $docTypeId, $referenceDate)
     {
         try {
-            $this->rangeDates();
+            $referenceDateQuery = "";
+            if($docTypeId != 2) {
+                $this->rangeDates($referenceDate);
+                $referenceDateQuery = " AND referenceDate >= '$this->initialDate' AND referenceDate <= '$this->finalDate' ";
+            }
             $docTypeField = $this->getDocTypeField($docTypeId);
-
-            return DB::select(DB::raw("SELECT d.*, ehd.* FROM documents as d
+            $sql = "SELECT d.*, ehd.* FROM documents as d
                                 LEFT JOIN employees_has_documents as ehd ON
-                                d.id = ehd.documentId AND
-                                referenceDate >= '$this->initialDate' AND referenceDate <= '$this->finalDate'  AND ehd.employeeId = $id
+                                d.id = ehd.documentId
+                                $referenceDateQuery AND ehd.employeeId = $id
                                 LEFT JOIN employees as e ON
                                 e.id = ehd.employeeId
                                 WHERE
                                 d.$docTypeField = 1
-                                ORDER BY d.id;"));
-
+                                ORDER BY d.id;";
+            //dd($sql);
+            return DB::select(DB::raw($sql));
         } catch (\Exception $e) {
             echo $e->getMessage();
             return false;
