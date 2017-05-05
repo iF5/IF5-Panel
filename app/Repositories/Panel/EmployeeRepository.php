@@ -66,8 +66,16 @@ class EmployeeRepository extends Employee
     public function findByPendency()
     {
         try {
-            return Employee::selectRaw('*, 0 AS companyId')
-                ->where('status', '=', 0)
+            return Employee::join('providers', function($join){
+                return $join->on('providers.id', '=', 'employees.providerId');
+            })
+                ->select(
+                    'employees.id AS id',
+                    'employees.name AS name',
+                    'providers.id AS companyId',
+                    'providers.name AS companyName'
+                )
+                ->where('employees.status', '=', 0)
                 ->paginate($this->totalPerPage);
         } catch (\Exception $e) {
             throw new ModelNotFoundException;

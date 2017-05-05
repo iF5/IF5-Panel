@@ -98,9 +98,17 @@ class ProviderRepository extends Provider
     {
         try {
             return Provider::join('companies_has_providers', function ($join) {
-                return $join->on('providerId', '=', 'providers.id');
+                return $join->on('companies_has_providers.providerId', '=', 'providers.id');
             })
-                ->where('companies_has_providers.status', '=', 0)
+                ->join('companies', function($join){
+                    return $join->on('companies.id', '=', 'companies_has_providers.companyId');
+                })
+                ->select(
+                    'providers.id AS id',
+                    'providers.name AS name',
+                    'companies.id AS companyId',
+                    'companies.name AS companyName'
+                )->where('companies_has_providers.status', '=', 0)
                 ->paginate($this->totalPerPage);
         } catch (\Exception $e) {
             throw new ModelNotFoundException;

@@ -17,6 +17,7 @@
                 <table id="provider-table" class="table table-bordred table-striped">
                     <thead>
                     <th>Nome</th>
+                    <th>Empresa</th>
                     <th>Aprovar</th>
                     </thead>
                     <tbody>
@@ -25,6 +26,9 @@
                         <tr class="line-light-red">
                             <td>
                                 <a href="{{ route('pendency.show', ['companyId' => $row->companyId, 'id' => $row->id, 'source' => $source]) }}">{{ $row->name }}</a>
+                            </td>
+                            <td>
+                                {{ $row->companyName }}
                             </td>
                             <td>
                                 <a href="#"
@@ -38,7 +42,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="2" align="center">Nenhuma pend&ecirc;ncia foi encontrada.</td>
+                            <td colspan="3" align="center">Nenhuma pend&ecirc;ncia foi encontrada.</td>
                         </tr>
                     @endforelse
 

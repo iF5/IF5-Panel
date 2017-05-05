@@ -84,6 +84,7 @@ class PendencyController extends Controller
 
         return view('panel.employee.show', [
             'employee' => $this->employeeRepository->findById($id),
+            'companies' => $this->employeeRepository->findAllByCompany($companyId),//Nesse caso $companyId e o providerId
             'breadcrumbs' => $this->getBreadcrumb($source, self::EMPLOYEE_TITLE)
         ]);
     }
