@@ -67,7 +67,7 @@
 
 
                             <td>
-                                <a href="{{ route('provider.identify', $company->id) }}"
+                                <a href="{{ route('report.index') }}"
                                    class="btn btn-primary btn-xs" title="Relat&oacute;rios"><span
                                             class="glyphicon glyphicon-signal"></span></a>
                             </td>

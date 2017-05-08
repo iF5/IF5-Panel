@@ -11,6 +11,14 @@
 |
 */
 
+function routeLoad($directoryName)
+{
+    $files = glob(sprintf('%s/%s/', __DIR__, $directoryName) . '*.php');
+    foreach ($files as $file) {
+        require "{$file}";
+    }
+}
+
 //Authentication
 //Auth::routes();
 $this->get('/', 'Auth\LoginController@showLoginForm');
@@ -19,14 +27,7 @@ $this->post('/login', 'Auth\LoginController@login')->name('login');
 $this->get('/logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::group(['middleware' => 'auth'], function () {
-
-    $path = sprintf('%s/%s/', __DIR__, 'panel');
-    $files = glob("{$path}*.php");
-
-    foreach ($files as $file) {
-        require "{$file}";
-    }
-
+    routeLoad('panel');
 });
 
 //Errors
@@ -35,5 +36,3 @@ $this->get('/error-custom', function () {
         'message' => \Session::get('message')
     ]);
 })->name('error.custom');
-
-\Route::auth();
