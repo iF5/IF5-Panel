@@ -35,5 +35,3 @@ $this->get('/error-custom', function () {
         'message' => \Session::get('message')
     ]);
 })->name('error.custom');
-
-\Route::auth();

@@ -84,4 +84,9 @@ class RolePolicy
         return $this->role === 'provider';
     }
 
+
+    public function isAdminAndProvider()
+    {
+        return in_array($this->role, ['admin', 'provider']);
+    }
 }

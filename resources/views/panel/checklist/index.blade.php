@@ -145,59 +145,50 @@
                                         </td>
                                         <td>
                                             @can('onlyProvider')
-                                            @if ($docs->validated == 1)
-                                                Validado
-                                            @else
-                                                Invalidado
+                                                @if ($docs->validated == 1 and $docs->status == 1)
+                                                    Validado
                                                 @endif
-                                                @endcan
+                                                @if ($docs->validated == 0 and $docs->status == 1)
+                                                    Invalidado
+                                                @endif
+                                            @endcan
 
                                                 @can('onlyAdmin')
-                                                        <!-- BEGIN ONLY ADMIN -->
+                                                    <!-- BEGIN ONLY ADMIN -->
+                                                    <form class="document-validated-form" name="document-validated-form"
+                                                          id="document-validated-form-{{$docs->id}}">
 
-                                                <form class="document-validated-form" name="document-validated-form"
-                                                      id="document-validated-form-{{$docs->id}}">
+                                                        @if ($docs->validated == 0 and $docs->status == 1)
+                                                            <a href="{{ route('checklist.update', [
+                                                            'employeeId' => $docs->employeeId,
+                                                            'documentId' => $docs->documentId,
+                                                            'referenceDate' => $docs->referenceDate,
+                                                            'status' => 1 ]) }}"
+                                                               class="btn btn-warning btn-md modal-document-validated"
+                                                               title="Validar Documento">Validar
+                                                            </a>
+                                                        @elseif($docs->validated == 1 and $docs->status == 1)
+                                                            <a href="{{ route('checklist.update', [
+                                                            'employeeId' => $docs->employeeId,
+                                                            'documentId' => $docs->documentId,
+                                                            'referenceDate' => $docs->referenceDate,
+                                                            'status' => 0 ]) }}"
+                                                               class="btn btn-danger btn-md modal-document-invalidated"
+                                                               title="Invalidar Documento">Invalidar
+                                                            </a>
+                                                        @endif
 
-                                                    @if ($docs->validated == 0 and $docs->status == 1)
-                                                        <a href="{{ route('checklist.update', [
-                                                        'employeeId' => $docs->employeeId,
-                                                        'documentId' => $docs->documentId,
-                                                        'referenceDate' => $docs->referenceDate,
-                                                        'status' => 1 ]) }}"
-                                                           class="btn btn-warning btn-md modal-document-validated"
-                                                           title="Validar Documento">Validar
-                                                        </a>
-                                                    @elseif($docs->validated == 1 and $docs->status == 1)
-                                                        <a href="{{ route('checklist.update', [
-                                                        'employeeId' => $docs->employeeId,
-                                                        'documentId' => $docs->documentId,
-                                                        'referenceDate' => $docs->referenceDate,
-                                                        'status' => 0 ]) }}"
-                                                           class="btn btn-danger btn-md modal-document-invalidated"
-                                                           title="Invalidar Documento">Invalidar
-                                                        </a>
-                                                    @endif
-
-                                                    <input class="employeeId" type="hidden" name="employeeId"
-                                                           value="{{$docs->employeeId}}">
-                                                    <input class="documentId" type="hidden" name="documentId"
-                                                           value="{{$docs->documentId}}">
-                                                    <input class="referenceDate" type="hidden" name="referenceDate"
-                                                           value="{{$docs->referenceDate}}">
-                                                    <input class="finalFileName" type="hidden" name="finalFileName"
-                                                           value="{{$docs->finalFileName}}">
-                                                </form>
-                                                <!-- END ONLY ADMIN -->
+                                                        <input class="employeeId" type="hidden" name="employeeId"
+                                                               value="{{$docs->employeeId}}">
+                                                        <input class="documentId" type="hidden" name="documentId"
+                                                               value="{{$docs->documentId}}">
+                                                        <input class="referenceDate" type="hidden" name="referenceDate"
+                                                               value="{{$docs->referenceDate}}">
+                                                        <input class="finalFileName" type="hidden" name="finalFileName"
+                                                               value="{{$docs->finalFileName}}">
+                                                    </form>
+                                                    <!-- END ONLY ADMIN -->
                                                 @endcan
-
-
-                                                @can('onlyProvider')
-                                                        <!-- BEGIN ONLY PROVIDER -->
-                                                @if ($docs->validated == 1) Sim @endif
-                                                @if ($docs->validated == 0) N&atilde;o @endif
-                                                        <!-- END ONLY PROVIDER -->
-                                                @endcan
-
                                         </td>
                                         <td>
                                             @if ($docs->validated == 1 and $docs->status == 1)

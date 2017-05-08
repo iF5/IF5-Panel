@@ -124,6 +124,10 @@ class ChecklistController
         $employeeId = session('employee')->id;
         $providerId = session('provider')->id;
 
+        echo $employeeId, "<br>";
+        echo $providerId, "<br>";
+        dd("---");
+
         $finalFileName = sha1($employeeId . "-" . $documentId . "-". $referenceDate);
         $originalFileName = $file->getClientOriginalName();
 

@@ -130,7 +130,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#"><i class="fa fa-arrow-circle-up"></i> Funcion&aacute;rios </a>
+                                <a href="{{ route('employee.index') }}"><i class="fa fa-arrow-circle-up"></i> Funcion&aacute;rios </a>
                             </li>
                             @endcan
 
