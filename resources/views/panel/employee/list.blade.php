@@ -53,7 +53,7 @@
                             @else
                                 <td>
                                     <a href="{{ route('checklist.index', ['id'=>$employee->id, 'docTypeId'=>1])}}"
-                                       class="btn btn-success btn-xs"><span
+                                       class="btn btn-primary btn-xs"><span
                                                 class="glyphicon glyphicon-cloud-upload" title="Check List de Documentos"></span></a>
 
                                 </td>

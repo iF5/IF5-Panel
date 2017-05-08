@@ -56,7 +56,7 @@
                                     </td>
                                     <td>
                                         <a href="{{ route('employee.identify', [$provider->id]) }}"
-                                           class="btn btn-warning btn-xs"><span
+                                           class="btn btn-primary btn-xs"><span
                                                     class="glyphicon glyphicon-list-alt"></span></a>
 
                                     </td>

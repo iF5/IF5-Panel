@@ -29,10 +29,10 @@
                     <th>Razão Social</th>
                     <th>Nome Fantasia</th>
                     <th>Cnpj</th>
-                    <th>Ramo de Atividade</th>
                     <th>Telefone</th>
                     <th>Usu&aacute;rios</th>
                     <th>Prestadores de servi&ccedil;os</th>
+                    <th>Relat&oacute;rios</th>
                     <th></th>
                     <th></th>
                     </thead>
@@ -45,14 +45,13 @@
                             </td>
                             <td>{{ $company->fantasyName }}</td>
                             <td>{{ $company->cnpj }}</td>
-                            <td>{{ $company->activityBranch }}</td>
                             <td>{{ $company->phone }}</td>
                             <td>
                                 <a href="{{ route('user-company.identify', $company->id) }}"
                                    class="btn btn-primary btn-xs" title="Usu&aacute;rios"><span
                                             class="glyphicon glyphicon-user"></span></a>
                                 {{--
-                                    <p data-placement="top" data-toggle="tooltip" title="Visualizar">
+                                    <p data-placement="top" data-toggle="tooltip" titl:e="Visualizar">
                                         <a href="{{ route('user-company.identify', $company->id) }}"
                                            class="btn btn-success btn-xs"><span
                                                     class="glyphicon glyphicon-user"></span></a>
@@ -61,9 +60,19 @@
                             </td>
                             <td>
                                 <a href="{{ route('provider.identify', $company->id) }}"
-                                   class="btn btn-warning btn-xs" title="Prestadores de servi&ccedil;os"><span
+                                   class="btn btn-primary btn-xs" title="Prestadores de servi&ccedil;os"><span
                                             class="glyphicon glyphicon-briefcase"></span></a>
                             </td>
+
+
+
+                            <td>
+                                <a href="{{ route('provider.identify', $company->id) }}"
+                                   class="btn btn-primary btn-xs" title="Relat&oacute;rios"><span
+                                            class="glyphicon glyphicon-signal"></span></a>
+                            </td>
+
+
 
 
                             <td>
