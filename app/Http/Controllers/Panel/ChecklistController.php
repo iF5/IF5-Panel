@@ -108,7 +108,8 @@ class ChecklistController
         }
     }
 
-    public function upload(Request $request, $documentId, $referenceDate){
+    public function upload(Request $request, $documentId, $referenceDate)
+    {
 
         $referenceDate = $referenceDate."-01";
 
@@ -122,7 +123,7 @@ class ChecklistController
 
         $date = $this->explodeDate($referenceDate);
         $employeeId = session('employee')->id;
-        $providerId = session('provider')->id;
+        $providerId = session('provider') ? session('provider')->id : \Auth::user()->providerId;
 
         $finalFileName = sha1($employeeId . "-" . $documentId . "-". $referenceDate);
         $originalFileName = $file->getClientOriginalName();
@@ -156,7 +157,6 @@ class ChecklistController
 
     public function update($employeeId, $documentId, $referenceDate, $status)
     {
-        //dd("$employeeId - $documentId - $referenceDate");
         $documentData = [
             'employeeId' => $employeeId,
             'documentId' => $documentId,
@@ -175,7 +175,7 @@ class ChecklistController
     public function download($employeeId, $documentId, $referenceDate, $finalFileName)
     {
         $date = $this->explodeDate($referenceDate);
-        $providerId = session('provider')->id;
+        $providerId = session('provider') ? session('provider')->id : \Auth::user()->providerId;
 
         $path = storage_path() . "/upload/documents/{$providerId}/{$employeeId}/{$documentId}/{$date['year']}/{$date['month']}/{$finalFileName}";
         return response()->download($path);

@@ -16,11 +16,12 @@ class CreateReportsTable extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->string('name');
-            $table->date('referenceDate')->nullable();
-            $table->string('fileName');
-            $table->string('fileOriginalName');
+            $table->string('referenceDate');
+            $table->string('fileName')->nullable();
+            $table->string('fileOriginalName')->nullable();
             $table->integer('companyId')->unsigned();
             $table->dateTime('createdAt');
+            $table->dateTime('sentAt')->nullable();
         });
     }
 

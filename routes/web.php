@@ -11,7 +11,7 @@
 |
 */
 
-function routeLoad($directoryName)
+function loadRoute($directoryName)
 {
     $files = glob(sprintf('%s/%s/', __DIR__, $directoryName) . '*.php');
     foreach ($files as $file) {
@@ -27,7 +27,7 @@ $this->post('/login', 'Auth\LoginController@login')->name('login');
 $this->get('/logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::group(['middleware' => 'auth'], function () {
-    routeLoad('panel');
+    loadRoute('panel');
 });
 
 //Errors

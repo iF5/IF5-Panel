@@ -120,8 +120,6 @@ $(function () {
                 submitElement: '#dz-modal-submit',
                 messageElement: '#dz-modal-message',
                 url: this.rel + "/" + date
-                //maxFilesize: 500,
-                //data: {}
             });
         }else{
             alert("Preencha a data de referencia.");

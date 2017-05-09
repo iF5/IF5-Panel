@@ -63,18 +63,11 @@
                                    class="btn btn-primary btn-xs" title="Prestadores de servi&ccedil;os"><span
                                             class="glyphicon glyphicon-briefcase"></span></a>
                             </td>
-
-
-
                             <td>
-                                <a href="{{ route('report.index') }}"
+                                <a href="{{ route('report.identify', $company->id) }}"
                                    class="btn btn-primary btn-xs" title="Relat&oacute;rios"><span
                                             class="glyphicon glyphicon-signal"></span></a>
                             </td>
-
-
-
-
                             <td>
                                 <a href="{{ route('company.edit', $company->id) }}"
                                    class="btn btn-success btn-xs" title="Editar"><span
