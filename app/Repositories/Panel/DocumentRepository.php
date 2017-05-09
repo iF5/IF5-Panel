@@ -101,11 +101,15 @@ class DocumentRepository extends Document
     public function updateDocument($data)
     {
         try {
+            $arrUpdate = ['validated' => $data['status'], 'receivedDate' => date("Y-m-d H:i:s")];
+            if($data['status'] == 0){
+                $arrUpdate = ['validated' => $data['status']];
+            }
             return DB::table('employees_has_documents')
                 ->where('employeeId', $data['employeeId'])
                 ->where('documentId', $data['documentId'])
                 ->where('referenceDate', $data['referenceDate'])
-                ->update(['validated' => $data['status']]);
+                ->update($arrUpdate);
         } catch(\Exception $e) {
             echo $e->getMessage();
             return false;

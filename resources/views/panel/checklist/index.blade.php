@@ -148,7 +148,7 @@
                                                 @if ($docs->validated == 1 and $docs->status == 1)
                                                     Validado
                                                 @endif
-                                                @if ($docs->validated == 0 and $docs->status == 1)
+                                                @if ($docs->validated == 0 and $docs->status == 1 and $docs->receivedDate)
                                                     Invalidado
                                                 @endif
                                             @endcan
