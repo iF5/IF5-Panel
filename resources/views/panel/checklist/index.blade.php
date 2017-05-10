@@ -203,14 +203,39 @@
                                                     Baixar
                                                 </a>
                                             @else
-                                                <a href=""
-                                                   class="btn btn-primary btn-md modal-document-upload"
-                                                   title="Enviar documento" data-toggle="modal"
-                                                   data-target="#upload"
-                                                   rel="{{ route('checklist.upload', ['documentId'=>$docs->id, 'referenceDate'=>'']) }}"
-                                                   id="modal-document-upload-{{$docs->id}}">
-                                                    Enviar
-                                                </a>
+                                                @can('onlyProvider')
+                                                    <a href=""
+                                                       class="btn btn-primary btn-md modal-document-upload"
+                                                       title="Enviar documento" data-toggle="modal"
+                                                       data-target="#upload"
+                                                       rel="{{ route('checklist.upload', ['documentId'=>$docs->id, 'referenceDate'=>'']) }}"
+                                                       id="modal-document-upload-{{$docs->id}}">
+                                                        Enviar
+                                                    </a>
+                                                @endcan
+                                                @can('onlyAdmin')
+                                                @if ($docs->status == 1)
+                                                    <a href="{{ route('checklist.download', [
+                                                        'employeeId' => $docs->employeeId,
+                                                        'documentId' => $docs->documentId,
+                                                        'referenceDate' => $docs->referenceDate,
+                                                        'finalFileName' => $docs->finalFileName ]) }}"
+                                                       class="btn btn-success btn-md modal-document-download"
+                                                       title="Download documento"
+                                                       id="modal-document-download-{{$docs->id}}">
+                                                        Baixar
+                                                    </a>
+                                                @else
+                                                    <a href=""
+                                                       class="btn btn-primary btn-md modal-document-upload"
+                                                       title="Enviar documento" data-toggle="modal"
+                                                       data-target="#upload"
+                                                       rel="{{ route('checklist.upload', ['documentId'=>$docs->id, 'referenceDate'=>'']) }}"
+                                                       id="modal-document-upload-{{$docs->id}}">
+                                                        Enviar
+                                                    </a>
+                                                @endif
+                                                @endcan
                                             @endif
                                         </td>
                                     </tr>
