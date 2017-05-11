@@ -183,8 +183,12 @@ class ReportController extends Controller
     public function destroy($id)
     {
         $report = $this->reportRepository->findById($id);
-        $path = $this->getDirPath($report->companyId, $report->referenceDate);
-        unlink($path . $report->fileName);
+        $file = $this->getDirPath($report->companyId, $report->referenceDate) . $report->fileName;
+
+        if (file_exists($file)) {
+            unlink($file);
+        }
+
         $this->reportRepository->destroy($id);
         return redirect()->route('report.index');
     }

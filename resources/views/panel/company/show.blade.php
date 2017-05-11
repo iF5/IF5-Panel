@@ -51,10 +51,14 @@
                        class="btn btn-primary btn-md" title="Usu&aacute;rios"><span
                                 class="glyphicon glyphicon-user"></span></a>
 
-
                     <a href="{{ route('provider.identify', $company->id) }}"
                        class="btn btn-warning btn-md" title="Prestadores de servi&ccedil;os"><span
                                 class="glyphicon glyphicon-briefcase"></span></a>
+                    <td>
+                        <a href="{{ route('report.identify', $company->id) }}"
+                           class="btn btn-primary btn-md" title="Relat&oacute;rios"><span
+                                    class="glyphicon glyphicon-signal"></span></a>
+                    </td>
 
                     @can('onlyAdmin')
                     <a href="{{ route('company.edit', $company->id) }}"
