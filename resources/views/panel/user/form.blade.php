@@ -24,8 +24,8 @@
 
                     <form id="user-form" method="post" action="{{ route($route, $parameters) }}">
 
-                        {{ method_field($method) }}
-                        {{ csrf_field() }}
+                        {!! method_field($method) !!}
+                        {!! csrf_field() !!}
 
                         <div class="row">
                             <div class="form-group col-sm-5">

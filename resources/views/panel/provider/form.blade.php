@@ -23,9 +23,8 @@
 
                     <form id="provider-form" method="post" action="{{ route($route, $parameters) }}">
 
-                        {{ method_field($method) }}
-                        {{ csrf_field() }}
-
+                        {!! method_field($method) !!}
+                        {!! csrf_field() !!}
 
                         <div class="form-group col-xs-4">
                             <label for="name">Razão Social* :</label>

@@ -17,8 +17,10 @@
             </div>
             <div class="modal-footer ">
                 <form id="form-modal-delete" method="post" action="" style="float: right;">
-                    {{ method_field('DELETE') }}
-                    {{ csrf_field() }}
+
+                    {!! method_field('DELETE') !!}
+                    {!! csrf_field() !!}
+
                     <button class="btn btn-success" type="submit"><span class="glyphicon glyphicon-ok-sign"></span> Sim
                     </button>
                 </form>
@@ -49,8 +51,10 @@
             </div>
             <div class="modal-footer ">
                 <form id="form-modal-update" method="post" action="" style="float: right;">
-                    {{ method_field('PUT') }}
-                    {{ csrf_field() }}
+
+                    {!! method_field('PUT') !!}
+                    {!! csrf_field() !!}
+
                     <button class="btn btn-success" type="submit"><span class="glyphicon glyphicon-ok-sign"></span> Sim
                     </button>
                 </form>
@@ -79,7 +83,7 @@
                 <div id="dz-modal-message"></div>
 
                 <form id="dz-modal-upload" method="post" action="" class="dropzone" enctype="multipart/form-data">
-                    {{ csrf_field() }}
+                    {!! csrf_field() !!}
                     <div class="dz-message">
                         Clique aqui para selecionar ou arraste e solte o(s) arquivo(s)
                     </div>

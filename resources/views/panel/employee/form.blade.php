@@ -23,8 +23,9 @@
 
                     <form method="post" action="{{ route($route, $parameters) }}">
                         <div class="row">
-                            {{ method_field($method) }}
-                            {{ csrf_field() }}
+
+                            {!! method_field($method) !!}
+                            {!! csrf_field() !!}
 
                             <div class="form-group col-xs-12">
                                 <h2>Dados pessoais :</h2>

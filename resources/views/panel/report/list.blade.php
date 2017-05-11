@@ -111,7 +111,7 @@
                     @if($referenceDate)
                         {!! $reports->appends(['reference-date' => $referenceDate])->links() !!}
                     @else
-
+                        {!! $reports->links() !!}
                     @endif
                 </div>
             </div>
