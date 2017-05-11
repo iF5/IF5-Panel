@@ -71,7 +71,7 @@
                 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                     <div class="menu_section">
                         <ul class="nav side-menu">
-                            <!--<li><a><i class="fa fa-home"></i> Dashboard <span class="fa fa-chevron-down"></span></a>
+                        <!--<li><a><i class="fa fa-home"></i> Dashboard <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                     <li><a href="{{ url('dashboard') }}">Cliente/Prestador</a></li>
                                     <li><a href="{{ url('dashboard-employee') }}">Funcion&aacute;rios</a></li>
@@ -81,57 +81,55 @@
                             <li><a><i class="fa fa-check-square-o"></i> Checklist <span class="fa fa-chevron-down"></span></a>
                             </li>
                             -->
-                            <!--<li>
-                                <a href="#"><i class="fa fa-bar-chart-o"></i> Relat&oacute;rios <span
-                                            class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a href="{{ url('report') }}">Upload</a></li>
-                                </ul>
-                            </li>-->
-
                             @can('onlyAdmin')
-                            <li>
-                                <a href="{{ route('user-admin.index') }}"><i class="fa fa-users"></i>
-                                    Usu&aacute;rios admin
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('company.index') }}"><i class="fa fa-building-o"></i> Clientes
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#"><i class="fa fa-check"></i>Pendências<span
-                                            class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a href="{{ route('pendency.index', ['source' => 'provider']) }}">Prestadores
-                                            de
-                                            servi&ccedil;os </a></li>
-                                    <li><a href="{{ route('pendency.index', ['source' => 'employee']) }}">Funcion&aacute;rios</a>
-                                    </li>
-                                </ul>
-                            </li>
+                                <li>
+                                    <a href="{{ route('user-admin.index') }}"><i class="fa fa-users"></i>
+                                        Usu&aacute;rios admin
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('company.index') }}"><i class="fa fa-building-o"></i> Clientes
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#"><i class="fa fa-check"></i>Pendências<span
+                                                class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="{{ route('pendency.index', ['source' => 'provider']) }}">Prestadores
+                                                de
+                                                servi&ccedil;os </a></li>
+                                        <li><a href="{{ route('pendency.index', ['source' => 'employee']) }}">Funcion&aacute;rios</a>
+                                        </li>
+                                    </ul>
+                                </li>
                             @endcan
 
                             @can('onlyCompany')
-                            <li>
-                                <a href="{{ route('user-company.index') }}"><i class="fa fa-users"></i> Usu&aacute;rios
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('provider.index') }}"><i class="fa fa-briefcase"></i> Prestadores
-                                    de
-                                    servi&ccedil;os </a>
-                            </li>
+                                <li>
+                                    <a href="{{ route('user-company.index') }}"><i class="fa fa-users"></i> Usu&aacute;rios
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('provider.index') }}"><i class="fa fa-briefcase"></i> Prestadores
+                                        de
+                                        servi&ccedil;os </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('report.index') }}"><i class="fa fa-bar-chart-o"></i>
+                                        Relat&oacute;rios
+                                    </a>
+                                </li>
                             @endcan
 
                             @can('onlyProvider')
-                            <li>
-                                <a href="{{ route('user-provider.index') }}"><i class="fa fa-users"></i> Usu&aacute;rios
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('employee.index') }}"><i class="fa fa-arrow-circle-up"></i> Funcion&aacute;rios </a>
-                            </li>
+                                <li>
+                                    <a href="{{ route('user-provider.index') }}"><i class="fa fa-users"></i> Usu&aacute;rios
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('employee.index') }}"><i class="fa fa-arrow-circle-up"></i>
+                                        Funcion&aacute;rios </a>
+                                </li>
                             @endcan
 
                         </ul>
@@ -172,25 +170,25 @@
                         </li>
 
                         @can('onlyAdmin')
-                        <li role="presentation" class="dropdown">
-                            <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown"
-                               aria-expanded="false">
-                                <i class="fa fa-envelope-o"></i>
-                                @if(app('NotificationController')->load()['total'] > 0)
-                                    <span class="badge bg-green">{{ app('NotificationController')->load()['total'] }}</span>
-                                @endif
-                            </a>
-                            <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                @foreach(app('NotificationController')->load()['items'] as $items)
-                                    <li>
-                                        <a href="{{ $items['link'] }}">
-                                            <span>{{ $items['label'] }}</span>
-                                            <span class="time">{{ $items['total'] }}</span>
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </li>
+                            <li role="presentation" class="dropdown">
+                                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown"
+                                   aria-expanded="false">
+                                    <i class="fa fa-envelope-o"></i>
+                                    @if(app('NotificationController')->load()['total'] > 0)
+                                        <span class="badge bg-green">{{ app('NotificationController')->load()['total'] }}</span>
+                                    @endif
+                                </a>
+                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                    @foreach(app('NotificationController')->load()['items'] as $items)
+                                        <li>
+                                            <a href="{{ $items['link'] }}">
+                                                <span>{{ $items['label'] }}</span>
+                                                <span class="time">{{ $items['total'] }}</span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
                         @endcan
                     </ul>
                 </nav>
@@ -199,8 +197,8 @@
         <!-- /top navigation -->
 
         <!-- page content -->
-        @yield('content')
-                <!-- /page content -->
+    @yield('content')
+    <!-- /page content -->
 
         <!-- footer content -->
         <footer>
@@ -215,7 +213,7 @@
 
 @include('includes.modal')
 
-        <!-- jQuery -->
+<!-- jQuery -->
 <script src="{{ asset('vendors/jquery/dist/jquery.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/jquery.maskedinput.min.js') }}" type="text/javascript"></script>
 <!-- Bootstrap -->

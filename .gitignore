@@ -17,4 +17,4 @@ Homestead.yaml
 .ebextensions/
 
 
-/storage/upload/documents/*
+/storage/upload/*

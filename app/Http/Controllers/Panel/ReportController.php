@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Traits\AuthTrait;
 use App\Repositories\Panel\CompanyRepository;
@@ -9,7 +10,7 @@ use App\Services\BreadcrumbService;
 use App\Repositories\Panel\ReportRepository;
 
 
-class ReportController
+class ReportController extends Controller
 {
 
     use AuthTrait;
@@ -28,6 +29,11 @@ class ReportController
      * @var BreadcrumbService
      */
     private $breadcrumbService;
+
+    /**
+     * @var array
+     */
+    private $extensions = ['pdf'];
 
     public function __construct(
         ReportRepository $reportRepository,
@@ -70,22 +76,6 @@ class ReportController
             'reports' => $reports,
             'breadcrumbs' => $this->getBreadcrumb()
         ]);
-    }
-
-
-    public function upload(Request $request)
-    {
-        $dir = public_path() . '/uploads/';
-        $files = $request->file('file');
-
-        foreach ($files as $file) {
-            $file->move($dir, $file->getClientOriginalName());
-        }
-
-        return response()->json([
-            'message' => 'Os Arquivos foram enviados com sucesso!'
-        ]);
-
     }
 
     /**
@@ -192,6 +182,9 @@ class ReportController
      */
     public function destroy($id)
     {
+        $report = $this->reportRepository->findById($id);
+        $path = $this->getDirPath($report->companyId, $report->referenceDate);
+        unlink($path . $report->fileName);
         $this->reportRepository->destroy($id);
         return redirect()->route('report.index');
     }
@@ -213,6 +206,77 @@ class ReportController
         $data['Relat&oacute;rios'] = route('report.index');
         $data[$location] = null;
         return $this->breadcrumbService->push($data)->get();
+    }
+
+    /**
+     * @param $companyId
+     * @param $referenceDate
+     * @return string
+     */
+    protected function getDirPath($companyId, $referenceDate)
+    {
+        $year = substr($referenceDate, 3, 4);
+        $month = substr($referenceDate, 0, 2);
+        return storage_path() . "/upload/report/{$companyId}/{$year}/{$month}/";
+    }
+
+    /**
+     * @param $path
+     */
+    protected function createDir($path)
+    {
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function upload(Request $request, $id)
+    {
+        $file = $request->file('file');
+        $extension = $file->getClientOriginalExtension();
+        if (!in_array($extension, $this->extensions)) {
+            return response()->json([
+                'message' => 'Só são permitidos arquivos do tipo ' . implode(', ', $this->extensions) . '.'
+            ]);
+        }
+
+        $report = $this->reportRepository->findById($id);
+        $dirPath = $this->getDirPath($report->companyId, $report->referenceDate);
+        $this->createDir($dirPath);
+
+        $fileOriginalName = $file->getClientOriginalName();
+        $fileName = sprintf('%s.%s', sha1($report->id . $report->referenceDate), $extension);
+        if (!$file->move($dirPath, $fileName)) {
+            return response()->json([
+                'message' => "Falha ao enviar o arquivo <b>{$fileOriginalName}</b> por favor tente novamente!"
+            ]);
+        }
+
+        $this->reportRepository->findOrFail($id)->update([
+            'fileName' => $fileName,
+            'fileOriginalName' => $fileOriginalName,
+            'sentAt' => (new \DateTime())->format('Y-m-d H:i:s')
+        ]);
+
+        return response()->json([
+            'message' => "O arquivo <b>{$fileOriginalName}</b> foi enviado com sucesso!"
+        ]);
+    }
+
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function download($id)
+    {
+        $report = $this->reportRepository->findById($id);
+        $path = $this->getDirPath($report->companyId, $report->referenceDate);
+        return response()->download($path . $report->fileName);
     }
 
 }

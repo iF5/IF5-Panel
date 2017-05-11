@@ -1,86 +1,58 @@
 @extends('layouts.panel')
 
-@section('title', 'Relat&oacute;rio upload')
+@section('title', 'Gest&atilde;o de relat&oacute;rios')
 
 @section('content')
     <!-- page content -->
     <div class="right_col" role="main">
 
         <div class="row">
-            <div class="x_panel">
-                <div class="x_title">
-                    <h2>Gest&atilde;o de
-                        <span class="text-primary">upload</span>
-                    </h2>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="col-md-12">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <!-- menu breadcrumb -->
+                        @include('includes.breadcrumb')
+                    </div>
+                    <div class="x_content">
 
-                    <div id="dzSuccess"></div>
-
-                    <form method="post" action="{{ route('report.upload') }}" class="dropzone" id="dzUpload"
-                          enctype="multipart/form-data">
-                        {{ csrf_field() }}
-                        <div class="dz-message">
-                            Clique aqui para selecionar o(s) arquivo(s)
+                        <div style="padding: 10px 0px 20px 0px">
+                            <strong>Atenção : </strong>todos os campos com o s&iacute;mbolo * s&atilde;o obrigat&oacute;rios.
                         </div>
 
-                        <div class="dropzone-previews"></div>
+                        <!-- form validate -->
+                        @include('includes.form-validate')
 
-                        <button type="submit" id="submit-all" class="btn btn-success" style="cursor: pointer;">Enviar
-                        </button>
-                    </form>
+                        <form id="report-form" method="post" action="{{ route($route, $parameters) }}">
 
+                            {{ method_field($method) }}
+                            {{ csrf_field() }}
+
+                            <div class="row">
+                                <div class="form-group col-sm-5">
+                                    <label for="name">Nome* :</label>
+                                    <input type="text" id="name" name="name" value="{{ $report->name or old('name') }}"
+                                           class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-2">
+                                    <label for="referenceDateSearch">Data de refer&ecirc;ncia * :</label>
+                                    <input type="text" id="referenceDateSearch" name="referenceDate"
+                                           value="{{ $report->referenceDate or old('referenceDate') }}"
+                                           class="form-control" required placeholder="mm/aaaa">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="control-group" style="margin: 20px 0px 0px 12px;">
+                                    <button type="submit" class="btn btn-success">Salvar</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
     <!-- /page content -->
-    <script src="{{ asset('js/dropzone.js') }}" type="text/javascript"></script>
-    <script type="text/javascript">
-        Dropzone.options.dzUpload = {
-
-            autoProcessQueue: false,
-            uploadMultiple: true,
-            maxFilesize: 256,
-            maxFiles: 2,
-
-            init: function () {
-
-                var submitButton = document.querySelector('#submit-all');
-                var dzUpload = this;
-
-                submitButton.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    dzUpload.processQueue();
-                });
-
-                this.on('addedfile', function (file) {
-                    var removeButton = Dropzone.createElement('<button class="btn btn-danger btn-xs modal-delete" style="cursor: pointer;"><span class="glyphicon glyphicon-trash"></span></button>');
-                    var _this = this;
-
-                    removeButton.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        _this.removeFile(file);
-                    });
-
-                    file.previewElement.appendChild(removeButton);
-                    document.getElementById('dzSuccess').innerHTML = '';
-                });
-
-                this.on('complete', function (file) {
-                    dzUpload.removeFile(file);
-                });
-
-                this.on("success", function(file, serverResponse) {
-                    var resp = JSON.parse(JSON.stringify(serverResponse));
-                    document.getElementById('dzSuccess').innerHTML = resp.message;
-                });
-            }
-
-        };
-    </script>
 @endsection

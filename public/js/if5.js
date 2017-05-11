@@ -106,6 +106,17 @@ $(function () {
         });
     });
 
+    //On upload report
+    $('.modal-report-upload').on('click', function (e) {
+        e.preventDefault();
+        new Upload({
+            formElement: '#dz-modal-upload',
+            submitElement: '#dz-modal-submit',
+            messageElement: '#dz-modal-message',
+            url: this.href
+        });
+    });
+
     //On upload employee documents
     $('.modal-document-upload').on('click', function () {
         var myId = this.id.replace("modal-document-upload-", "");
