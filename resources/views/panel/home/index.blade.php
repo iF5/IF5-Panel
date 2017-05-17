@@ -1,6 +1,6 @@
 @extends('layouts.panel')
 
-@section('title', 'Gest&atilde;o de prestador de servi&ccedil;os')
+@section('title', 'Home')
 
 @section('content')
     <!-- page content -->
