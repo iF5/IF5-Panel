@@ -36,7 +36,7 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-5">
-                                <label for="cpf">Cpf* :</label>
+                                <label for="cpf">CPF* :</label>
                                 <input type="text" id="cpf" name="cpf" value="{{ $user->cpf or old('cpf') }}"
                                        class="form-control" required>
                             </div>
@@ -57,9 +57,9 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-5">
-                                <label for="phone">Telefone* :</label>
+                                <label for="phone">Telefone :</label>
                                 <input type="text" id="phone" name="phone" value="{{ $user->phone or old('phone') }}"
-                                       class="form-control" required>
+                                       class="form-control">
                             </div>
                         </div>
                         <div class="row">
