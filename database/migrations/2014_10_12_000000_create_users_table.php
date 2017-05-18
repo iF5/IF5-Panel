@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('cpf')->unique();
             $table->string('jobRole');
             $table->string('department');
-            $table->string('phone');
+            $table->string('phone')->nullable();
             $table->string('cellPhone');
             $table->string('email')->unique();
             $table->string('password');

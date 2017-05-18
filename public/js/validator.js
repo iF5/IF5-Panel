@@ -3,33 +3,30 @@
  */
 
 
+$(function(){
 
-function TestaCPF(strCPF) {
-    var Soma;
-    var Resto;
-    Soma = 0;
-    if (strCPF == "00000000000") return false;
+    function validateCPF(strCPF) {
+        var Soma;
+        var Resto;
+        Soma = 0;
+        if (strCPF == "00000000000") return false;
 
-    for (i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
-    Resto = (Soma * 10) % 11;
+        for (i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
+        Resto = (Soma * 10) % 11;
 
-    if ((Resto == 10) || (Resto == 11))  Resto = 0;
-    if (Resto != parseInt(strCPF.substring(9, 10)) ) return false;
+        if ((Resto == 10) || (Resto == 11))  Resto = 0;
+        if (Resto != parseInt(strCPF.substring(9, 10)) ) return false;
 
-    Soma = 0;
-    for (i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (12 - i);
-    Resto = (Soma * 10) % 11;
+        Soma = 0;
+        for (i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (12 - i);
+        Resto = (Soma * 10) % 11;
 
-    if ((Resto == 10) || (Resto == 11))  Resto = 0;
-    if (Resto != parseInt(strCPF.substring(10, 11) ) ) return false;
-    return true;
-}
+        if ((Resto == 10) || (Resto == 11))  Resto = 0;
+        if (Resto != parseInt(strCPF.substring(10, 11) ) ) return false;
+        return true;
+    }
 
-//lista estado e cidades
-https://gist.github.com/ografael/2037135
-
-
-    function validarCNPJ(cnpj) {
+    function validateCNPJ(cnpj) {
 
         cnpj = cnpj.replace(/[^\d]+/g,'');
 
@@ -83,6 +80,68 @@ https://gist.github.com/ografael/2037135
 
     }
 
+    $("#btn-user-form").on("click", function(){
 
+        if($("#name").val() == ""){
+            setBorderAndFocus("#name");
+            return false;
+        }
+        removeBorder("#name");
 
+        var cpfValue = $("#cpf").val().replace(/\./ig, "").replace(/-/ig, "");
 
+        if(cpfValue != ""){
+
+            var testCpf = validateCPF(cpfValue);
+            if(!testCpf) {
+                alert("CPF invalido!");
+                setBorderAndFocus("#cpf");
+                return false;
+            }
+        }else if(cpfValue == ""){
+            setBorderAndFocus("#cpf");
+            return false;
+        }
+        removeBorder("#cpf");
+
+        if($("#jobRole").val() == ""){
+            setBorderAndFocus("#jobRole");
+            return false;
+        }
+        removeBorder("#jobRole");
+
+        if($("#department").val() == ""){
+            setBorderAndFocus("#department");
+            return false;
+        }
+        removeBorder("#department");
+
+        if($("#cellPhone").val() == ""){
+            setBorderAndFocus("#cellPhone");
+            return false;
+        }
+        removeBorder("#cellPhone");
+
+        if($("#email").val() == ""){
+            setBorderAndFocus("#email");
+            return false;
+        }
+        removeBorder("#email");
+
+        if($("#password").val() == ""){
+            setBorderAndFocus("#password");
+            return false;
+        }
+        removeBorder("#password");
+    });
+
+    function setBorderAndFocus(id){
+        alert("Este campo deve ser preenchido");
+        $(id).focus();
+        $(id).css({border: '1px solid #FF0000'});
+    }
+
+    function removeBorder(id){
+        $(id).css({border: ''});
+    }
+});
