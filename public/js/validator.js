@@ -80,6 +80,7 @@ $(function(){
 
     }
 
+    /* Validate user form */
     $("#btn-user-form").on("click", function(){
 
         if($("#name").val() == ""){
@@ -133,6 +134,22 @@ $(function(){
             return false;
         }
         removeBorder("#password");
+    });
+
+    /* Validate company form */
+    $("#btn-company-form").on("click", function(){
+        if($("#name").val() == ""){
+            setBorderAndFocus("#name");
+            return false;
+        }
+        removeBorder("#name");
+
+        //
+        if($("#fantasyName").val() == ""){
+            setBorderAndFocus("#fantasyName");
+            return false;
+        }
+        removeBorder("#fantasyName");
     });
 
     function setBorderAndFocus(id){
