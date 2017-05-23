@@ -8,17 +8,6 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $documentsTitle = \DB::table('documents')->get();
-
-        return view('panel.home.index', [
-            'documentsTitle' => $documentsTitle
-        ]);
+        return view('panel.home.index');
     }
 }
-
-/*
-
-
-
-
- */

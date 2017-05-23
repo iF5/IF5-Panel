@@ -9,15 +9,39 @@ class DashboardController extends Controller
 
     public function index()
     {
-       $this->authorize('isProvider');
+       //$this->authorize('isProvider');
 
-       return view('panel.dashboard.index');
+        $documentsTitle = \DB::table('documents')->get();
 
-    }
+        return view('panel.dashboard.index', [
+            'documentsTitle' => $documentsTitle,
+            'total' => count($documentsTitle)
+        ]);
+        /**
+        SELECT
+        p.id,
+        p.name,
+        COUNT(e.id) AS employeeQuantity
+        FROM providers AS p
+        INNER JOIN employees AS e
+        ON e.providerId = p.id
+        WHERE p.name LIKE '%tok%'
+        GROUP BY p.id;
 
-    public function home()
-    {
-        return view('panel.dashboard.home');
+
+        SELECT
+        d.id,
+        d.name,
+        count(ehd.documentId) AS documentQuantity
+        FROM documents AS d
+        LEFT JOIN employees_has_documents AS ehd
+        ON ehd.documentId = d.id
+        LEFT JOIN employees AS e
+        ON e.id = ehd.employeeId
+        WHERE e.providerId = 1
+        GROUP BY d.id;
+         */
+
     }
 
     public function employee()
