@@ -84,7 +84,7 @@ $(function(){
     $("#btn-user-form").on("click", function(){
 
         if($("#name").val() == ""){
-            setBorderAndFocus("#name");
+            showMsgAndBorder("#name");
             return false;
         }
         removeBorder("#name");
@@ -94,43 +94,44 @@ $(function(){
         if(cpfValue != ""){
 
             var testCpf = validateCPF(cpfValue);
+
             if(!testCpf) {
                 alert("CPF invalido!");
                 setBorderAndFocus("#cpf");
                 return false;
             }
         }else if(cpfValue == ""){
-            setBorderAndFocus("#cpf");
+            showMsgAndBorder("#cpf");
             return false;
         }
         removeBorder("#cpf");
 
         if($("#jobRole").val() == ""){
-            setBorderAndFocus("#jobRole");
+            showMsgAndBorder("#jobRole");
             return false;
         }
         removeBorder("#jobRole");
 
         if($("#department").val() == ""){
-            setBorderAndFocus("#department");
+            showMsgAndBorder("#department");
             return false;
         }
         removeBorder("#department");
 
         if($("#cellPhone").val() == ""){
-            setBorderAndFocus("#cellPhone");
+            showMsgAndBorder("#cellPhone");
             return false;
         }
         removeBorder("#cellPhone");
 
         if($("#email").val() == ""){
-            setBorderAndFocus("#email");
+            showMsgAndBorder("#email");
             return false;
         }
         removeBorder("#email");
 
         if($("#password").val() == ""){
-            setBorderAndFocus("#password");
+            showMsgAndBorder("#password");
             return false;
         }
         removeBorder("#password");
@@ -138,22 +139,135 @@ $(function(){
 
     /* Validate company form */
     $("#btn-company-form").on("click", function(){
+
         if($("#name").val() == ""){
-            setBorderAndFocus("#name");
+            showMsgAndBorder("#name");
             return false;
         }
         removeBorder("#name");
 
-        //
         if($("#fantasyName").val() == ""){
-            setBorderAndFocus("#fantasyName");
+            showMsgAndBorder("#fantasyName");
             return false;
         }
         removeBorder("#fantasyName");
+
+        if($("#activityBranch").val() == ""){
+            showMsgAndBorder("#activityBranch");
+            return false;
+        }
+        removeBorder("#activityBranch");
+
+        var cnpjValue = $("#cnpj").val().replace(/\./ig, "").replace(/\//ig, "").replace(/-/ig, "");
+
+        if(cnpjValue != ""){
+
+            var testCnpj = validateCNPJ(cnpjValue);
+
+            if(!testCnpj){
+                alert("CNPJ invalido!");
+                setBorderAndFocus("#cnpj");
+                return false;
+            }
+        }else if(cnpjValue == ""){
+            showMsgAndBorder("#cnpj");
+            return false;
+        }
+        removeBorder("#cnpj");
+
+        if($("#stateInscription").val() == ""){
+            showMsgAndBorder("#stateInscription");
+            return false;
+        }
+        removeBorder("#stateInscription");
+
+        if($("#municipalInscription").val() == ""){
+            showMsgAndBorder("#municipalInscription");
+            return false;
+        }
+        removeBorder("#municipalInscription");
+
+        if($("#mainCnae").val() == ""){
+            showMsgAndBorder("#mainCnae");
+            return false;
+        }
+        removeBorder("#mainCnae");
+
+        if($("#fax").val() == ""){
+            showMsgAndBorder("#fax");
+            return false;
+        }
+        removeBorder("#fax");
+
+        if($("#cep").val() == ""){
+            showMsgAndBorder("#cep");
+            return false;
+        }
+        removeBorder("#cep");
+
+        if($("#street").val() == ""){
+            showMsgAndBorder("#street");
+            return false;
+        }
+        removeBorder("#street");
+
+        if($("#number").val() == ""){
+            showMsgAndBorder("#number");
+            return false;
+        }
+        removeBorder("#number");
+
+        if($("#district").val() == ""){
+            showMsgAndBorder("#district");
+            return false;
+        }
+        removeBorder("#district");
+
+        if($("#city").val() == ""){
+            showMsgAndBorder("#city");
+            return false;
+        }
+        removeBorder("#city");
+
+        if($("#state").val() == ""){
+            showMsgAndBorder("#state");
+            return false;
+        }
+        removeBorder("#state");
+
+        if($("#responsibleName").val() == ""){
+            showMsgAndBorder("#responsibleName");
+            return false;
+        }
+        removeBorder("#responsibleName");
+
+        if($("#cellPhone").val() == ""){
+            showMsgAndBorder("#cellPhone");
+            return false;
+        }
+        removeBorder("#cellPhone");
+
+        if($("#email").val() == ""){
+            showMsgAndBorder("#email");
+            return false;
+        }
+        removeBorder("#email");
     });
 
-    function setBorderAndFocus(id){
+    function validateEmail(){
+        
+    }
+
+    function showMsgAndBorder(id){
+        msgAlert();
+        setBorderAndFocus(id);
+    }
+
+    function msgAlert(){
         alert("Este campo deve ser preenchido");
+    }
+
+    function setBorderAndFocus(id){
         $(id).focus();
         $(id).css({border: '1px solid #FF0000'});
     }

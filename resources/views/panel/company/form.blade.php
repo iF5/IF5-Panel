@@ -138,7 +138,7 @@
 
                             <div class="form-group col-xs-4">
                                 <label for="email">E-mail* :</label>
-                                <input type="email" id="email" name="email"
+                                <input id="email" name="email"
                                        value="{{ $company->email or old('email') }}"
                                        class="form-control">
                             </div>
