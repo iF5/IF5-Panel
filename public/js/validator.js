@@ -247,15 +247,24 @@ $(function(){
         }
         removeBorder("#cellPhone");
 
-        if($("#email").val() == ""){
+        var email = $("#email").val();
+        if(email == ""){
             showMsgAndBorder("#email");
             return false;
+        }else{
+            var validate = validateEmail(email);
+            if(!validate){
+                alert("Email invalido!");
+                setBorderAndFocus("#email");
+                return false;
+            }
         }
         removeBorder("#email");
     });
 
-    function validateEmail(){
-        
+    function validateEmail(email){
+        var pattern = /(.*?)@(.*?)\.[a-z]{2}/;
+        return pattern.test(email);
     }
 
     function showMsgAndBorder(id){
