@@ -45,34 +45,52 @@ class DashboardController extends Controller
             ) AS b
         ) WHERE a.providerId = b.providerId;");
 
-        $arr = [];
-        $values = [];
+        $providers = [];
+
         foreach($join as $j){
-            for($i = 1; $i <= $total; $i++){
-                if($j->documentId === $i){
-                    $values = [
-                        'providerName' => $j->providerName,
-                        'employeeQuantity' => $j->employeeQuantity,
-                        'documentQuantity' => $j->documentQuantity
-                    ];
-                }else{
-                    $values = [
-                        'providerName' => $j->providerName,
-                        'employeeQuantity' => $j->employeeQuantity,
-                        'documentQuantity' => 0
-                    ];
-                }
-            }
-            $arr[$j->providerId][] = $values;
+            $providers[$j->providerId] = [
+                'providerName' => $j->providerName,
+                'employeeQuantity' => $j->employeeQuantity,
+                'documents' => []
+            ];
         }
 
-        dd($arr);
+        $totalProvider = count($providers);
+        for($i = 1; $i <= $totalProvider; $i++) {
+            for ($j = 1; $j <= $total; $j++) {
+                $providers[$i]['documents'][$j] = 0;
+            }
+        }
 
-        dd('END');
+        foreach($join as $j){
+            $providers[$j->providerId]['documents'][$j->documentId] = $j->documentQuantity;
+        }
+
+
+/*
+        foreach($join as $j){
+            $documentsValues = [];
+            for($i = 1; $i <= $total; $i++){
+                $documentsValues[$i] = 0;
+                if((int) $j->documentId === $i){
+                    $documentsValues[$i] = $j->documentQuantity;
+                }
+            }
+            $arr[$j->providerId] = [
+                'providerName' => $j->providerName,
+                'employeeQuantity' => $j->employeeQuantity,
+                'documents' => $documentsValues
+            ];
+            $providers[$j->providerId]['documents'][] = [
+
+            ];
+        }
+*/
+
 
         return view('panel.dashboard.index', [
             'documentsTitle' => $documents,
-            'total' => $total
+            'providers' => $providers
         ]);
         /**
         SELECT
