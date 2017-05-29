@@ -5,83 +5,31 @@
 
 $(function(){
 
-    function validateCPF(strCPF) {
-        var Soma;
-        var Resto;
-        Soma = 0;
-        if (strCPF == "00000000000") return false;
+    $("#form-provider-associate").on("click", function(event){
+        var cnpjValue = cleanCNPJ("#cnpj");
 
-        for (i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
-        Resto = (Soma * 10) % 11;
+        if(cnpjValue != ""){
+            var testCnpj = validateCNPJ(cnpjValue);
 
-        if ((Resto == 10) || (Resto == 11))  Resto = 0;
-        if (Resto != parseInt(strCPF.substring(9, 10)) ) return false;
-
-        Soma = 0;
-        for (i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (12 - i);
-        Resto = (Soma * 10) % 11;
-
-        if ((Resto == 10) || (Resto == 11))  Resto = 0;
-        if (Resto != parseInt(strCPF.substring(10, 11) ) ) return false;
-        return true;
-    }
-
-    function validateCNPJ(cnpj) {
-
-        cnpj = cnpj.replace(/[^\d]+/g,'');
-
-        if(cnpj == '') return false;
-
-        if (cnpj.length != 14)
+            if(!testCnpj){
+                alert("CNPJ invalido!");
+                setBorderAndFocus("#cnpj");
+                return false;
+            }
+        }else if(cnpjValue == ""){
+            showMsgAndBorder("#cnpj");
             return false;
-
-        // Elimina CNPJs invalidos conhecidos
-        if (cnpj == "00000000000000" ||
-            cnpj == "11111111111111" ||
-            cnpj == "22222222222222" ||
-            cnpj == "33333333333333" ||
-            cnpj == "44444444444444" ||
-            cnpj == "55555555555555" ||
-            cnpj == "66666666666666" ||
-            cnpj == "77777777777777" ||
-            cnpj == "88888888888888" ||
-            cnpj == "99999999999999")
-            return false;
-
-        // Valida DVs
-        tamanho = cnpj.length - 2
-        numeros = cnpj.substring(0,tamanho);
-        digitos = cnpj.substring(tamanho);
-        soma = 0;
-        pos = tamanho - 7;
-        for (i = tamanho; i >= 1; i--) {
-            soma += numeros.charAt(tamanho - i) * pos--;
-            if (pos < 2)
-                pos = 9;
         }
-        resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-        if (resultado != digitos.charAt(0))
-            return false;
+    });
 
-        tamanho = tamanho + 1;
-        numeros = cnpj.substring(0,tamanho);
-        soma = 0;
-        pos = tamanho - 7;
-        for (i = tamanho; i >= 1; i--) {
-            soma += numeros.charAt(tamanho - i) * pos--;
-            if (pos < 2)
-                pos = 9;
-        }
-        resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-        if (resultado != digitos.charAt(1))
-            return false;
-
-        return true;
-
+    function cleanCNPJ(id){
+        return $(id).val().replace(/\./ig, "").replace(/\//ig, "").replace(/-/ig, "");
     }
 
     /* Validate user form */
     $("#btn-user-form").on("click", function(){
+
+        //name, cpf, jobRole, department, cellPhone, email, password
 
         if($("#name").val() == ""){
             showMsgAndBorder("#name");
@@ -140,6 +88,9 @@ $(function(){
     /* Validate company form */
     $("#btn-company-form").on("click", function(){
 
+        //name, fantasyName, activityBranch, cnpj, stateInscription, municipalInscription, mainCnae, fax, cep, street, number, district, city,
+        //state, responsibleName, cellPhone, email
+
         if($("#name").val() == ""){
             showMsgAndBorder("#name");
             return false;
@@ -158,7 +109,7 @@ $(function(){
         }
         removeBorder("#activityBranch");
 
-        var cnpjValue = $("#cnpj").val().replace(/\./ig, "").replace(/\//ig, "").replace(/-/ig, "");
+        var cnpjValue = cleanCNPJ("#cnpj");
 
         if(cnpjValue != ""){
 
@@ -262,6 +213,101 @@ $(function(){
         removeBorder("#email");
     });
 
+    $("#btn-provider-form").on("click", function(){
+        var validator = new Validator();
+        validator.voidIds = ["#name", "#fantasyName"];
+
+        if(!validator.voidValidate()) {
+            return false;
+        }
+
+        if(!cnpjValidate("#cnpj")){
+            return false;
+        }
+    });
+
+    function cpfvalidate(id){
+        var validator = new Validator();
+        validator.cpfId = id;
+        return validator.cpfValidate();
+    }
+
+    function cnpjValidate(id){
+        var validator = new Validator();
+        validator.cnpjId = id;
+        return validator.cnpjValidate();
+    }
+});
+
+function Validator(){
+    var voidIds = [];
+    var cpfId = "";
+    var cnpjId = "";
+
+    this.voidValidate = function(){
+        if(this.voidIds != []){
+            var elId = "";
+            for(id in this.voidIds){
+                elId = this.voidIds[id];
+                if($(elId).val() == ""){
+                    showMsgAndBorder(elId);
+                    return false;
+                }
+                removeBorder(elId);
+            }
+            return true;
+        }
+        return false;
+    };
+
+    this.cpfValidate = function(){
+        if(this.cpfId != ""){
+            var cpfValue = cleanCPF(this.cpfId);
+            if(cpfValue != ""){
+                var testCpf = validateCPF(cpfValue);
+                if(!testCpf) {
+                    alert("CPF invalido!");
+                    setBorderAndFocus(this.cpfId);
+                    return false;
+                }
+            }else if(cpfValue == ""){
+                showMsgAndBorder(this.cpfId);
+                return false;
+            }
+            removeBorder(this.cpfId);
+            return true;
+        }
+        return false;
+    }
+
+    this.cnpjValidate = function(){
+        if(this.cnpjId != ""){
+            var value = cleanCNPJ(this.cnpjId);
+            if(value != ""){
+                var test = validateCNPJ(value);
+                if(!test) {
+                    alert("CNPJ invalido!");
+                    setBorderAndFocus(this.cnpjId);
+                    return false;
+                }
+            }else if(value == ""){
+                showMsgAndBorder(this.cnpjId);
+                return false;
+            }
+            removeBorder(this.cnpjId);
+            return true;
+        }
+        return false;
+    }
+
+    function cleanCNPJ(id){
+        return $(id).val().replace(/\./ig, "").replace(/\//ig, "").replace(/-/ig, "");
+    }
+
+    function cleanCPF(id){
+        return $(id).val().replace(/\./ig, "").replace(/-/ig, "");
+    }
+
     function validateEmail(email){
         var pattern = /(.*?)@(.*?)\.[a-z]{2}/;
         return pattern.test(email);
@@ -284,4 +330,79 @@ $(function(){
     function removeBorder(id){
         $(id).css({border: ''});
     }
-});
+
+    function validateCPF(strCPF) {
+        var Soma;
+        var Resto;
+        Soma = 0;
+        if (strCPF == "00000000000") return false;
+
+        for (i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
+        Resto = (Soma * 10) % 11;
+
+        if ((Resto == 10) || (Resto == 11))  Resto = 0;
+        if (Resto != parseInt(strCPF.substring(9, 10)) ) return false;
+
+        Soma = 0;
+        for (i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (12 - i);
+        Resto = (Soma * 10) % 11;
+
+        if ((Resto == 10) || (Resto == 11))  Resto = 0;
+        if (Resto != parseInt(strCPF.substring(10, 11) ) ) return false;
+        return true;
+    }
+
+    function validateCNPJ(cnpj) {
+
+        cnpj = cnpj.replace(/[^\d]+/g,'');
+
+        if(cnpj == '') return false;
+
+        if (cnpj.length != 14)
+            return false;
+
+        // Elimina CNPJs invalidos conhecidos
+        if (cnpj == "00000000000000" ||
+            cnpj == "11111111111111" ||
+            cnpj == "22222222222222" ||
+            cnpj == "33333333333333" ||
+            cnpj == "44444444444444" ||
+            cnpj == "55555555555555" ||
+            cnpj == "66666666666666" ||
+            cnpj == "77777777777777" ||
+            cnpj == "88888888888888" ||
+            cnpj == "99999999999999")
+            return false;
+
+        // Valida DVs
+        tamanho = cnpj.length - 2
+        numeros = cnpj.substring(0,tamanho);
+        digitos = cnpj.substring(tamanho);
+        soma = 0;
+        pos = tamanho - 7;
+        for (i = tamanho; i >= 1; i--) {
+            soma += numeros.charAt(tamanho - i) * pos--;
+            if (pos < 2)
+                pos = 9;
+        }
+        resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+        if (resultado != digitos.charAt(0))
+            return false;
+
+        tamanho = tamanho + 1;
+        numeros = cnpj.substring(0,tamanho);
+        soma = 0;
+        pos = tamanho - 7;
+        for (i = tamanho; i >= 1; i--) {
+            soma += numeros.charAt(tamanho - i) * pos--;
+            if (pos < 2)
+                pos = 9;
+        }
+        resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+        if (resultado != digitos.charAt(1))
+            return false;
+
+        return true;
+
+    }
+}

@@ -33,7 +33,7 @@
                                 <input type="text" id="cnpj" name="cnpj" value="{{ $cnpj }}" class="form-control"
                                        required>
                             <span class="input-group-btn">
-                                <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
+                                <button type="submit" class="btn btn-default" id="form-provider-associate"><i class="glyphicon glyphicon-search"></i>
                                 </button>
                             </span>
                             </div>

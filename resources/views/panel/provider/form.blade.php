@@ -29,19 +29,19 @@
                         <div class="form-group col-xs-4">
                             <label for="name">Razão Social* :</label>
                             <input type="text" id="name" name="name" value="{{ $provider->name or old('name') }}"
-                                   class="form-control" required>
+                                   class="form-control">
                         </div>
                         <div class="form-group col-xs-4">
                             <label for="fantasyName">Nome Fantasia* :</label>
                             <input type="text" id="fantasyName" name="fantasyName"
                                    value="{{ $provider->fantasyName or old('fantasyName') }}"
-                                   class="form-control" required>
+                                   class="form-control">
                         </div>
                         <div class="form-group col-xs-4">
                             <label for="activityBranch">Ramo de Atividade* :</label>
                             <input type="text" id="activityBranch" name="activityBranch"
                                    value="{{ $provider->activityBranch or old('activityBranch') }}"
-                                   class="form-control" required>
+                                   class="form-control">
                         </div>
 
                         <div class="form-group col-xs-4">
@@ -52,7 +52,7 @@
                             @else
                                 <label for="cpnj">CNPJ* : </label>
                                 <input type="text" id="cnpj" name="cnpj"
-                                       value="{{ $provider->cnpj or old('cnpj') }}" class="form-control" required>
+                                       value="{{ $provider->cnpj or old('cnpj') }}" class="form-control">
                             @endif
                         </div>
 
@@ -60,13 +60,13 @@
                             <label for="stateInscription">Inscrição Estadual* :</label>
                             <input type="text" id="stateInscription" name="stateInscription"
                                    value="{{ $provider->stateInscription or old('stateInscription') }}"
-                                   class="form-control" required>
+                                   class="form-control">
                         </div>
                         <div class="form-group col-xs-4">
                             <label for="municipalInscription">Inscrição Municipal* :</label>
                             <input type="text" id="municipalInscription" name="municipalInscription"
                                    value="{{ $provider->municipalInscription or old('municipalInscription') }}"
-                                   class="form-control" required>
+                                   class="form-control">
                         </div>
 
 
@@ -74,13 +74,13 @@
                             <label for="mainCnae">CNAE Principal* :</label>
                             <input type="text" id="mainCnae" name="mainCnae"
                                    value="{{ $provider->mainCnae or old('mainCnae') }}"
-                                   class="form-control" required>
+                                   class="form-control">
                         </div>
                         <div class="form-group col-xs-4">
-                            <label for="phone">Telefone* :</label>
+                            <label for="phone">Telefone :</label>
                             <input type="phone" id="phone" name="phone"
                                    value="{{ $provider->phone or old('phone') }}"
-                                   class="form-control" required>
+                                   class="form-control">
                         </div>
                         <div class="form-group col-xs-4">
                             <label for="fax">Fax* :</label>
@@ -92,19 +92,19 @@
                         <div class="form-group col-xs-4">
                             <label for="cep">CEP* :</label>
                             <input type="text" id="cep" name="cep" value="{{ $provider->cep or old('cep') }}"
-                                   class="form-control" required>
+                                   class="form-control">
                         </div>
                         <div class="form-group col-xs-4">
                             <label for="street">Logradouro* :</label>
                             <input type="text" id="street" name="street"
                                    value="{{ $provider->street or old('street') }}"
-                                   class="form-control" required>
+                                   class="form-control">
                         </div>
                         <div class="form-group col-xs-4">
                             <label for="number">Número* :</label>
                             <input type="text" id="number" name="number"
                                    value="{{ $provider->number or old('number') }}"
-                                   class="form-control" required>
+                                   class="form-control">
                         </div>
 
 
@@ -112,12 +112,12 @@
                             <label for="district">Bairro* :</label>
                             <input type="text" id="district" name="district"
                                    value="{{ $provider->district or old('district') }}"
-                                   class="form-control" required>
+                                   class="form-control">
                         </div>
                         <div class="form-group col-xs-4">
                             <label for="city">Cidade* :</label>
                             <input type="text" id="city" name="city" value="{{ $provider->city or old('city') }}"
-                                   class="form-control" required>
+                                   class="form-control">
                         </div>
                         <div class="form-group col-xs-4">
                             <label for="state">UF* :</label>
@@ -133,7 +133,7 @@
                             <label for="responsibleName">Nome * :</label>
                             <input type="responsibleName" id="responsibleName" name="responsibleName"
                                    value="{{ $provider->responsibleName or old('responsibleName') }}"
-                                   class="form-control" required>
+                                   class="form-control">
                         </div>
                         <div class="form-group col-xs-4">
                             <label for="cellPhone">Celular :</label>
@@ -145,12 +145,12 @@
                             <label for="email">E-mail * :</label>
                             <input type="email" id="email" name="email"
                                    value="{{ $provider->email or old('email') }}"
-                                   class="form-control" required>
+                                   class="form-control">
                         </div>
 
                         <div class="clearfix"></div>
                         <div class="control-group" style="margin: 30px 0px 0px 12px;">
-                            <button type="submit" class="btn btn-success">Salvar</button>
+                            <button type="submit" class="btn btn-success" id="btn-provider-form">Salvar</button>
                         </div>
 
                     </form>
