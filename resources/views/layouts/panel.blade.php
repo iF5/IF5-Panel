@@ -71,17 +71,12 @@
                 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                     <div class="menu_section">
                         <ul class="nav side-menu">
-                        <!--<li><a><i class="fa fa-home"></i> Dashboard <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a href="{{ url('dashboard') }}">Cliente/Prestador</a></li>
-                                    <li><a href="{{ url('dashboard-employee') }}">Funcion&aacute;rios</a></li>
-                                </ul>
-                            </li>-->
-                            <!--
-                            <li><a><i class="fa fa-check-square-o"></i> Checklist <span class="fa fa-chevron-down"></span></a>
-                            </li>
-                            -->
                             @can('onlyAdmin')
+                                <li>
+                                    <a href="{{ route('dashboard.index') }}"><i class="fa fa-dashboard"></i>
+                                        Dashboard
+                                    </a>
+                                </li>
                                 <li>
                                     <a href="{{ route('user-admin.index') }}"><i class="fa fa-users"></i>
                                         Usu&aacute;rios admin

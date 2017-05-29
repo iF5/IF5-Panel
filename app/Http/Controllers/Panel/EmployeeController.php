@@ -82,7 +82,6 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $this->getBreadcrumb();
         $keyword = \Request::input('keyword');
         $employees = ($keyword)
             ? $this->employeeRepository->findLike($this->getProviderId(), 'name', $keyword)
