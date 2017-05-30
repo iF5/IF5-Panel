@@ -61,6 +61,7 @@ $(function(){
         }
     });
 
+    /* Validate provider form */
     $("#btn-provider-form").on("click", function(){
         var validator = new Validator();
         validator.voidIds = [
