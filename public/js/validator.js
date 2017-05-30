@@ -6,216 +6,47 @@
 $(function(){
 
     $("#form-provider-associate").on("click", function(event){
-        var cnpjValue = cleanCNPJ("#cnpj");
-
-        if(cnpjValue != ""){
-            var testCnpj = validateCNPJ(cnpjValue);
-
-            if(!testCnpj){
-                alert("CNPJ invalido!");
-                setBorderAndFocus("#cnpj");
-                return false;
-            }
-        }else if(cnpjValue == ""){
-            showMsgAndBorder("#cnpj");
+        if(!cnpjValidate("#cnpj")){
             return false;
         }
     });
 
-    function cleanCNPJ(id){
+    function sacleanCNPJ(id){
         return $(id).val().replace(/\./ig, "").replace(/\//ig, "").replace(/-/ig, "");
     }
 
     /* Validate user form */
     $("#btn-user-form").on("click", function(){
 
-        //name, cpf, jobRole, department, cellPhone, email, password
+        var validator = new Validator();
+        validator.voidIds = [
+            "#name", "#cpf", "#jobRole", "#department",
+            "#cellPhone", "#email", "#password"
+        ];
 
-        if($("#name").val() == ""){
-            showMsgAndBorder("#name");
+        if(!validator.voidValidate()) {
             return false;
         }
-        removeBorder("#name");
 
-        var cpfValue = $("#cpf").val().replace(/\./ig, "").replace(/-/ig, "");
-
-        if(cpfValue != ""){
-
-            var testCpf = validateCPF(cpfValue);
-
-            if(!testCpf) {
-                alert("CPF invalido!");
-                setBorderAndFocus("#cpf");
-                return false;
-            }
-        }else if(cpfValue == ""){
-            showMsgAndBorder("#cpf");
+        if(!cpfValidate("#cpf")){
             return false;
         }
-        removeBorder("#cpf");
 
-        if($("#jobRole").val() == ""){
-            showMsgAndBorder("#jobRole");
+        if(!emailValidate("#email")){
             return false;
         }
-        removeBorder("#jobRole");
-
-        if($("#department").val() == ""){
-            showMsgAndBorder("#department");
-            return false;
-        }
-        removeBorder("#department");
-
-        if($("#cellPhone").val() == ""){
-            showMsgAndBorder("#cellPhone");
-            return false;
-        }
-        removeBorder("#cellPhone");
-
-        if($("#email").val() == ""){
-            showMsgAndBorder("#email");
-            return false;
-        }
-        removeBorder("#email");
-
-        if($("#password").val() == ""){
-            showMsgAndBorder("#password");
-            return false;
-        }
-        removeBorder("#password");
     });
 
     /* Validate company form */
     $("#btn-company-form").on("click", function(){
 
-        //name, fantasyName, activityBranch, cnpj, stateInscription, municipalInscription, mainCnae, fax, cep, street, number, district, city,
-        //state, responsibleName, cellPhone, email
-
-        if($("#name").val() == ""){
-            showMsgAndBorder("#name");
-            return false;
-        }
-        removeBorder("#name");
-
-        if($("#fantasyName").val() == ""){
-            showMsgAndBorder("#fantasyName");
-            return false;
-        }
-        removeBorder("#fantasyName");
-
-        if($("#activityBranch").val() == ""){
-            showMsgAndBorder("#activityBranch");
-            return false;
-        }
-        removeBorder("#activityBranch");
-
-        var cnpjValue = cleanCNPJ("#cnpj");
-
-        if(cnpjValue != ""){
-
-            var testCnpj = validateCNPJ(cnpjValue);
-
-            if(!testCnpj){
-                alert("CNPJ invalido!");
-                setBorderAndFocus("#cnpj");
-                return false;
-            }
-        }else if(cnpjValue == ""){
-            showMsgAndBorder("#cnpj");
-            return false;
-        }
-        removeBorder("#cnpj");
-
-        if($("#stateInscription").val() == ""){
-            showMsgAndBorder("#stateInscription");
-            return false;
-        }
-        removeBorder("#stateInscription");
-
-        if($("#municipalInscription").val() == ""){
-            showMsgAndBorder("#municipalInscription");
-            return false;
-        }
-        removeBorder("#municipalInscription");
-
-        if($("#mainCnae").val() == ""){
-            showMsgAndBorder("#mainCnae");
-            return false;
-        }
-        removeBorder("#mainCnae");
-
-        if($("#fax").val() == ""){
-            showMsgAndBorder("#fax");
-            return false;
-        }
-        removeBorder("#fax");
-
-        if($("#cep").val() == ""){
-            showMsgAndBorder("#cep");
-            return false;
-        }
-        removeBorder("#cep");
-
-        if($("#street").val() == ""){
-            showMsgAndBorder("#street");
-            return false;
-        }
-        removeBorder("#street");
-
-        if($("#number").val() == ""){
-            showMsgAndBorder("#number");
-            return false;
-        }
-        removeBorder("#number");
-
-        if($("#district").val() == ""){
-            showMsgAndBorder("#district");
-            return false;
-        }
-        removeBorder("#district");
-
-        if($("#city").val() == ""){
-            showMsgAndBorder("#city");
-            return false;
-        }
-        removeBorder("#city");
-
-        if($("#state").val() == ""){
-            showMsgAndBorder("#state");
-            return false;
-        }
-        removeBorder("#state");
-
-        if($("#responsibleName").val() == ""){
-            showMsgAndBorder("#responsibleName");
-            return false;
-        }
-        removeBorder("#responsibleName");
-
-        if($("#cellPhone").val() == ""){
-            showMsgAndBorder("#cellPhone");
-            return false;
-        }
-        removeBorder("#cellPhone");
-
-        var email = $("#email").val();
-        if(email == ""){
-            showMsgAndBorder("#email");
-            return false;
-        }else{
-            var validate = validateEmail(email);
-            if(!validate){
-                alert("Email invalido!");
-                setBorderAndFocus("#email");
-                return false;
-            }
-        }
-        removeBorder("#email");
-    });
-
-    $("#btn-provider-form").on("click", function(){
         var validator = new Validator();
-        validator.voidIds = ["#name", "#fantasyName"];
+        validator.voidIds = [
+            "#name", "#fantasyName", "#activityBranch", "#cnpj",
+            "#stateInscription", "#municipalInscription", "#mainCnae",
+            "#fax", "#cep", "#street", "#number", "#district", "#city",
+            "#state", "#responsibleName", "#cellPhone", "#email"
+        ];
 
         if(!validator.voidValidate()) {
             return false;
@@ -224,9 +55,36 @@ $(function(){
         if(!cnpjValidate("#cnpj")){
             return false;
         }
+
+        if(!emailValidate("#email")){
+            return false;
+        }
     });
 
-    function cpfvalidate(id){
+    $("#btn-provider-form").on("click", function(){
+        var validator = new Validator();
+        validator.voidIds = [
+            "#name", "#fantasyName", "#activityBranch",
+            "#cnpj", "#stateInscription", "#municipalInscription",
+            "#mainCnae", "#cep", "#street", "#number", "#district",
+            "#city", "#state", "#responsibleName", "#cellPhone",
+            "#email"
+        ];
+
+        if(!validator.voidValidate()) {
+            return false;
+        }
+
+        if(!cnpjValidate("#cnpj")){
+            return false;
+        }
+
+        if(!emailValidate("#email")){
+            return false;
+        }
+    });
+
+    function cpfValidate(id){
         var validator = new Validator();
         validator.cpfId = id;
         return validator.cpfValidate();
@@ -237,12 +95,19 @@ $(function(){
         validator.cnpjId = id;
         return validator.cnpjValidate();
     }
+
+    function emailValidate(id){
+        var validator = new Validator();
+        validator.emailId = id;
+        return validator.validateEmail();
+    }
 });
 
 function Validator(){
     var voidIds = [];
     var cpfId = "";
     var cnpjId = "";
+    var emailId = "";
 
     this.voidValidate = function(){
         if(this.voidIds != []){
@@ -300,6 +165,26 @@ function Validator(){
         return false;
     }
 
+    this.validateEmail = function(){
+        if(this.emailId != "") {
+            var str = $(this.emailId).val();
+            if (str == "") {
+                showMsgAndBorder(this.emailId);
+                return false;
+            } else {
+                var validate = email(str);
+                if (!validate) {
+                    alert("Email invalido!");
+                    setBorderAndFocus(this.emailId);
+                    return false;
+                }
+            }
+            removeBorder(this.emailId);
+            return true;
+        }
+        return false;
+    };
+
     function cleanCNPJ(id){
         return $(id).val().replace(/\./ig, "").replace(/\//ig, "").replace(/-/ig, "");
     }
@@ -308,9 +193,9 @@ function Validator(){
         return $(id).val().replace(/\./ig, "").replace(/-/ig, "");
     }
 
-    function validateEmail(email){
+    function email(str){
         var pattern = /(.*?)@(.*?)\.[a-z]{2}/;
-        return pattern.test(email);
+        return pattern.test(str);
     }
 
     function showMsgAndBorder(id){

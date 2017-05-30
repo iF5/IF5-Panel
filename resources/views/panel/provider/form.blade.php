@@ -48,7 +48,7 @@
                             @if($provider->cnpjHidden)
                                 <label>CNPJ* :</label>
                                 <input type="text" value="{{ $provider->cnpj or old('cnpj')}}" class="form-control" disabled>
-                                <input type="hidden" name="cnpj" value="{{ $provider->cnpj or old('cnpj') }}">
+                                <input type="hidden" id="cnpj" name="cnpj" value="{{ $provider->cnpj or old('cnpj') }}">
                             @else
                                 <label for="cpnj">CNPJ* : </label>
                                 <input type="text" id="cnpj" name="cnpj"
@@ -83,7 +83,7 @@
                                    class="form-control">
                         </div>
                         <div class="form-group col-xs-4">
-                            <label for="fax">Fax* :</label>
+                            <label for="fax">Fax :</label>
                             <input type="fax" id="fax" name="fax" value="{{ $provider->fax or old('fax') }}"
                                    class="form-control">
                         </div>
@@ -143,7 +143,7 @@
                         </div>
                         <div class="form-group col-xs-4">
                             <label for="email">E-mail * :</label>
-                            <input type="email" id="email" name="email"
+                            <input type="text" id="email" name="email"
                                    value="{{ $provider->email or old('email') }}"
                                    class="form-control">
                         </div>
