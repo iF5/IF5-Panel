@@ -16,70 +16,48 @@ class DashboardRepository
      */
     public function findDocumentAndEmployeeByProviders($keyword = null)
     {
-
-
-            //https://stackoverflow.com/questions/28319240/laravel-how-to-use-derived-tables-subqueries-in-the-laravel-query-builder
-            $whereLike = ($keyword) ? "WHERE p.name LIKE '%{$keyword}%'" : null;
-
+        try {
+            //Sub query
             $documentsByEmployees = \DB::table('documents')->selectRaw('
                 employees_has_documents.documentId,
                 count(employees_has_documents.documentId) AS documentQuantity,
                 employees.providerId
-            ')->leftJoin('employees_has_documents', function($join){
+            ')->leftJoin('employees_has_documents', function ($join) {
                 $join->on('employees_has_documents.documentId', '=', 'documents.id');
-            })->join('employees', function($join){
+            })->join('employees', function ($join) {
                 $join->on('employees.id', '=', 'employees_has_documents.employeeId');
             })->where([
-                ['employees_has_documents', '=', 1]
+                ['employees_has_documents.validated', '=', '?']
             ])->groupBy('documents.id', 'employees.providerId');
 
+            //Sub query
+            $employeesByProviders = \DB::table('providers')->selectRaw('
+                providers.id AS providerId,
+                providers.name AS providerName,
+                count(employees.id) AS employeeQuantity
+            ')->join('employees', function ($join) {
+                $join->on('employees.providerId', '=', 'providers.id');
+            });
+            if ($keyword) {
+                $employeesByProviders->where('providers.name', 'like', '?');
+            }
+            $employeesByProviders->groupBy('providers.id')->limit($this->limit);
 
-
-            $b = \DB::selectRaw('
+            //Query final
+            return \DB::table(null)->selectRaw('
                 a.documentId,
-                a.documentQuantity
-            ')->from(\DB::raw("({$documentsByEmployees->toSql()}) AS a"))->toSql();
-
-        dd($b);
-
-            $q = "SELECT
-                    a.documentId,
-                    a.documentQuantity,
-                    b.providerId,
-                    b.providerName,
-                    b.employeeQuantity
-                FROM (
-                    (
-                        SELECT
-                            ehd.documentId,
-                            count(ehd.documentId) AS documentQuantity,
-                            e.providerId
-                        FROM documents AS d
-                        LEFT JOIN employees_has_documents AS ehd
-                          ON ehd.documentId = d.id
-                        INNER JOIN employees AS e
-                          ON e.id = ehd.employeeId
-                        WHERE
-                          ehd.validated = 1
-                        GROUP BY d.id, e.providerId
-                    ) AS a,
-                    (
-                        SELECT
-                            p.id AS providerId,
-                            p.name AS providerName,
-                            COUNT(e.id) AS employeeQuantity
-                        FROM providers AS p
-                        INNER JOIN employees AS e
-                          ON e.providerId = p.id
-                        {$whereLike}
-                        GROUP BY p.id
-                        LIMIT {$this->limit}
-                    ) AS b
-                ) WHERE a.providerId = b.providerId;";
-
-            return \DB::select($q);
-
-
+                a.documentQuantity,
+                b.providerId,
+                b.providerName,
+                b.employeeQuantity
+            ', [1, "%{$keyword}%"])->from(\DB::raw("
+                ({$documentsByEmployees->toSql()}) AS a, ({$employeesByProviders->toSql()}) AS b
+             "))
+                ->whereRaw('a.providerId = b.providerId')
+                ->get();
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
     }
 
     /**
