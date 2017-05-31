@@ -68,23 +68,19 @@ class DashboardRepository
     {
         try {
 
-            $q = "SELECT
-                    ehd.documentId,
-                    count(ehd.documentId) AS documentQuantity,
-                    e.id AS employeeId,
-                    e.name AS employeeName
-                FROM documents AS d
-                LEFT JOIN employees_has_documents AS ehd
-                    ON ehd.documentId = d.id
-                INNER JOIN employees AS e
-                    ON e.id = ehd.employeeId
-                WHERE
-                    e.providerId = {$providerId}
-                    AND ehd.validated = 1
-                GROUP BY d.id, e.id;
-            ";
-
-            return \DB::select($q);
+            return \DB::table('documents')->selectRaw('
+                employees_has_documents.documentId,
+                count(employees_has_documents.documentId) AS documentQuantity,
+                employees.id AS employeeId,
+                employees.name AS employeeName
+            ', [$providerId, 1])->leftJoin('employees_has_documents', function ($join) {
+                $join->on('employees_has_documents.documentId', '=', 'documents.id');
+            })->join('employees', function ($join) {
+                $join->on('employees.id', '=', 'employees_has_documents.employeeId');
+            })->where([
+                ['employees.providerId', '=', '?'],
+                ['employees_has_documents.validated', '=', '?']
+            ])->groupBy('documents.id', 'employees.id')->get();
 
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
