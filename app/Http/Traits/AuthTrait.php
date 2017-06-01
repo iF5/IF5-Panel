@@ -38,4 +38,12 @@ trait AuthTrait
         return (in_array(\Auth::user()->role, $array));
     }
 
+    /**
+     * @return string
+     */
+    protected function getRole()
+    {
+        return \Auth::user()->role;
+    }
+
 }

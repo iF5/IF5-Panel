@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\AuthTrait;
 use App\Models\Document;
 use App\Repositories\Panel\DashboardRepository;
 use App\Services\BreadcrumbService;
@@ -10,6 +11,8 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+
+    use AuthTrait;
 
     /**
      * @var DashboardRepository
@@ -29,6 +32,11 @@ class DashboardController extends Controller
     {
         $this->dashboardRepository = $dashboardRepository;
         $this->breadcrumbService = $breadcrumbService;
+    }
+
+    public function checkProviderId($providerId)
+    {
+        //return ($this->getRole() === )
     }
 
 
@@ -67,7 +75,7 @@ class DashboardController extends Controller
             ];
         }
 
-        foreach($providers as &$provider) {
+        foreach ($providers as &$provider) {
             for ($i = 1; $i <= $totalDocuments; $i++) {
                 $provider['documents'][$i] = 0;
             }
@@ -116,7 +124,7 @@ class DashboardController extends Controller
             ];
         }
 
-        foreach($employees as &$employee) {
+        foreach ($employees as &$employee) {
             for ($i = 1; $i <= $totalDocuments; $i++) {
                 $employee['documents'][$i] = 0;
             }
