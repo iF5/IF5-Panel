@@ -39,11 +39,27 @@ trait AuthTrait
     }
 
     /**
+     * @return int
+     */
+    protected function getId()
+    {
+        return \Auth::user()->id;
+    }
+
+    /**
      * @return string
      */
     protected function getRole()
     {
         return \Auth::user()->role;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getCompanyId()
+    {
+        return \Auth::user()->companyId;
     }
 
 }
