@@ -22,8 +22,8 @@ class CreateProvidersTable extends Migration
             $table->string('stateInscription');
             $table->string('municipalInscription');
             $table->string('mainCnae');
-            $table->string('phone');
-            $table->string('fax');
+            $table->string('phone')->nullable();;
+            $table->string('fax')->nullable();
             $table->string('cep');
             $table->string('street');
             $table->string('number');
