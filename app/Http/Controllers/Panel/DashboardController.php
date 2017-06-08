@@ -3,16 +3,12 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
-use App\Http\Traits\AuthTrait;
 use App\Models\Document;
 use App\Repositories\Panel\DashboardRepository;
 use App\Services\BreadcrumbService;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-
-    use AuthTrait;
 
     /**
      * @var DashboardRepository
@@ -34,12 +30,9 @@ class DashboardController extends Controller
         $this->breadcrumbService = $breadcrumbService;
     }
 
-    public function checkProviderId($providerId)
-    {
-        //return ($this->getRole() === )
-    }
-
-
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         $keyword = \Request::input('keyword');
@@ -64,7 +57,7 @@ class DashboardController extends Controller
     private function prepareReportToProviders($totalDocuments, $keyword = null)
     {
         $providers = [];
-        $data = $this->dashboardRepository->findDocumentAndEmployeeByProviders($keyword);
+        $data = $this->dashboardRepository->findProviders($keyword);
 
         foreach ($data as $d) {
             $providers[$d->providerId] = [
@@ -114,7 +107,7 @@ class DashboardController extends Controller
     private function prepareReportToEmployee($totalDocuments, $providerId)
     {
         $employees = [];
-        $data = $this->dashboardRepository->findDocumentAndEmployeeByProviderId($providerId);
+        $data = $this->dashboardRepository->findEmployeesByProviderId($providerId);
 
         foreach ($data as $d) {
             $employees[$d->employeeId] = [

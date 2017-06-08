@@ -15,12 +15,12 @@ class HomeController extends Controller
      */
     protected $redirects = [
         'admin' => 'dashboard.index',
-        'company' => 'dashboard.employee',
+        'company' => 'dashboard.index',
         'provider' => 'employee.index'
     ];
 
     /**
-     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function index()
     {

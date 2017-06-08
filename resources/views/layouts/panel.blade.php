@@ -71,17 +71,14 @@
                 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                     <div class="menu_section">
                         <ul class="nav side-menu">
-                            @can('onlyAdmin')
+                            @can('isCompany')
                                 <li>
                                     <a href="{{ route('dashboard.index') }}"><i class="fa fa-dashboard"></i>
                                         Dashboard
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="{{ route('user-admin.index') }}"><i class="fa fa-users"></i>
-                                        Usu&aacute;rios admin
-                                    </a>
-                                </li>
+                            @endcan
+                            @can('onlyAdmin')
                                 <li>
                                     <a href="{{ route('company.index') }}"><i class="fa fa-building-o"></i> Clientes
                                     </a>
@@ -91,39 +88,42 @@
                                                 class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('pendency.index', ['source' => 'provider']) }}">Prestadores
-                                                de
-                                                servi&ccedil;os </a></li>
+                                                de servi&ccedil;os </a></li>
                                         <li><a href="{{ route('pendency.index', ['source' => 'employee']) }}">Funcion&aacute;rios</a>
                                         </li>
                                     </ul>
+                                </li>
+                                <li>
+                                    <a href="{{ route('user-admin.index') }}"><i class="fa fa-users"></i>
+                                        Usu&aacute;rios admin
+                                    </a>
                                 </li>
                             @endcan
 
                             @can('onlyCompany')
                                 <li>
-                                    <a href="{{ route('user-company.index') }}"><i class="fa fa-users"></i> Usu&aacute;rios
+                                    <a href="{{ route('report.index') }}"><i class="fa fa-bar-chart-o"></i>
+                                        Relat&oacute;rios
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{{ route('provider.index') }}"><i class="fa fa-briefcase"></i> Prestadores
-                                        de
-                                        servi&ccedil;os </a>
+                                        de servi&ccedil;os </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('report.index') }}"><i class="fa fa-bar-chart-o"></i>
-                                        Relat&oacute;rios
+                                    <a href="{{ route('user-company.index') }}"><i class="fa fa-users"></i> Usu&aacute;rios
                                     </a>
                                 </li>
                             @endcan
 
                             @can('onlyProvider')
                                 <li>
-                                    <a href="{{ route('user-provider.index') }}"><i class="fa fa-users"></i> Usu&aacute;rios
-                                    </a>
+                                    <a href="{{ route('employee.index') }}"><i class="fa fa-list-alt"></i>
+                                        Funcion&aacute;rios </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('employee.index') }}"><i class="fa fa-arrow-circle-up"></i>
-                                        Funcion&aacute;rios </a>
+                                    <a href="{{ route('user-provider.index') }}"><i class="fa fa-users"></i> Usu&aacute;rios
+                                    </a>
                                 </li>
                             @endcan
 
