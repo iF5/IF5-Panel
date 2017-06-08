@@ -110,6 +110,7 @@ class EmployeeRepository extends Employee
     public function findCompanyByEmployee($employeeId)
     {
         try {
+
             return \DB::table('employees_has_companies')->where('employeeId', '=', $employeeId)->get();
         } catch (\Exception $e) {
             throw new ModelNotFoundException;

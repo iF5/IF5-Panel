@@ -190,7 +190,6 @@ class EmployeeController extends Controller
         foreach ($companies as &$company) {
             $company->selected = (in_array($company->id, $employeesArray)) ? true : false;
         }
-
         return $companies;
     }
 
