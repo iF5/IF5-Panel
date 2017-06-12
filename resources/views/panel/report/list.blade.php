@@ -26,9 +26,9 @@
                             @endif
                             <input class="form-control" type="text" id="referenceDateSearch" name="reference-date"
                                    placeholder="mm/aaaa"
-                                   value="{{ $referenceDate }}" required>
+                                   value="{{ $referenceDate }}">
                             <span class="input-group-btn">
-                                <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
+                                <button type="submit" class="btn btn-default" id="btn-search-report"><i class="glyphicon glyphicon-search"></i>
                                 </button>
                             </span>
                         </div>

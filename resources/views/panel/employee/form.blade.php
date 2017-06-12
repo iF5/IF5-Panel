@@ -37,48 +37,47 @@
                                 <label for="name">Nome * :</label>
                                 <input type="text" id="name" name="name"
                                        value="{{ $employee->name or old('name') }}"
-                                       class="form-control" required>
+                                       class="form-control">
                             </div>
                             <div class="form-group col-xs-4">
                                 <label for="cpf">CPF * : </label>
                                 <input type="text" id="cpf" name="cpf"
-                                       value="{{ $employee->cpf or old('cpf') }}" class="form-control" required>
+                                       value="{{ $employee->cpf or old('cpf') }}" class="form-control">
                             </div>
                             <div class="form-group col-xs-4">
                                 <label for="rg">RG * : </label>
                                 <input type="text" id="rg" name="rg"
-                                       value="{{ $employee->rg or old('rg') }}" class="form-control" required>
+                                       value="{{ $employee->rg or old('rg') }}" class="form-control">
                             </div>
 
                             <div class="form-group col-xs-4">
                                 <label for="ctps">CTPS Número * : </label>
                                 <input type="text" id="ctps" name="ctps"
-                                       value="{{ $employee->ctps or old('ctps') }}" class="form-control" required>
+                                       value="{{ $employee->ctps or old('ctps') }}" class="form-control">
                             </div>
                             <div class="form-group col-xs-4">
                                 <label for="birthDate">Data de nascimento * : </label>
                                 <input type="text" id="birthDate" name="birthDate"
                                        value="{{ $employee->birthDate or old('birthDate') }}"
-                                       class="form-control dateMask"
-                                       required>
+                                       class="form-control dateMask">
                             </div>
                             <div class="form-group col-xs-4">
                                 <label for="street">Endereço * : </label>
                                 <input type="text" id="street" name="street"
                                        value="{{ $employee->street or old('street') }}" class="form-control"
-                                       required>
+                                       >
                             </div>
 
                             <div class="form-group col-xs-4">
                                 <label for="district">Bairro * : </label>
                                 <input type="text" id="district" name="district"
                                        value="{{ $employee->district or old('district') }}" class="form-control"
-                                       required>
+                                       >
                             </div>
                             <div class="form-group col-xs-4">
                                 <label for="city">Cidade * : </label>
                                 <input type="text" id="city" name="city"
-                                       value="{{ $employee->city or old('city') }}" class="form-control" required>
+                                       value="{{ $employee->city or old('city') }}" class="form-control" >
                             </div>
                             <div class="form-group col-xs-4">
                                 <label for="state">Estado * : </label>
@@ -98,7 +97,7 @@
                                 <label for="jobRole">Função * : </label>
                                 <input type="text" id="jobRole" name="jobRole"
                                        value="{{ $employee->jobRole or old('jobRole') }}" class="form-control"
-                                       required>
+                                       >
                             </div>
                             <div class="form-group col-xs-4">
                                 <label for="salaryCap">Piso salarial *
@@ -106,17 +105,17 @@
                                 <input type="text" id="salaryCap" name="salaryCap"
                                        value="{{ ($method === 'PUT') ? number_format($employee->salaryCap, 2, ',', '.') : old('salaryCap') }}"
                                        class="form-control moneyMask"
-                                       required>
+                                       >
                             </div>
                             <div class="form-group col-xs-4">
                                 <label for="hiringDate">Data contratação * : </label>
                                 <input type="text" id="hiringDate" name="hiringDate"
                                        value="{{ $employee->hiringDate or old('hiringDate') }}"
-                                       class="form-control dateMask" required>
+                                       class="form-control dateMask" >
                             </div>
 
                             <div class="form-group col-xs-4">
-                                <label for="endingDate">Data da rescisão * : </label>
+                                <label for="endingDate">Data da rescisão  : </label>
                                 <input type="text" id="endingDate" name="endingDate"
                                        value="{{ $employee->endingDate or old('endingDate') }}"
                                        class="form-control dateMask">
@@ -124,7 +123,7 @@
                             <div class="form-group col-xs-4">
                                 <label for="pis">Número do PIS * : </label>
                                 <input type="text" id="pis" name="pis"
-                                       value="{{ $employee->pis or old('pis') }}" class="form-control" required>
+                                       value="{{ $employee->pis or old('pis') }}" class="form-control" >
                             </div>
                             <div class="form-group col-xs-4">
                                 <label for="workingHours">Jornada de trabalho * : </label>
@@ -173,7 +172,7 @@
 
                         <div class="row">
                             <div class="control-group col-xs-4" style="margin-top: 30px;">
-                                <button type="submit" class="btn btn-success">Salvar</button>
+                                <button type="submit" class="btn btn-success" id="btn-employee-form">Salvar</button>
                             </div>
                         </div>
 

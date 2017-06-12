@@ -5,6 +5,46 @@
 
 $(function(){
 
+    /* Validate search report */
+    $("#btn-search-report").on("click", function(){
+        var validator = new Validator();
+        validator.voidIds = [
+            "#referenceDateSearch"
+        ];
+
+        if(!validator.voidValidate()) {
+            return false;
+        }
+    });
+
+    /* Validate employee form create */
+    $("#btn-employee-form").on("click", function(){
+        var validator = new Validator();
+        validator.voidIds = [
+            "#name", "#cpf", "#rg", "#ctps", "#birthDate", "#street",
+            "#district", "#city", "#state", "#jobRole", "#salaryCap",
+            "#hiringDate", "#pis", "#workingHours",
+            "#workRegime", "#companies"
+        ];
+
+        if(!validator.voidValidate()) {
+            return false;
+        }
+    });
+
+    /* Validate form search */
+    $("#btn-search").on("click", function(){
+
+        var validator = new Validator();
+        validator.voidIds = [
+            "#keyword"
+        ];
+
+        if(!validator.voidValidate()) {
+            return false;
+        }
+    });
+
     $("#form-provider-associate").on("click", function(event){
         if(!cnpjValidate("#cnpj")){
             return false;
