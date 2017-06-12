@@ -30,10 +30,9 @@
                             <div class="input-group">
                                 <span class="input-group-addon">Digite o CNPJ
                             </span>
-                                <input type="text" id="cnpj" name="cnpj" value="{{ $cnpj }}" class="form-control"
-                                       required>
+                                <input type="text" id="cnpj" name="cnpj" value="{{ $cnpj }}" class="form-control">
                             <span class="input-group-btn">
-                                <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
+                                <button type="submit" class="btn btn-default" id="form-provider-associate"><i class="glyphicon glyphicon-search"></i>
                                 </button>
                             </span>
                             </div>
