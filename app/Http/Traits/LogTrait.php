@@ -14,12 +14,12 @@ trait LogTrait
      * @param string $method
      * @param array $data
      */
-    protected function saveLog($title, $method, array $data = [])
+    protected function createLog($title, $method, array $data = [])
     {
         Log::create([
             'title' => $title,
             'method' => $method,
-            'authorId' => $this->getId(),
+            'userId' => $this->getId(),
             'createdAt' => (new \DateTime())->format('Y-m-d H:i:s'),
             'data' => json_encode($data)
         ]);

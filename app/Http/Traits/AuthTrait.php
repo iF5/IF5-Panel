@@ -49,6 +49,22 @@ trait AuthTrait
     /**
      * @return string
      */
+    protected function getName()
+    {
+        return \Auth::user()->name;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getEmail()
+    {
+        return \Auth::user()->email;
+    }
+
+    /**
+     * @return string
+     */
     protected function getRole()
     {
         return \Auth::user()->role;

@@ -1,3 +1,3 @@
 <?php
 
-Route::get('home', 'Panel\HomeController@index');
+Route::get('log', 'Panel\LogController@index');

@@ -17,7 +17,7 @@ class CreateLogTable extends Migration
             $table->bigIncrements('id')->unsigned();
             $table->string('title');
             $table->string('method');
-            $table->integer('authorId')->unsigned();
+            $table->integer('userId')->unsigned();
             $table->dateTime('createdAt');
             $table->json('data');
         });

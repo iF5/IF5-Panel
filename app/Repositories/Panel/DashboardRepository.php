@@ -102,9 +102,6 @@ class DashboardRepository
                 ({$b->toSql()}) AS b
              "))->whereRaw('a.providerId = b.providerId');
 
-
-            //dd($stmt->toSql());
-
             return $stmt->get();
 
         } catch (\Exception $e) {

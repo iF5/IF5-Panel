@@ -13,7 +13,7 @@ class Log extends Model
     protected $fillable = [
         'title',
         'method',
-        'authorId',
+        'userId',
         'createdAt',
         'data'
     ];
