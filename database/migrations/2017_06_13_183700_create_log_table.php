@@ -19,7 +19,7 @@ class CreateLogTable extends Migration
             $table->string('method');
             $table->integer('userId')->unsigned();
             $table->dateTime('createdAt');
-            $table->json('data');
+            $table->mediumText('data');
         });
     }
 
