@@ -21,8 +21,15 @@ class LogController extends Controller
      */
     private $breadcrumbService;
 
+    private $verbs = [
+        'GET' => 'Visualizou',
+        'POST' => 'Cadastrou',
+        'PUT' => 'Atualizou',
+        'DELETE' => 'Apagou'
+    ];
+
     public function __construct(
-        LogRepository  $logRepository,
+        LogRepository $logRepository,
         BreadcrumbService $breadcrumbService
     )
     {
@@ -38,15 +45,17 @@ class LogController extends Controller
     public function index()
     {
         $date = \Request::input('date');
-        
-        if(!$date){
+
+        if (!$date) {
             $date = (new \DateTime())->format('Y-m-d');
         }
 
-        dd($this->logRepository->findByToday($date));
+        $logs = $this->logRepository->findByToday($date);
 
-        return view('panel.company.list', [
-            'companies' => $companies,
+        return view('panel.log.list', [
+            'logs' => $logs,
+            'keyword' => null,
+            'verbs' => $this->verbs,
             'breadcrumbs' => $this->getBreadcrumb()
         ]);
     }
@@ -59,13 +68,26 @@ class LogController extends Controller
      */
     public function show($id)
     {
-        $company = $this->companyRepository->find($id);
+        $log = $this->logRepository->findById($id);
+        $log->data = json_decode($log->data, true);
 
-        return view('panel.company.show', [
-            'company' => $company,
-            'states' => $this->states,
+        return view('panel.log.show', [
+            'log' => $log,
+            'verbs' => $this->verbs,
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
+    }
+
+    /**
+     * @param null $location
+     * @return object
+     */
+    protected function getBreadcrumb($location = null)
+    {
+        return $this->breadcrumbService->push([
+            'Logs' => route('log.index'),
+            $location => null
+        ])->get();
     }
 
 }

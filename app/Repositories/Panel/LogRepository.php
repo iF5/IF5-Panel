@@ -14,6 +14,27 @@ class LogRepository extends Log
     private $totalPerPage = 20;
 
     /**
+     * @param integer $id
+     * @return mixed
+     */
+    public function findById($id)
+    {
+        try {
+            return Log::join('users', function ($join) {
+                $join->on('users.id', '=', 'logs.userId');
+            })->selectRaw('
+                    logs.*,
+                    users.name AS userName,
+                    users.email
+                ')
+                ->where('logs.id', '=', $id)
+                ->first();
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+    /**
      * @param string $date
      * @return mixed
      */
