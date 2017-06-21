@@ -162,9 +162,10 @@
                                 <label for="companies">Empresas alocadas * : </label>
                                 <select id="companies" name="companies[]" size="{{ count($companies) }}"
                                         class="form-control" multiple>
+
                                     @foreach($companies as $company)
                                         <option value="{{ $company->id }}"
-                                                @if($company->companyId) selected @endif>{{ $company->name }}</option>
+                                                @if($company->selected) selected @endif>{{ $company->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

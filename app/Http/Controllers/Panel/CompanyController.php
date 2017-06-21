@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Http\Traits\LogTrait;
 use App\Repositories\Panel\RelationshipRepository;
 use App\Repositories\Panel\CompanyRepository;
 use App\Services\BreadcrumbService;
@@ -10,6 +11,8 @@ use App\Http\Controllers\Controller;
 
 class CompanyController extends Controller
 {
+
+    use LogTrait;
 
     /**
      * @var CompanyRepository
@@ -105,6 +108,7 @@ class CompanyController extends Controller
 
         $data = $this->formRequest($request->all(), 'store');
         $company = $this->companyRepository->create($data);
+        $this->createLog('Company', 'POST', $data);
 
         return redirect()->route('company.create')->with([
             'success' => true,
@@ -176,6 +180,7 @@ class CompanyController extends Controller
 
         $data = $this->formRequest($request->all());
         $this->companyRepository->findOrFail($id)->update($data);
+        $this->createLog('Company', 'PUT', $data);
 
         return redirect()->route('company.edit', $id)->with([
             'success' => true,
@@ -197,6 +202,8 @@ class CompanyController extends Controller
         $this->relationshipRepository->destroy('companies_has_providers', [
             'companyId' => $id
         ]);
+        $this->createLog('Company', 'DELETE', ['id' => $id]);
+
         return redirect()->route('company.index');
     }
 

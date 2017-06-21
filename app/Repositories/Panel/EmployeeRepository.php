@@ -66,7 +66,7 @@ class EmployeeRepository extends Employee
     public function findByPendency()
     {
         try {
-            return Employee::join('providers', function($join){
+            return Employee::join('providers', function ($join) {
                 return $join->on('providers.id', '=', 'employees.providerId');
             })
                 ->select(
@@ -86,25 +86,32 @@ class EmployeeRepository extends Employee
      * @param int $providerId
      * @return mixed
      */
-    public function findAllByCompany($providerId)
+    public function findCompanyByProvider($providerId)
     {
         try {
             return \DB::table('companies')
                 ->select(
                     'companies.id',
-                    'companies.name',
-                    'employees_has_companies.employeeId',
-                    'employees_has_companies.companyId'
-                )
-                ->join('companies_has_providers', function ($join) {
-                    return $join->on('companies_has_providers.companyId', '=', 'companies.id');
-                })
-                ->leftJoin('employees_has_companies', function ($leftJoin) {
-                    return $leftJoin->on('employees_has_companies.companyId', '=', 'companies.id');
-                })
-                ->distinct()
-                ->where('companies_has_providers.providerId', '=', $providerId)
+                    'companies.name'
+                )->join('companies_has_providers', function ($join) {
+                    $join->on('companies_has_providers.companyId', '=', 'companies.id');
+                })->where('companies_has_providers.providerId', '=', $providerId)
                 ->get();
+
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+    /**
+     * @param int $employeeId
+     * @return mixed
+     */
+    public function findCompanyByEmployee($employeeId)
+    {
+        try {
+
+            return \DB::table('employees_has_companies')->where('employeeId', '=', $employeeId)->get();
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }

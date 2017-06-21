@@ -116,7 +116,7 @@ class EmployeeController extends Controller
     {
         $this->employeeRepository->providerId = $this->getProviderId();
         $this->employeeRepository->hasChildren = 0;
-        $companies = $this->employeeRepository->findAllByCompany($this->getProviderId());
+        $companies = $this->getCompanies();
 
         return view('panel.employee.form', [
             'employee' => $this->employeeRepository,
@@ -172,6 +172,28 @@ class EmployeeController extends Controller
     }
 
     /**
+     * @param int $employeeId
+     * @return mixed
+     */
+    private function getCompanies($employeeId = null)
+    {
+        $companies = $this->employeeRepository->findCompanyByProvider($this->getProviderId());
+        $employeesArray = [];
+
+        if ($employeeId) {
+            $employees = $this->employeeRepository->findCompanyByEmployee($employeeId);
+            foreach ($employees as &$employee) {
+                $employeesArray[] = $employee->companyId;
+            }
+        }
+
+        foreach ($companies as &$company) {
+            $company->selected = (in_array($company->id, $employeesArray)) ? true : false;
+        }
+        return $companies;
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int $id
@@ -180,7 +202,7 @@ class EmployeeController extends Controller
     public function edit($id)
     {
         $employee = $this->employeeRepository->findOrFail($id);
-        $companies = $this->employeeRepository->findAllByCompany($this->getProviderId());
+        $companies = $this->getCompanies($id);
 
         return view('panel.employee.form', [
             'employee' => $employee,

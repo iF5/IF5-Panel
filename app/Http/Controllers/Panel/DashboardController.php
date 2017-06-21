@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\LogTrait;
 use App\Models\Document;
 use App\Repositories\Panel\DashboardRepository;
 use App\Services\BreadcrumbService;
 
 class DashboardController extends Controller
 {
+
+    use LogTrait;
 
     /**
      * @var DashboardRepository
