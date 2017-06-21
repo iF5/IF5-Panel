@@ -108,7 +108,7 @@ class CompanyController extends Controller
 
         $data = $this->formRequest($request->all(), 'store');
         $company = $this->companyRepository->create($data);
-        $this->createLog('Company', 'POST', $data);
+        $this->createLog('Empresa', 'POST', $data);
 
         return redirect()->route('company.create')->with([
             'success' => true,
@@ -180,7 +180,7 @@ class CompanyController extends Controller
 
         $data = $this->formRequest($request->all());
         $this->companyRepository->findOrFail($id)->update($data);
-        $this->createLog('Company', 'PUT', $data);
+        $this->createLog('Empresa', 'PUT', $data);
 
         return redirect()->route('company.edit', $id)->with([
             'success' => true,
@@ -202,7 +202,7 @@ class CompanyController extends Controller
         $this->relationshipRepository->destroy('companies_has_providers', [
             'companyId' => $id
         ]);
-        $this->createLog('Company', 'DELETE', ['id' => $id]);
+        $this->createLog('Empresa', 'DELETE', ['id' => $id]);
 
         return redirect()->route('company.index');
     }

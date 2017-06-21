@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Http\Traits\LogTrait;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Panel\UserRepository;
@@ -9,6 +10,8 @@ use App\Services\BreadcrumbService;
 
 class ProfileController extends Controller
 {
+
+    use LogTrait;
 
     /**
      * @var UserRepository
@@ -100,6 +103,8 @@ class ProfileController extends Controller
 
         $this->userRepository->findOrFail($id)->update($data);
 
+        $this->createLog('Perfil', 'PUT', $data);
+
         return redirect()->route('profile.edit')->with([
             'success' => true,
             'message' => 'Meu perfil foi atualizado com sucesso!'
@@ -143,6 +148,9 @@ class ProfileController extends Controller
         }
 
         $this->userRepository->find($this->getId())->update(['image' => $name]);
+
+        $this->createLog('Imagem de perfil', 'PUT', ['image' => $name]);
+
         return response()->json([
             'message' => "O arquivo <b>{$file->getClientOriginalName()}</b> foi enviado com sucesso!"
         ]);

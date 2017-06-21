@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 trait UserTrait
 {
 
+    use LogTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -79,6 +81,7 @@ trait UserTrait
         );
 
         $user = $this->getUser()->create($data);
+        $this->createLog('Usu&aacute;rio', 'POST', $data);
 
         return redirect()->route("user-{$this->getRole()}.create")->with([
             'success' => true,
@@ -136,6 +139,7 @@ trait UserTrait
             $request, $this->getUser()->validateRules($id), $this->getUser()->validateMessages()
         );
         $this->getUser()->findOrFail($id)->update($data);
+        $this->createLog('Usu&aacute;rio', 'PUT', $data);
 
         return redirect()->route("user-{$this->getRole()}.edit", $id)->with([
             'success' => true,
@@ -154,6 +158,7 @@ trait UserTrait
     public function destroy($id)
     {
         $this->getUser()->destroy($id);
+        $this->createLog('Usu&aacute;rio', 'DELETE', ['id' => $id]);
         return redirect()->route("user-{$this->getRole()}.index");
     }
 
