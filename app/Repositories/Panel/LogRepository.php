@@ -11,7 +11,7 @@ class LogRepository extends Log
 
     use AuthTrait;
 
-    private $totalPerPage = 20;
+    private $totalPerPage = 30;
 
     /**
      * @param integer $id
@@ -22,13 +22,8 @@ class LogRepository extends Log
         try {
             return Log::join('users', function ($join) {
                 $join->on('users.id', '=', 'logs.userId');
-            })->selectRaw('
-                    logs.*,
-                    users.name AS userName,
-                    users.email
-                ')
-                ->where('logs.id', '=', $id)
-                ->first();
+            })->where('logs.id', '=', $id)->first();
+
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
@@ -36,17 +31,22 @@ class LogRepository extends Log
 
     /**
      * @param string $date
+     * @param string | null $method
      * @return mixed
      */
-    public function findByToday($date)
+    public function findByToday($date, $method = null)
     {
         try {
-            return Log::join('users', function ($join) {
+            $stmt = Log::join('users', function ($join) {
                 $join->on('users.id', '=', 'logs.userId');
-            })->selectRaw('logs.*, users.name AS userName')
-                ->whereBetween('logs.createdAt', ["{$date} 00:00:00", "{$date} 23:59:59"])
-                ->orderBy('logs.createdAt', 'desc')
-                ->paginate($this->totalPerPage);
+            })->selectRaw('logs.*, users.name')
+                ->whereBetween('logs.createdAt', ["{$date} 00:00:00", "{$date} 23:59:59"]);
+
+            if ($method) {
+                $stmt->where('logs.method', '=', $method);
+            }
+
+            return $stmt->orderBy('logs.createdAt', 'desc')->paginate($this->totalPerPage);
 
         } catch (\Exception $e) {
             throw new ModelNotFoundException;

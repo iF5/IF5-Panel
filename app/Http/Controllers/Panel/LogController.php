@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Panel;
 
-use App\Http\Traits\LogTrait;
+use App\Repositories\Panel\CompanyRepository;
 use App\Repositories\Panel\LogRepository;
+use App\Repositories\Panel\ProviderRepository;
 use App\Services\BreadcrumbService;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class LogController extends Controller
@@ -21,7 +21,18 @@ class LogController extends Controller
      */
     private $breadcrumbService;
 
+    /**
+     * @var CompanyRepository
+     */
+    private $companyRepository;
+
+    /**
+     * @var ProviderRepository
+     */
+    private $providerRepository;
+
     private $verbs = [
+        'ALL' => 'Todos',
         'GET' => 'Visualizou',
         'POST' => 'Cadastrou',
         'PUT' => 'Atualizou',
@@ -30,10 +41,14 @@ class LogController extends Controller
 
     public function __construct(
         LogRepository $logRepository,
+        CompanyRepository $companyRepository,
+        ProviderRepository $providerRepository,
         BreadcrumbService $breadcrumbService
     )
     {
         $this->logRepository = $logRepository;
+        $this->companyRepository = $companyRepository;
+        $this->providerRepository = $providerRepository;
         $this->breadcrumbService = $breadcrumbService;
     }
 
@@ -44,17 +59,19 @@ class LogController extends Controller
      */
     public function index()
     {
-        $date = \Request::input('date');
+        $dateInput = \Request::input('date');
+        $searchData = [
+            'date' => ($dateInput || !empty($dateInput)) ? $dateInput : (new \DateTime())->format('d/m/Y'),
+            'verb' => (\Request::input('verb')) ? \Request::input('verb') : 'ALL'
+        ];
 
-        if (!$date) {
-            $date = (new \DateTime())->format('Y-m-d');
-        }
-
-        $logs = $this->logRepository->findByToday($date);
+        $date = implode('-', array_reverse(explode('/', $searchData['date'])));
+        $method = ($searchData['verb'] === 'ALL') ? null : $searchData['verb'];
+        $logs = $this->logRepository->findByToday($date, $method);
 
         return view('panel.log.list', [
             'logs' => $logs,
-            'keyword' => null,
+            'searchData' => $searchData,
             'verbs' => $this->verbs,
             'breadcrumbs' => $this->getBreadcrumb()
         ]);
@@ -69,13 +86,32 @@ class LogController extends Controller
     public function show($id)
     {
         $log = $this->logRepository->findById($id);
-        $log->data = json_decode($log->data, true);
 
         return view('panel.log.show', [
-            'log' => $log,
+            'log' => $this->formatting($log),
             'verbs' => $this->verbs,
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
+    }
+
+    /**
+     * @param $log
+     * @return mixed
+     */
+    private function formatting($log)
+    {
+        if($log->role === 'provider'){
+            $provider = $this->providerRepository->findById($log->providerId);
+            $log->providerName = $provider->name;
+        }
+
+        if($log->role === 'company'){
+            $company = $this->companyRepository->findById($log->companyId);
+            $log->companyName = $company->name;
+        }
+
+        $log->data = json_decode($log->data, true);
+        return $log;
     }
 
     /**
