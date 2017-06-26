@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Http\Traits\LogTrait;
 use Illuminate\Http\Request;
 use App\Repositories\Panel\EmployeeRepository;
 use App\Repositories\Panel\DocumentRepository;
@@ -10,6 +11,8 @@ use App\Services\BreadcrumbService;
 
 class ChecklistController
 {
+
+    use LogTrait;
 
     /**
      * @var EmployeeRepository
@@ -149,6 +152,7 @@ class ChecklistController
              'finalFileName' => $finalFileName,
              'originalFileName' => $originalFileName];
 
+        $this->createLog('Checklist upload', 'PUT', $documentData);
         $this->documentRepository->saveDocument($documentData);
         return response()->json([
             'message' => "O arquivo <b>{$originalFileName}</b> foi enviado com sucesso!"
@@ -169,6 +173,8 @@ class ChecklistController
         }else{
             $return = array("status" => "fail");
         }
+
+        $this->createLog('Checklist', 'PUT', $documentData);
         return json_encode($return);
     }
 

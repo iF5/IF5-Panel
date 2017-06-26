@@ -7,8 +7,6 @@ use App\Models\Log;
 trait LogTrait
 {
 
-    use AuthTrait;
-
     /**
      * @param string $title
      * @param string $method
@@ -19,7 +17,7 @@ trait LogTrait
         Log::create([
             'title' => $title,
             'method' => $method,
-            'userId' => $this->getId(),
+            'userId' => \Auth::user()->id,
             'createdAt' => (new \DateTime())->format('Y-m-d H:i:s'),
             'data' => json_encode($data)
         ]);

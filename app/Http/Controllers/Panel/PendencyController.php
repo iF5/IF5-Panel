@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 
+use App\Http\Traits\LogTrait;
 use App\Repositories\Panel\EmployeeRepository;
 use App\Repositories\Panel\ProviderRepository;
 use App\Repositories\Panel\RelationshipRepository;
@@ -11,6 +12,8 @@ use App\Services\BreadcrumbService;
 
 class PendencyController extends Controller
 {
+
+    use LogTrait;
 
     const PROVIDER_TITLE = 'Prestadores de servi&ccedil;os';
 
@@ -97,6 +100,8 @@ class PendencyController extends Controller
      */
     public function approve($companyId, $id, $source)
     {
+        $this->createLog('Aprova&ccedil;&atilde;o de pend&ecirc;ncias', 'PUT', ["{$source}Id" => $id]);
+
         if ($source === 'provider') {
             $this->relationshipRepository->update('companies_has_providers', ['status' => 1], [
                 'companyId' => $companyId,
