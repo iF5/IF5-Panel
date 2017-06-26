@@ -154,6 +154,20 @@ $(function () {
         });
     });
 
+    //http://localhost:4545/Api/public/6410700/cnae-index
+    /*$.ajax({
+        url: "http://localhost:4545/Api/public/cnae/6410700",
+        type: "GET",
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (data) {
+            if(data.status == "success"){
+                //location.reload();
+                alert(data.data);
+            }
+        }
+    });*/
+
     //On validate documents
     $('.modal-document-invalidated').on('click', function(event){
         event.preventDefault();
@@ -173,16 +187,6 @@ $(function () {
     //On download documents
     $('.modal-document-download').on('click', function(event){
         event.preventDefault();
-
-        /*var myId = this.id.replace("modal-document-download-", "");
-        var employeeId = $("#document-validated-form-" + myId).children(".employeeId").val();
-        var documentId = $("#document-validated-form-" + myId).children(".documentId").val();
-        var referenceDate = $("#document-validated-form-" + myId).children(".referenceDate").val();
-        var finalFileName = $("#document-validated-form-" + myId).children(".finalFileName").val();
-
-        var currentUrl = $(location).attr('href');
-        var finalUrl = currentUrl.replace(/[0-9]+\/[0-9]+\/checklist/i, "download");
-        finalUrl = finalUrl + "/" + employeeId + "/" + documentId + "/" + referenceDate + "/" + finalFileName;*/
         window.location = this.href;
     });
 
