@@ -21,12 +21,12 @@ class CnaeController
         $this->cnaeRepository = $cnaeRepository;
     }
 
-    public function index(Request $request, $code = null, $cnae = null)
+    public function index(Request $request, $cnae)
     {
         //$this->cnaeRepository->find($code, $cnae);
-        return response()->json([
-            'data' => $this->cnaeRepository->find($code, $cnae)
-        ]);
+        return response()->json(
+            $this->cnaeRepository->find($cnae)
+        );
     }
 
 }

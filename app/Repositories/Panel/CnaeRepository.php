@@ -15,18 +15,16 @@ class CnaeRepository
      * @param null $cnae
      * @return mixed
      */
-    public function find($code = null, $cnae = null)
+    public function find($cnae)
     {
         try {
-            if($code !== null){
-                $where = 'code = ' . $code;
-            }else if($cnae !== null){
-                $where = 'cnae like ' . "'%" . $cnae . "%'";
-            }
+
+            $where = 'cnae like ' . "'%" . $cnae . "%'";
+
 
             $stmt = \DB::table(null)->selectRaw('
-                code,
-                cnae'
+                code as id,
+                cnae as name'
             )->from(\DB::raw("cnae"))->whereRaw($where);
 
             return $stmt->get();

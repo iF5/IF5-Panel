@@ -154,6 +154,16 @@ $(function () {
         });
     });
 
+
+    $('input.typeahead').typeahead({
+        source:  function (query, process) {
+            return $.get('http://localhost:4545/Api/public/cnae/' + query, { query: query }, function (data) {
+                return process(data);
+            });
+        }
+    });
+
+
     //http://localhost:4545/Api/public/6410700/cnae-index
     /*$.ajax({
         url: "http://localhost:4545/Api/public/cnae/6410700",
