@@ -156,7 +156,7 @@ $(function () {
 
     $('input.typeahead').typeahead({
         source:  function (query, process) {
-            return $.get($(location).attr('hostname') + '/cnae/' + query, { query: query }, function (data) {
+            return $.get("http://" + $(location).attr('hostname') + '/cnae/' + query, { query: query }, function (data) {
                 return process(data);
             });
         }
