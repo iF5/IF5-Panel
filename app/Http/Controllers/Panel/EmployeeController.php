@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Traits\AuthTrait;
+use App\Http\Traits\LogTrait;
 use App\Repositories\Panel\EmployeeRepository;
 use App\Repositories\Panel\ProviderRepository;
 use App\Repositories\Panel\RelationshipRepository;
@@ -13,7 +14,7 @@ use App\Http\Controllers\Controller;
 class EmployeeController extends Controller
 {
 
-    use AuthTrait;
+    use AuthTrait, LogTrait;
 
     /**
      * @var EmployeeRepository
@@ -145,6 +146,8 @@ class EmployeeController extends Controller
         $employee = $this->employeeRepository->create($data);
         $this->createRelationshipByCompany($employee->id, $data['companies']);
 
+        $this->createLog('Funcion&aacute;rio', 'POST', $data);
+
         return redirect()->route('employee.create')->with([
             'success' => true,
             'message' => 'Funcion&aacute;rio cadastrado com sucesso!',
@@ -232,6 +235,8 @@ class EmployeeController extends Controller
         $this->employeeRepository->findOrFail($id)->update($data);
         $this->createRelationshipByCompany($id, $data['companies']);
 
+        $this->createLog('Funcion&aacute;rio', 'PUT', $data);
+
         return redirect()->route('employee.edit', $id)->with([
             'success' => true,
             'message' => 'Funcion&aacute;rio atualizado com sucesso!',
@@ -252,6 +257,8 @@ class EmployeeController extends Controller
         $this->relationshipRepository->destroy('employees_has_companies', [
             'employeeId' => $id
         ]);
+
+        $this->createLog('Funcion&aacute;rio', 'DELETE', ['id' => $id]);
 
         return redirect()->route('employee.index');
     }

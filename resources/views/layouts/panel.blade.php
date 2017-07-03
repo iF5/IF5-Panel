@@ -98,6 +98,11 @@
                                         Usu&aacute;rios admin
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{{ route('log.index') }}"><i class="fa fa-eye"></i>
+                                        Logs
+                                    </a>
+                                </li>
                             @endcan
 
                             @can('onlyCompany')

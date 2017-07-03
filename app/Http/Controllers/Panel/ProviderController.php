@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Http\Traits\LogTrait;
 use App\Repositories\Panel\CompanyRepository;
 use App\Repositories\Panel\RelationshipRepository;
 use App\Repositories\Panel\ProviderRepository;
@@ -12,7 +13,7 @@ use App\Http\Traits\AuthTrait;
 
 class ProviderController extends Controller
 {
-    use AuthTrait;
+    use AuthTrait, LogTrait;
 
     /**
      * @var ProviderRepository
@@ -109,13 +110,16 @@ class ProviderController extends Controller
         }
 
         if ($request->isMethod('post') && $request->get('action') === 'associate') {
-            $this->relationshipRepository->create('companies_has_providers', [
+            $data = [
                 'companyId' => $this->getCompanyId(),
                 'providerId' => $request->get('providerId'),
                 'status' => $this->isAdmin()
-            ]);
+            ];
+
+            $this->relationshipRepository->create('companies_has_providers', $data);
             $success = true;
             \Session::remove('cnpj');
+            $this->createLog('Prestador de servi&ccedil;os associar', 'POST', $data);
         }
 
         $breadcrumbs = $this->getBreadcrumb('Cadastrar/Incluir');
@@ -176,6 +180,8 @@ class ProviderController extends Controller
             'providerId' => $provider->id,
             'status' => $this->isAdmin()
         ]);
+
+        $this->createLog('Prestador de servi&ccedil;os', 'POST', $data);
 
         \Session::remove('cnpj');
         return redirect()
@@ -250,6 +256,8 @@ class ProviderController extends Controller
         $data = $this->formRequest($request->all());
         $this->providerRepository->findOrFail($id)->update($data);
 
+        $this->createLog('Prestador de servi&ccedil;os', 'PUT', $data);
+
         return redirect()->route('provider.edit', $id)->with([
             'success' => true,
             'message' => 'Prestador de servi&ccedil;os atualizado com sucesso!'
@@ -264,10 +272,12 @@ class ProviderController extends Controller
      */
     public function destroy($id)
     {
-        $this->relationshipRepository->destroy('companies_has_providers', [
+        $data =  [
             'companyId' => $this->getCompanyId(),
             'providerId' => $id
-        ]);
+        ];
+        $this->relationshipRepository->destroy('companies_has_providers', $data);
+        $this->createLog('Prestador de servi&ccedil;os', 'DELETE', $data);
         return redirect()->route('provider.index');
     }
 
