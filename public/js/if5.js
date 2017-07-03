@@ -162,21 +162,6 @@ $(function () {
         }
     });
 
-
-    //http://localhost:4545/Api/public/6410700/cnae-index
-    /*$.ajax({
-        url: "http://localhost:4545/Api/public/cnae/6410700",
-        type: "GET",
-        dataType: 'json',
-        contentType: 'application/json',
-        success: function (data) {
-            if(data.status == "success"){
-                //location.reload();
-                alert(data.data);
-            }
-        }
-    });*/
-
     //On validate documents
     $('.modal-document-invalidated').on('click', function(event){
         event.preventDefault();
