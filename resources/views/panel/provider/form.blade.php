@@ -74,7 +74,7 @@
                             <label for="mainCnae">CNAE Principal* :</label>
                             <input type="text" id="mainCnae" name="mainCnae"
                                    value="{{ $provider->mainCnae or old('mainCnae') }}"
-                                   class="form-control">
+                                   class="typeahead form-control" data-provide="typeahead" autocomplete="off">
                         </div>
                         <div class="form-group col-xs-4">
                             <label for="phone">Telefone :</label>
