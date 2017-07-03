@@ -154,10 +154,9 @@ $(function () {
         });
     });
 
-
     $('input.typeahead').typeahead({
         source:  function (query, process) {
-            return $.get('http://localhost:4545/Api/public/cnae/' + query, { query: query }, function (data) {
+            return $.get($(location).attr('hostname') + '/cnae/' + query, { query: query }, function (data) {
                 return process(data);
             });
         }
