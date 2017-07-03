@@ -23,9 +23,14 @@ class CnaeController
 
     public function index(Request $request, $cnae)
     {
-        //$this->cnaeRepository->find($code, $cnae);
+        $arr = $this->cnaeRepository->find($cnae);
+
+        foreach($arr as &$values){
+            $values->name = html_entity_decode($values->name);
+        }
+
         return response()->json(
-            $this->cnaeRepository->find($cnae)
+            $arr
         );
     }
 
