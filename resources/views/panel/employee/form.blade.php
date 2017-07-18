@@ -62,22 +62,34 @@
                                        class="form-control dateMask">
                             </div>
                             <div class="form-group col-xs-4">
-                                <label for="street">Endereço * : </label>
+                                <label for="cep">CEP* :</label>
+                                <input type="text" id="cep" name="cep" value="{{ $employee->cep or old('cep') }}"
+                                       class="form-control">
+                            </div>
+                            <div class="form-group col-xs-4">
+                                <label for="street">Logradouro* :</label>
                                 <input type="text" id="street" name="street"
-                                       value="{{ $employee->street or old('street') }}" class="form-control"
-                                       >
+                                       value="{{ $employee->street or old('street') }}"
+                                       class="form-control">
+                            </div>
+                            <div class="form-group col-xs-4">
+                                <label for="number">Número* :</label>
+                                <input type="text" id="number" name="number"
+                                       value="{{ $employee->number or old('number') }}"
+                                       class="form-control">
                             </div>
 
+
                             <div class="form-group col-xs-4">
-                                <label for="district">Bairro * : </label>
+                                <label for="district">Bairro* :</label>
                                 <input type="text" id="district" name="district"
-                                       value="{{ $employee->district or old('district') }}" class="form-control"
-                                       >
+                                       value="{{ $employee->district or old('district') }}"
+                                       class="form-control">
                             </div>
                             <div class="form-group col-xs-4">
-                                <label for="city">Cidade * : </label>
-                                <input type="text" id="city" name="city"
-                                       value="{{ $employee->city or old('city') }}" class="form-control" >
+                                <label for="city">Cidade* :</label>
+                                <input type="text" id="city" name="city" value="{{ $employee->city or old('city') }}"
+                                       class="form-control">
                             </div>
                             <div class="form-group col-xs-4">
                                 <label for="state">Estado * : </label>

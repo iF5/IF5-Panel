@@ -36,7 +36,7 @@
                         <strong>Dados enviado : </strong><br/><br/>
                         <code>
                             @foreach ($log->data as $key => $value)
-                                {{ $key }} = {{ $value }}<br/>
+                                {{ $key }} = {{ print_r($value) }}<br/>
                             @endforeach
                         </code>
                     </li>

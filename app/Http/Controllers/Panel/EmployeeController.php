@@ -165,7 +165,7 @@ class EmployeeController extends Controller
     public function show($id)
     {
         $employee = $this->employeeRepository->find($id);
-        $companies = $this->employeeRepository->findAllByCompany($this->getProviderId());
+        $companies = $this->employeeRepository->findCompanyByProvider($this->getProviderId());
 
         return view('panel.employee.show', [
             'employee' => $employee,
@@ -206,7 +206,7 @@ class EmployeeController extends Controller
     {
         $employee = $this->employeeRepository->findOrFail($id);
         $companies = $this->getCompanies($id);
-
+        #dd($employee);
         return view('panel.employee.form', [
             'employee' => $employee,
             'states' => $this->states,

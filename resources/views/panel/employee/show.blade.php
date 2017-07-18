@@ -22,7 +22,9 @@
                 <li class="list-group-item"><strong>RG : </strong> {{ $employee->rg }}</li>
                 <li class="list-group-item"><strong>CTPS número : </strong> {{ $employee->ctps }}</li>
                 <li class="list-group-item"><strong>Data de nascimento : </strong> {{ $employee->birthDate }}</li>
+                <li class="list-group-item"><strong>CEP : </strong> {{ $employee->cep }}</li>
                 <li class="list-group-item"><strong>Endereço : </strong> {{ $employee->street }}</li>
+                <li class="list-group-item"><strong>Número : </strong> {{ $employee->number }}</li>
                 <li class="list-group-item"><strong>Bairro : </strong> {{ $employee->district }}</li>
                 <li class="list-group-item"><strong>Cidade : </strong> {{ $employee->city }}</li>
                 <li class="list-group-item"><strong>Estado : </strong> {{ $employee->state }}</li>
@@ -38,7 +40,7 @@
                         : </strong> {{ ($employee->hasChildren)? 'Sim' : 'N&atilde;o' }}</li>
                 <li class="list-group-item"><strong>Empresas alocadas : </strong>
                     @foreach($companies as $company)
-                        @if($company->companyId) <br />&nbsp;&nbsp;{{ $company->name }} @endif
+                        @if($company->id) <br />&nbsp;&nbsp;{{ $company->name }} @endif
                     @endforeach
                 </li>
                 <li class="list-group-item"><strong>Status

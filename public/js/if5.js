@@ -156,11 +156,19 @@ $(function () {
 
     $('input.typeahead').typeahead({
         source:  function (query, process) {
-            return $.get("http://" + $(location).attr('hostname') + '/cnae/' + query, { query: query }, function (data) {
+            return $.get("http://" + hostName() + '/cnae/' + query, { query: query }, function (data) {
                 return process(data);
             });
         }
     });
+
+    function hostName() {
+        var hostname = $(location).attr('hostname');
+        if(hostname == "localhost"){
+            return hostname + ":4545/Api/public/";
+        }
+        return hostname;
+    }
 
     //On validate documents
     $('.modal-document-invalidated').on('click', function(event){

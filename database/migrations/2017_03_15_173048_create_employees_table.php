@@ -20,7 +20,9 @@ class CreateEmployeesTable extends Migration
             $table->string('rg');
             $table->string('ctps');
             $table->string('birthDate');
+            $table->string('cep');
             $table->string('street');
+            $table->string('number');
             $table->string('district');
             $table->string('city');
             $table->string('state');

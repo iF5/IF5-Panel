@@ -136,7 +136,7 @@
                                    class="form-control">
                         </div>
                         <div class="form-group col-xs-4">
-                            <label for="cellPhone">Celular :</label>
+                            <label for="cellPhone">Celular * :</label>
                             <input type="cellPhone" id="cellPhone" name="cellPhone"
                                    value="{{ $provider->cellPhone or old('cellPhone') }}"
                                    class="form-control">
