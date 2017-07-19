@@ -38,9 +38,9 @@
 
 </head>
 
-<body class="nav-md">
+<body class="nav-md" style="background-color: #FFFFFF;">
 <div class="container body">
-    <div class="main_container">
+    <div class="main_container" style="background-color: #2A3F54;">
         <div class="col-md-3 left_col">
             <div class="left_col scroll-view">
                 <div class="navbar nav_title" style="border: 0;">
@@ -197,7 +197,7 @@
         <!-- /top navigation -->
 
         <!-- page content -->
-    @yield('content')
+        @yield('content')
     <!-- /page content -->
 
         <!-- footer content -->
