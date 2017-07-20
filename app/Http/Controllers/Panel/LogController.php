@@ -126,9 +126,14 @@ class LogController extends Controller
         ])->get();
     }
 
-    
     public function test()
     {
         return view('panel.log.test');
     }
+
+    public function test2()
+    {
+        return view('panel.log.test2');
+    }
+
 }
