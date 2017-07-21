@@ -1,10 +1,5 @@
 <?php
 
-/**
- * To (http or https)
- */
-$_SERVER['REQUEST_SCHEME'] = $_SERVER['HTTP_X_FORWARDED_PROTO'];
-
 define('LARAVEL_START', microtime(true));
 
 /*
