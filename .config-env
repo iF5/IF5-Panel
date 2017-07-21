@@ -2,7 +2,6 @@ APP_ENV=local
 APP_KEY=base64:KgV8ElBdUKCYK/K6PwdDGFO6KYoUo73/uacR8tr1/s4=
 APP_DEBUG=true
 APP_LOG_LEVEL=debug
-APP_URL=//painel.if5.com.br
 
 #DB_CONNECTION=mysql
 #DB_HOST=localhost
