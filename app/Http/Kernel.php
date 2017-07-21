@@ -21,7 +21,7 @@ class Kernel extends HttpKernel
         /**
          * To (http or https)
          */
-        \App\Http\Middleware\HttpsProtocol::class
+        //\App\Http\Middleware\HttpsProtocol::class
     ];
 
     /**
