@@ -5,8 +5,8 @@
  */
 function getUrl()
 {
-    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
-    return $protocol . $_SERVER['HTTP_HOST'];
+
+    return $_SERVER['HTTP_X_FORWARDED_PROTO'] ."://". $_SERVER['HTTP_HOST'];
 }
 
 return [
