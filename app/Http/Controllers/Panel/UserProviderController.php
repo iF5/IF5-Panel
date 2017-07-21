@@ -108,7 +108,7 @@ class UserProviderController extends Controller implements UserInterface
             $company = \Session::get('company');
             $provider = \Session::get('provider');
             $data = [
-                'Empresas' => route('company.index'),
+                'Clientes' => route('company.index'),
                 $company->name => route('company.show', $company->id),
                 'Prestadores de servi&ccedil;os' => route('provider.index'),
                 $provider->name => route('provider.show', $provider->id)

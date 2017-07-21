@@ -30,7 +30,7 @@
                     <tr>
                         <td>
                             <div class="btn-group">
-                                <button class="btn btn-dark dropdown-toggle" data-toggle="dropdown">
+                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                                     <span class='glyphicon glyphicon-cog'></span> <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">

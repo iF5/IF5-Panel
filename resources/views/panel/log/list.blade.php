@@ -45,10 +45,16 @@
                         @forelse($logs as $log)
                             <tr>
                                 <td>
-                                    <a href="{{ route('log.show', $log->id) }}"
-                                       class="btn btn-warning btn-xs" title="Visualizar"><span
-                                                class="glyphicon glyphicon-eye-open"></span>
-                                    </a>
+                                    <div class="btn-group">
+                                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                            <span class='glyphicon glyphicon-cog'></span> <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li>
+                                                <a href="{{ route('log.show', $log->id) }}">Abrir</a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </td>
                                 <td>{{ $verbs[$log->method] }}</td>
                                 <td>{{ $log->title }}</td>
@@ -60,7 +66,6 @@
                                 <td colspan="5" align="center">Nenhum log foi encontrado.</td>
                             </tr>
                         @endforelse
-
                         </tbody>
                     </table>
 

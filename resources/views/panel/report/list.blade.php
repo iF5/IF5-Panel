@@ -28,7 +28,8 @@
                                    placeholder="mm/aaaa"
                                    value="{{ $referenceDate }}">
                             <span class="input-group-btn">
-                                <button type="submit" class="btn btn-default" id="btn-search-report"><i class="glyphicon glyphicon-search"></i>
+                                <button type="submit" class="btn btn-default" id="btn-search-report"><i
+                                            class="glyphicon glyphicon-search"></i>
                                 </button>
                             </span>
                         </div>
@@ -45,6 +46,7 @@
                 <div class="col-md-12" style="margin-top: 20px;">
                     <table id="report-table" class="table table-bordred table-striped">
                         <thead>
+                        <th></th>
                         <th>Nome</th>
                         <th>Data de refer&ecirc;ncia</th>
                         <th>Cadastrado em</th>
@@ -52,16 +54,32 @@
                         <th></th>
                         </thead>
                         <tbody>
-
                         @forelse($reports as $report)
                             <tr>
                                 <td>
-                                    <a>{{ $report->name }}</a>
+                                    <div class="btn-group">
+                                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                            <span class='glyphicon glyphicon-cog'></span> <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            @can('onlyAdmin')
+                                                <li>
+                                                    <a href="{{ route('report.upload', $report->id) }}">Enviar
+                                                        arquivo</a>
+                                                </li>
+                                            @endcan
+                                            @if($report->fileOriginalName)
+                                                <li>
+                                                    <a href="{{ route('report.download', $report->id) }}">Baixar
+                                                        arquivo</a>
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </div>
                                 </td>
+                                <td>{{ $report->name }}</td>
                                 <td>{{ $report->referenceDate }}</td>
-                                <td>
-                                    {{ \Carbon\Carbon::parse($report->createdAt)->format('d/m/Y H:i:s') }}
-                                </td>
+                                <td>{{ \Carbon\Carbon::parse($report->createdAt)->format('d/m/Y H:i:s') }}</td>
                                 <td>
                                     @if($report->sentAt)
                                         {{ $report->fileOriginalName }} -
@@ -69,23 +87,10 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if($report->fileOriginalName)
-                                        <a href="{{ route('report.download', $report->id) }}"
-                                           class="btn btn-primary btn-xs" title="Baixar arquivo"><span
-                                                    class="glyphicon glyphicon glyphicon-cloud-download"></span></a>
-                                    @endif
-
                                     @can('onlyAdmin')
-
-                                        <a href="{{ route('report.upload', $report->id) }}"
-                                           class="btn btn-warning btn-xs modal-report-upload" title="Enviar arquivo"
-                                           data-toggle="modal" data-target="#upload"><span
-                                                    class="glyphicon glyphicon glyphicon-cloud-upload"></span></a>
-
                                         <a href="{{ route('report.edit', $report->id) }}"
                                            class="btn btn-success btn-xs" title="Editar"><span
                                                     class="glyphicon glyphicon-pencil"></span></a>
-
 
                                         <a href="#"
                                            class="btn btn-danger btn-xs modal-delete" title="Excluir"
@@ -93,16 +98,14 @@
                                            data-target="#delete"
                                            rel="{{ route('report.destroy', $report->id) }}"><span
                                                     class="glyphicon glyphicon-trash"></span></a>
-
                                     @endcan
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" align="center">Nenhum relat&oacute;rio foi encontrado.</td>
+                                <td colspan="6" align="center">Nenhum relat&oacute;rio foi encontrado.</td>
                             </tr>
                         @endforelse
-
                         </tbody>
                     </table>
 

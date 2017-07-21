@@ -1,4 +1,4 @@
-<h2>
+<h5>
     @foreach($breadcrumbs as $breadcrumb)
         @if($breadcrumb->active)
             {{ $breadcrumb->label }}
@@ -9,5 +9,5 @@
             <span class="glyphicon glyphicon-chevron-right"></span>
         @endif
     @endforeach
-</h2>
+</h5>
 <div class="clearfix"></div>

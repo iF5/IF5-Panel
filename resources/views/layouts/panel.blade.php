@@ -38,9 +38,9 @@
 
 </head>
 
-<body class="nav-md" style="background-color: #FFFFFF;">
+<body class="nav-md" style="background: #FFFFFF;">
 <div class="container body">
-    <div class="main_container" style="background-color: #2A3F54;">
+    <div class="main_container" style="background: #2A3F54;">
         <div class="col-md-3 left_col">
             <div class="left_col scroll-view">
                 <div class="navbar nav_title" style="border: 0;">

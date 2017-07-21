@@ -96,7 +96,7 @@ class UserCompanyController extends Controller implements UserInterface
         if (\Session::has('company')) {
             $company = \Session::get('company');
             $data = [
-                'Empresas' => route('company.index'),
+                'Clientes' => route('company.index'),
                 $company->name => route('company.show', $company->id)
             ];
         }
