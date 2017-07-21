@@ -13,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (($_SERVER['SERVER_NAME'] !== 'localhost')) {
+        if (IF5_ENV === 'production') {
             $this->app['request']->server->set('HTTPS', true);
         }
 
