@@ -13,9 +13,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if ((isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')) {
+        if (($_SERVER['SERVER_NAME'] !== 'localhost')) {
             $this->app['request']->server->set('HTTPS', true);
         }
+
         \Validator::extend('unique_multiple', '\App\Http\Validations\UniqueMultiple@has');
     }
 
