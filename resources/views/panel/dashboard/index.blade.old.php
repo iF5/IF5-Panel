@@ -20,38 +20,40 @@
             <div class="col-md-6"></div>
 
             <div class="col-md-12" style="overflow-x: auto; min-height: 350px;">
-                <table class="table table-bordered">
+                <table class="table table-bordered" style="width:auto;">
                     <thead>
                     <tr>
                         <th>
-                            <div>Documentos</div>
+                            <div style="width: 200px; text-align: center;">Prestador</div>
                         </th>
-                        @foreach($providers as $provider)
+                        @foreach($documents as $document)
                             <th>
                                 <div style="width: 200px; text-align: center;">
-                                    {{ $provider['name'] }}
+                                    {{ $document->name }}
                                 </div>
                             </th>
                         @endforeach
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($providers as $provider)
-
-
+                    @forelse($providers as $provider)
+                        <tr>
+                            <td style="text-align: center;">
+                                <a href="{{ route('dashboard.employee', [$provider['id']]) }}">
+                                    <strong>{{ $provider['name'] }}</strong>
+                                </a>
+                            </td>
                             @foreach($provider['documents'] as $key => $value)
-                                <tr>
-                                <td>
-                                    {{ $value['name'] }}
+                                <td style="text-align: center;">
+                                    {{ $value }}/{{  $provider['employeeQuantity'] }}
                                 </td>
-                                <td>
-                                    {{ $value['total'] }}/{{  $provider['employeeQuantity'] }}
-                                </td>
-                                </tr>
                             @endforeach
-
-
-                    @endforeach
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="{{ $totalDocuments + 1 }}">Nenhum relat&oacute;rio foi encontrado.</td>
+                        </tr>
+                    @endforelse
                     </tbody>
                 </table>
             </div>

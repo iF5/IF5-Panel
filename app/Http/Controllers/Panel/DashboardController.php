@@ -42,7 +42,8 @@ class DashboardController extends Controller
         $documents = Document::all();
         $totalDocuments = count($documents);
         $providers = $this->prepareReportToProviders($totalDocuments, $keyword);
-
+        //dd($providers);
+        //$documents->providers = $providers;
         return view('panel.dashboard.index', [
             'documents' => $documents,
             'providers' => $providers,
@@ -70,15 +71,18 @@ class DashboardController extends Controller
                 'documents' => []
             ];
         }
-
+        $documents = Document::all();
         foreach ($providers as &$provider) {
-            for ($i = 1; $i <= $totalDocuments; $i++) {
-                $provider['documents'][$i] = 0;
+            for ($i = 1; $i < $totalDocuments; $i++) {
+                $provider['documents'][$i]['total'] = 0;
+
+                $provider['documents'][$i]['name'] = isset($documents[$i]) ? $documents[$i]->name : "";
+
             }
         }
 
         foreach ($data as $d) {
-            $providers[$d->providerId]['documents'][$d->documentId] = $d->documentQuantity;
+            $providers[$d->providerId]['documents'][$d->documentId]['total'] = $d->documentQuantity;
         }
 
         return $providers;
@@ -122,7 +126,7 @@ class DashboardController extends Controller
 
         foreach ($employees as &$employee) {
             for ($i = 1; $i <= $totalDocuments; $i++) {
-                $employee['documents'][$i] = 0;
+                $employee['documents'][$i]['total'] = 0;
             }
         }
 
