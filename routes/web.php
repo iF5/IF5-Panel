@@ -19,6 +19,8 @@ function loadRoute($directoryName)
     }
 }
 
+
+
 //Authentication
 //Auth::routes();
 $this->get('/', 'Auth\LoginController@showLoginForm');
