@@ -60,12 +60,12 @@
                            rev="Tem certeza que deseja aprovar este registro?"><span
                                     class="glyphicon glyphicon-thumbs-up"></span></a>
                     @else
-                        <a href="{{ route('employee.edit', $employee->id) }}"
+                        <a href="{{ route('employee.edit', $employee->id) }}" title="Editar"
                            class="btn btn-success btn-md"><span
                                     class="glyphicon glyphicon-pencil"></span></a>
 
                         <a href="#"
-                           class="btn btn-danger btn-md modal-delete" data-title="Excluir"
+                           class="btn btn-danger btn-md modal-delete" title="Excluir"
                            data-toggle="modal"
                            data-target="#delete"
                            rel="{{ route('employee.destroy', $employee->id) }}"><span
