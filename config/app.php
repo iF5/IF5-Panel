@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * @return string
+ */
+function getUrl()
+{
+
+    return $_SERVER['HTTP_X_FORWARDED_PROTO'] ."://". $_SERVER['HTTP_HOST'];
+}
+
 return [
 
     /*
@@ -51,7 +60,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', getUrl()),
 
     /*
     |--------------------------------------------------------------------------

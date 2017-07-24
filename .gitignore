@@ -6,7 +6,7 @@
 /.idea
 Homestead.json
 Homestead.yaml
-.env
+.localhost
 /nbproject/private/
 /nbproject
 
