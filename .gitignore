@@ -16,5 +16,3 @@ Homestead.yaml
 !.elasticbeanstalk/*.global.yml
 .ebextensions/
 
-
-/storage/upload/*
