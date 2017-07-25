@@ -201,9 +201,9 @@
     <!-- /page content -->
 
         <!-- footer content -->
-        <footer>
+        <footer style="position: fixed; right: 0; bottom: 0; background: transparent;">
             <div class="pull-right">
-                &copy; 2005 - 2017 - fone:(11) 0000.0000 ou 0000.0000 - IF5
+                &copy; 2017 direitos reservados, Fone: 11 4385-5005
             </div>
             <div class="clearfix"></div>
         </footer>
