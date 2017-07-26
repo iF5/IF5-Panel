@@ -14,6 +14,52 @@ class DashboardRepository
 
     private $bindings = [];
 
+
+    public function emploweeHasDocuments()
+    {
+        $stmt = \DB::table('documents')->selectRaw('
+                employees_has_documents.documentId,
+                count(employees_has_documents.documentId) AS documentQuantity,
+                employees.providerId
+            ')->leftJoin('employees_has_documents', function ($join) {
+            $join->on('employees_has_documents.documentId', '=', 'documents.id');
+        })->join('employees', function ($join) {
+            $join->on('employees.id', '=', 'employees_has_documents.employeeId');
+        });
+
+        if ($this->getRole() === 'company') {
+            $this->addBindings($this->getCompanyId());
+            $stmt->whereIn('employees.id', function ($query) {
+                $query->select('employeeId')->from('employees_has_companies')->where('companyId', '=', '?');
+            });
+        }
+        return $stmt->groupBy('documents.id', 'employees.providerId')->get();
+    }
+
+    public function employeesByProviders($keyword=null)
+    {
+        $stmt = \DB::table('providers')->selectRaw('
+                providers.id AS providerId,
+                providers.name AS providerName,
+                count(employees.id) AS employeeQuantity
+            ')->join('employees', function ($join) {
+            $join->on('employees.providerId', '=', 'providers.id');
+        });
+
+        if ($this->getRole() === 'company') {
+            $this->addBindings($this->getCompanyId());
+            $stmt->whereIn('employees.id', function ($query) {
+                $query->select('employeeId')->from('employees_has_companies')->where('companyId', '=', '?');
+            });
+        }
+
+        if ($keyword) {
+            $this->addBindings("%{$keyword}%");
+            $stmt->where('providers.name', 'like', '?');
+        }
+        return $stmt->groupBy('providers.id')->get();
+    }
+
     /**
      * @param $value
      * @param bool $overwrite
@@ -40,9 +86,9 @@ class DashboardRepository
             $join->on('employees_has_documents.documentId', '=', 'documents.id');
         })->join('employees', function ($join) {
             $join->on('employees.id', '=', 'employees_has_documents.employeeId');
-        })->where([
+        })/*->where([
             ['employees_has_documents.validated', '=', '?']
-        ]);
+        ])*/;
 
         if ($this->getRole() === 'company') {
             $this->addBindings($this->getCompanyId());
@@ -102,6 +148,7 @@ class DashboardRepository
                 ({$b->toSql()}) AS b
              "))->whereRaw('a.providerId = b.providerId');
 
+            //dd($stmt->toSql());
             return $stmt->get();
 
         } catch (\Exception $e) {

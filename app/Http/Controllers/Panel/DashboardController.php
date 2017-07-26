@@ -60,6 +60,30 @@ class DashboardController extends Controller
      */
     private function prepareReportToProviders($totalDocuments, $keyword = null)
     {
+        $documents = Document::all();
+        $employeeHasDocuments = $this->dashboardRepository->emploweeHasDocuments();
+        $employeesByProviders = $this->dashboardRepository->employeesByProviders($keyword);
+
+        $providerHasDocuments = [];
+        foreach($employeeHasDocuments as $hasDocument){
+            $providerHasDocuments[$hasDocument->providerId] = [
+                'documentId' => $hasDocument->documentId,
+                'documentQuantity' => $hasDocument->documentQuantity
+            ];
+        }
+
+        $providerEmployeeQtd = [];
+        foreach($employeesByProviders as $byProvider){
+            $providerEmployeeQtd[$byProvider->providerId] = [
+                'providerName' => $byProvider->providerName,
+                'employeeQuantity' => $byProvider->employeeQuantity
+            ];
+        }
+
+        #unir os dois arrays e indexar pelo documentId
+
+
+
         $providers = [];
         $data = $this->dashboardRepository->findProviders($keyword);
 
@@ -71,12 +95,14 @@ class DashboardController extends Controller
                 'documents' => []
             ];
         }
+
         $documents = Document::all();
         foreach ($providers as &$provider) {
-            for ($i = 1; $i < $totalDocuments; $i++) {
-                $provider['documents'][$i]['total'] = 0;
+            //for ($i = 1; $i < $totalDocuments; $i++) {
+            foreach($documents as $key => $docs){
+                $provider['documents'][$key]['total'] = 0;
 
-                $provider['documents'][$i]['name'] = isset($documents[$i]) ? $documents[$i]->name : "";
+                $provider['documents'][$key]['name'] = isset($docs) ? $docs->name : "";
 
             }
         }
