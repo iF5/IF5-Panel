@@ -121,4 +121,22 @@ class UserRepository extends User
         return User::where($filter)->first();
     }
 
+    /**
+     * @param string $email
+     * @return mixed
+     */
+    public function findByEmail($email)
+    {
+        return User::where('email', '=', $email)->first();
+    }
+
+    /**
+     * @param string $token
+     * @return mixed
+     */
+    public function findByDuoSha1Token($token)
+    {
+        return User::whereRaw('SHA1(SHA1(email))', '=', $token)->first();
+    }
+
 }

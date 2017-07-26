@@ -19,14 +19,17 @@ function loadRoute($directoryName)
     }
 }
 
-
-
-//Authentication
+#Authentication
 //Auth::routes();
 $this->get('/', 'Auth\LoginController@showLoginForm');
 $this->get('/login', 'Auth\LoginController@showLoginForm');
 $this->post('/login', 'Auth\LoginController@login')->name('login');
 $this->get('/logout', 'Auth\LoginController@logout')->name('logout');
+#Password-Reset
+$this->get('/password/reset', 'Auth\PasswordController@index')->name('password-reset.index');
+$this->post('/password/reset', 'Auth\PasswordController@check')->name('password-reset.check');
+$this->get('/password/reset/{token}', 'Auth\PasswordController@edit')->name('password-reset.edit');
+$this->post('/password/update', 'Auth\PasswordController@update')->name('password-reset.update');
 
 Route::group(['middleware' => 'auth'], function () {
     loadRoute('panel');

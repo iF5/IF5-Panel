@@ -5,7 +5,7 @@
         <div class="login_wrapper">
             <div class="animate form login_form">
                 <section class="login_content">
-                    <form class="form-horizontal" role="form" method="post" action="{{ route('login') }}">
+                    <form class="form-horizontal" role="form" method="post" action="{{ route('password-reset.check') }}">
                         {{ csrf_field() }}
                         <h1>Painel IF5</h1>
 
@@ -15,20 +15,12 @@
                             <strong>{{ $errors->first('email') }}</strong>
                                     </span>
                             @endif
-                            <input id="login" type="email" class="form-control" name="login" value="{{ old('email') }}"
-                                   placeholder="Login" required autofocus>
+                            <input id="email" type="email" class="form-control" name="email" value=""
+                                   placeholder="Digite seu e-mail cadastrado" required autofocus>
                         </div>
                         <div>
-                            @if ($errors->has('password'))
-                                <span class="help-block">
-                            <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                            @endif
-                            <input id="password" type="password" class="form-control" name="password" placeholder="Senha" required>
-                        </div>
-                        <div>
-                            <button class="btn btn-default submit" type="submit">Entrar</button>
-                            <a class="reset_pass" href="{{ route('password-reset.index') }}">Esqueci minha senha &raquo;</a>
+                            <button class="btn btn-default submit" type="submit">Enviar</button>
+                            <a class="reset_pass" href="{{ route('login') }}">&laquo; Voltar</a>
                         </div>
 
                         <div class="clearfix"></div>
