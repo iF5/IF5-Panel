@@ -24,18 +24,30 @@ class PasswordController extends Controller
         return view('auth.password-reset');
     }
 
+
     public function check(Request $request)
     {
-
         $email = trim($request->get('email'));
-        $token = sha1(sha1($email));
+        $user = $this->userRepository->findByEmail($email);
 
-        $a = $this->userRepository->findByEmail($email);
+        $data = [
+            'name' => $user->name,
+            'link' => route('password-reset.edit', [
+                'token' => sha1(sha1($user->email))
+            ])
+        ];
 
-        dd($token);
+        return view('auth.mail.password-reset', $data);
+
+        \Mail::send('auth.mail.password-reset', $data, function ($message) use ($data) {
+            $message->to($data['email'])
+                ->subject('Redefini&ccedil;&atilde;o de senha')
+                ->from('robot@btg360.com.br');
+        });
+
         return redirect()->route('password-reset.index')->with([
             'success' => true,
-            'message' => 'Cliente cadastrado com sucesso!'
+            'message' => 'Solicitação realizada com sucesso, para proseguir olhe seu email'
         ]);
     }
 

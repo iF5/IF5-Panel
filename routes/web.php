@@ -20,7 +20,7 @@ function loadRoute($directoryName)
 }
 
 #Authentication
-//Auth::routes();
+Auth::routes();
 $this->get('/', 'Auth\LoginController@showLoginForm');
 $this->get('/login', 'Auth\LoginController@showLoginForm');
 $this->post('/login', 'Auth\LoginController@login')->name('login');
