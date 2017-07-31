@@ -21,14 +21,20 @@ class PasswordController extends Controller
 
     public function index()
     {
-        return view('auth.password-reset');
+        return view('auth.passwords.email');
     }
-
 
     public function check(Request $request)
     {
         $email = trim($request->get('email'));
         $user = $this->userRepository->findByEmail($email);
+
+        if (!$user) {
+            return redirect()->route('password-reset.index')->with([
+                'success' => false,
+                'message' => sprintf('O e-mail %s n&atilde;o encontrado!', $email)
+            ]);
+        }
 
         $data = [
             'name' => $user->name,
@@ -37,23 +43,30 @@ class PasswordController extends Controller
             ])
         ];
 
-        return view('auth.mail.password-reset', $data);
+        return view('auth.passwords.mail', $data);
 
-        \Mail::send('auth.mail.password-reset', $data, function ($message) use ($data) {
+
+        /**
+         * return redirect()->route('auth.passwords.email')->with([
+         * 'success' => true,
+         * 'message' => 'Solicitação realizada com sucesso, para proseguir olhe seu email'
+         * ]);
+         * */
+
+    }
+
+    protected function sendEmail($data)
+    {
+        \Mail::send('auth.passwords.mail', $data, function ($message) use ($data) {
             $message->to($data['email'])
                 ->subject('Redefini&ccedil;&atilde;o de senha')
                 ->from('robot@btg360.com.br');
         });
-
-        return redirect()->route('password-reset.index')->with([
-            'success' => true,
-            'message' => 'Solicitação realizada com sucesso, para proseguir olhe seu email'
-        ]);
     }
 
-    public function edit()
+    public function edit($token)
     {
-        return view('auth.password-reset');
+        return view('auth.passwords.reset', ['token' => $token]);
     }
 
     public function update()
