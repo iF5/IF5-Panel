@@ -13,10 +13,6 @@
                 @include('includes.breadcrumb')
             </div>
 
-            <div class="col-md-6">
-                <!-- form the search -->
-                @include('includes.form-search')
-            </div>
             <div class="col-md-6"></div>
 
             <div class="col-md-12" style="overflow-x: auto; min-height: 350px;">
@@ -29,29 +25,27 @@
                         @foreach($providers as $provider)
                             <th>
                                 <div style="width: 200px; text-align: center;">
-                                    {{ $provider['name'] }}
+                                    <a href="{{ route('dashboard.employee', ["providerId" => $provider['providerId']]) }}">
+                                        {{ $provider['providerName'] }}
+                                    </a>
                                 </div>
                             </th>
                         @endforeach
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($providers as $provider)
-
-
-                            @foreach($provider['documents'] as $key => $value)
-                                <tr>
-                                <td>
-                                    {{ $value['name'] }}
-                                </td>
-                                <td>
-                                    {{ $value['total'] }}/{{  $provider['employeeQuantity'] }}
-                                </td>
-                                </tr>
+                        @foreach($documents as $key => $value)
+                            <tr>
+                            <td>
+                                {{ $key }}
+                            </td>
+                            @foreach($value as $val)
+                            <td>
+                                {{ $val['documentQuantity'] }}/{{  $val['employeeQuantity'] }}
+                            </td>
                             @endforeach
-
-
-                    @endforeach
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

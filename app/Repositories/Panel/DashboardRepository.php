@@ -17,23 +17,26 @@ class DashboardRepository
 
     public function emploweeHasDocuments()
     {
-        $stmt = \DB::table('documents')->selectRaw('
-                employees_has_documents.documentId,
-                count(employees_has_documents.documentId) AS documentQuantity,
-                employees.providerId
-            ')->leftJoin('employees_has_documents', function ($join) {
-            $join->on('employees_has_documents.documentId', '=', 'documents.id');
-        })->join('employees', function ($join) {
-            $join->on('employees.id', '=', 'employees_has_documents.employeeId');
-        });
-
-        if ($this->getRole() === 'company') {
-            $this->addBindings($this->getCompanyId());
-            $stmt->whereIn('employees.id', function ($query) {
-                $query->select('employeeId')->from('employees_has_companies')->where('companyId', '=', '?');
+        try {
+            $stmt = \DB::table('documents')->selectRaw('
+                    employees_has_documents.documentId,
+                    count(employees_has_documents.documentId) AS documentQuantity,
+                    employees.providerId
+                ')->leftJoin('employees_has_documents', function ($join) {
+                $join->on('employees_has_documents.documentId', '=', 'documents.id');
+            })->join('employees', function ($join) {
+                $join->on('employees.id', '=', 'employees_has_documents.employeeId');
             });
+
+            if ($this->getRole() === 'company') {
+                $stmt->whereIn('employees.id', function ($query) {
+                    $query->select('employeeId')->from('employees_has_companies')->where('companyId', '=', '?');
+                })->setBindings([$this->getCompanyId()]);
+            }
+            return $stmt->groupBy('documents.id', 'employees.providerId')->get();
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
         }
-        return $stmt->groupBy('documents.id', 'employees.providerId')->get();
     }
 
     public function employeesByProviders($keyword=null)
@@ -47,15 +50,14 @@ class DashboardRepository
         });
 
         if ($this->getRole() === 'company') {
-            $this->addBindings($this->getCompanyId());
             $stmt->whereIn('employees.id', function ($query) {
                 $query->select('employeeId')->from('employees_has_companies')->where('companyId', '=', '?');
-            });
+            })->setBindings([$this->getCompanyId()]);
         }
 
         if ($keyword) {
             $this->addBindings("%{$keyword}%");
-            $stmt->where('providers.name', 'like', '?');
+            $stmt->where('providers.name', 'like', '?')->setBindings(["%{$keyword}%"]);
         }
         return $stmt->groupBy('providers.id')->get();
     }
@@ -186,6 +188,39 @@ class DashboardRepository
             }
 
             return $stmt->groupBy('documents.id', 'employees.id')->get();
+
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+
+    public function findEmployeesByProviderIdNew($providerId)
+    {
+        try {
+            $this->addBindings([$providerId, $this->getCompanyId()], true);
+
+            $stmt = \DB::table('employees')->selectRaw('
+                employees_has_documents.documentId,
+                count(employees_has_documents.documentId) AS documentQuantity,
+                employees.id AS employeeId,
+                employees.name AS employeeName
+            ', $this->bindings)->leftJoin('employees_has_documents', function ($join) {
+                $join->on('employees.id', '=', 'employees_has_documents.employeeId');
+            })->where([
+                ['employees.providerId', '=', '?']
+            ]);
+
+            if ($this->getRole() === 'company') {
+               
+                $stmt->whereIn('employees.id', function ($query) {
+                    $query->select('employeeId')
+                        ->from('employees_has_companies')
+                        ->where('companyId', '=', '?')->setBindings([$this->getCompanyId()]);
+                });
+            }
+
+            return $stmt->groupBy('employees.id')->get();
 
         } catch (\Exception $e) {
             throw new ModelNotFoundException;

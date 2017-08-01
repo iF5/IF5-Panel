@@ -39,17 +39,13 @@ class DashboardController extends Controller
     public function index()
     {
         $keyword = \Request::input('keyword');
-        $documents = Document::all();
-        $totalDocuments = count($documents);
-        $providers = $this->prepareReportToProviders($totalDocuments, $keyword);
-        //dd($providers);
-        //$documents->providers = $providers;
+        $providers = $this->prepareReportToProviders($keyword);
+
         return view('panel.dashboard.index', [
-            'documents' => $documents,
-            'providers' => $providers,
+            'documents' => $providers['documents'],
+            'providers' => $providers['providers'],
             'breadcrumbs' => $this->getBreadcrumb(),
-            'keyword' => $keyword,
-            'totalDocuments' => $totalDocuments
+            'keyword' => $keyword
         ]);
     }
 
@@ -58,58 +54,51 @@ class DashboardController extends Controller
      * @param string $keyword
      * @return array
      */
-    private function prepareReportToProviders($totalDocuments, $keyword = null)
+    private function prepareReportToProviders($keyword = null)
     {
-        $documents = Document::all();
         $employeeHasDocuments = $this->dashboardRepository->emploweeHasDocuments();
         $employeesByProviders = $this->dashboardRepository->employeesByProviders($keyword);
 
         $providerHasDocuments = [];
         foreach($employeeHasDocuments as $hasDocument){
-            $providerHasDocuments[$hasDocument->providerId] = [
+            $providerHasDocuments["provider-" . $hasDocument->providerId] = [
                 'documentId' => $hasDocument->documentId,
                 'documentQuantity' => $hasDocument->documentQuantity
             ];
         }
 
+
+
         $providerEmployeeQtd = [];
         foreach($employeesByProviders as $byProvider){
-            $providerEmployeeQtd[$byProvider->providerId] = [
+            $providerEmployeeQtd["provider-" . $byProvider->providerId] = [
+                'providerId' =>  $byProvider->providerId,
                 'providerName' => $byProvider->providerName,
                 'employeeQuantity' => $byProvider->employeeQuantity
             ];
         }
 
-        #unir os dois arrays e indexar pelo documentId
+        $merge = array_merge_recursive($providerHasDocuments, $providerEmployeeQtd);
 
-
-
-        $providers = [];
-        $data = $this->dashboardRepository->findProviders($keyword);
-
-        foreach ($data as $d) {
-            $providers[$d->providerId] = [
-                'id' => $d->providerId,
-                'name' => $d->providerName,
-                'employeeQuantity' => $d->employeeQuantity,
-                'documents' => []
-            ];
-        }
-
+        $dash = [];
         $documents = Document::all();
-        foreach ($providers as &$provider) {
-            //for ($i = 1; $i < $totalDocuments; $i++) {
-            foreach($documents as $key => $docs){
-                $provider['documents'][$key]['total'] = 0;
-
-                $provider['documents'][$key]['name'] = isset($docs) ? $docs->name : "";
+        foreach($documents as $doc){
+            foreach($merge as $key => $mer){
+                if(!array_key_exists('documentId', $mer)) {
+                    $mer['documentId'] = 0;
+                }
+                $dash[$doc->name][$key]["documentQuantity"] = 0;
+                $dash[$doc->name][$key]["employeeQuantity"] = 0;
+                if($mer['documentId'] == $doc->id){
+                    $dash[$doc->name][$key]["documentQuantity"] = $mer['documentQuantity'];
+                    $dash[$doc->name][$key]["employeeQuantity"] = $mer['employeeQuantity'];
+                }
 
             }
         }
 
-        foreach ($data as $d) {
-            $providers[$d->providerId]['documents'][$d->documentId]['total'] = $d->documentQuantity;
-        }
+        $providers['documents'] = $dash;
+        $providers['providers'] = $merge;
 
         return $providers;
     }
@@ -125,8 +114,8 @@ class DashboardController extends Controller
         $employees = $this->prepareReportToEmployee($totalDocuments, $providerId);
 
         return view('panel.dashboard.employee', [
-            'documents' => $documents,
-            'employees' => $employees,
+            'documents' => $employees['documents'],
+            'employees' => $employees['employees'],
             'breadcrumbs' => $this->getBreadcrumb('Funcion&aacute;rios'),
             'totalDocuments' => $totalDocuments
         ]);
@@ -140,25 +129,21 @@ class DashboardController extends Controller
     private function prepareReportToEmployee($totalDocuments, $providerId)
     {
         $employees = [];
-        $data = $this->dashboardRepository->findEmployeesByProviderId($providerId);
+        $dash = [];
+        $employeeData = $this->dashboardRepository->findEmployeesByProviderIdNew($providerId);
 
-        foreach ($data as $d) {
-            $employees[$d->employeeId] = [
-                'id' => $d->employeeId,
-                'name' => $d->employeeName,
-                'documents' => []
-            ];
-        }
-
-        foreach ($employees as &$employee) {
-            for ($i = 1; $i <= $totalDocuments; $i++) {
-                $employee['documents'][$i]['total'] = 0;
+        $documents = Document::all();
+        foreach($documents as $doc){
+            foreach($employeeData as $key => $employee){
+                $dash[$doc->name][$key]["documentQuantity"] = 0;
+                if($employee->documentId == $doc->id){
+                    $dash[$doc->name][$key]["documentQuantity"] = $employee->documentQuantity;
+                }
             }
         }
 
-        foreach ($data as $d) {
-            $employees[$d->employeeId]['documents'][$d->documentId] = $d->documentQuantity;
-        }
+        $employees['documents'] = $dash;
+        $employees['employees'] = $employeeData;
 
         return $employees;
     }
