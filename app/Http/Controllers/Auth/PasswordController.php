@@ -43,7 +43,7 @@ class PasswordController extends Controller
             ])
         ];
 
-        return view('auth.passwords.mail', $data);
+        return view('auth.passwords.message', $data);
 
 
         /**

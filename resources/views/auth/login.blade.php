@@ -5,7 +5,8 @@
         <div class="login_wrapper">
             <div class="animate form login_form">
                 <section class="login_content">
-                    <form class="form-horizontal" role="form" method="post" action="{{ route('login') }}">
+                    <form id="form-login" class="form-horizontal" role="form" method="post"
+                          action="{{ route('login') }}" novalidate>
                         {{ csrf_field() }}
                         <h1>Painel IF5</h1>
 
@@ -16,7 +17,7 @@
                                     </span>
                             @endif
                             <input id="login" type="email" class="form-control" name="login" value="{{ old('email') }}"
-                                   placeholder="Login" required autofocus>
+                                   placeholder="Login" autofocus>
                         </div>
                         <div>
                             @if ($errors->has('password'))
@@ -24,11 +25,13 @@
                             <strong>{{ $errors->first('password') }}</strong>
                                     </span>
                             @endif
-                            <input id="password" type="password" class="form-control" name="password" placeholder="Senha" required>
+                            <input id="password" type="password" class="form-control" name="password"
+                                   placeholder="Senha">
                         </div>
                         <div>
                             <button class="btn btn-default submit" type="submit">Entrar</button>
-                            <a class="reset_pass" href="{{ route('password-reset.index') }}">Esqueci minha senha &raquo;</a>
+                            <a class="reset_pass" href="{{ route('password-reset.index') }}">Esqueci minha
+                                senha &raquo;</a>
                         </div>
 
                         <div class="clearfix"></div>

@@ -5,7 +5,7 @@
         <div class="login_wrapper">
             <div class="animate form login_form">
                 <section class="login_content">
-                    <form id="password-reset-email" class="form-horizontal" method="post"
+                    <form id="form-password-email" class="form-horizontal" method="post"
                           action="{{ route('password-reset.check') }}" novalidate>
                         {{ csrf_field() }}
                         <h1>Painel IF5</h1>
