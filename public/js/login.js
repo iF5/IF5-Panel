@@ -35,14 +35,14 @@ $(function () {
     $('#form-password-reset').submit(function () {
         var response = validate.assert({
             '#password': {value: $('#password').val(), type: 'MIN', min: 6},
-            '#passwordConfirm': {value: $('#password').val(), compareValue: $('#passwordConfirm'), type: 'EQUALS'}
+            '#passwordConfirm': {value: $('#password').val(), compareValue: $('#passwordConfirm').val(), type: 'EQUALS'}
         });
 
         return response.isSuccess;
     });
 
     /**
-     *
+     * Reset input border color
      */
     $('input').on('focus', function () {
         $(this).css('border', '');

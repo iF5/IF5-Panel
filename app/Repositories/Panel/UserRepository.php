@@ -136,7 +136,7 @@ class UserRepository extends User
      */
     public function findByDuoSha1Token($token)
     {
-        return User::whereRaw('SHA1(SHA1(email))', '=', $token)->first();
+        return User::whereRaw(sprintf("SHA1(SHA1(email)) = '%s'", $token))->first();
     }
 
 }

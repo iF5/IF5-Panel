@@ -6,14 +6,16 @@
             <div class="animate form login_form">
                 <section class="login_content">
                     <form id="form-password-reset" class="form-horizontal" method="post"
-                          action="{{ route('password-reset.check') }}" novalidate>
+                          action="{{ route('password-reset.update') }}" novalidate>
                         {{ csrf_field() }}
                         <h1>Painel IF5</h1>
 
                         <div class="control-group">
                             <span class="help-block" id="flash-message">
                                 @if (\Session::has('message'))
-                                    {{ \Session::get('message') }}
+                                    <p class="{{ (\Session::get('success'))? 'text-success': 'text-danger' }}">
+                                        {{ \Session::get('message') }}
+                                    </p>
                                 @endif
                             </span>
 

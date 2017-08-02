@@ -13,8 +13,8 @@
                         <div>
                             @if ($errors->has('email'))
                                 <span class="help-block">
-                            <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
+                                    <p class="text-danger">{{ $errors->first('email') }}</p>
+                                </span>
                             @endif
                             <input id="login" type="email" class="form-control" name="login" value="{{ old('email') }}"
                                    placeholder="Login" autofocus>
@@ -22,8 +22,8 @@
                         <div>
                             @if ($errors->has('password'))
                                 <span class="help-block">
-                            <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
+                                    <p class="text-danger">{{ $errors->first('password') }}</p>
+                                </span>
                             @endif
                             <input id="password" type="password" class="form-control" name="password"
                                    placeholder="Senha">

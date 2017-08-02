@@ -14,16 +14,27 @@ class PasswordController extends Controller
      */
     protected $userRepository;
 
+    /**
+     * PasswordController constructor.
+     * @param UserRepository $userRepository
+     */
     public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         return view('auth.passwords.email');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function check(Request $request)
     {
         $email = trim($request->get('email'));
@@ -55,6 +66,9 @@ class PasswordController extends Controller
 
     }
 
+    /**
+     * @param array $data
+     */
     protected function sendEmail($data)
     {
         \Mail::send('auth.passwords.mail', $data, function ($message) use ($data) {
@@ -64,14 +78,36 @@ class PasswordController extends Controller
         });
     }
 
+    /**
+     * @param $token
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit($token)
     {
         return view('auth.passwords.reset', ['token' => $token]);
     }
 
-    public function update()
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function update(Request $request)
     {
-        return view('auth.password-reset');
+        $data = (object)$request->all();
+        $user = $this->userRepository->findByDuoSha1Token($data->token);
+
+        if (!$user) {
+            return redirect()->route('password-reset.edit', ['token' => $data->token])->with([
+                'success' => false,
+                'message' => 'Usu&aacute;rio n&atilde;o encontrado!'
+            ]);
+        }
+
+        $this->userRepository->findOrFail($user->id)->update([
+            'password' => bcrypt($data->password)
+        ]);
+
+        return redirect('/login');
     }
 
 }

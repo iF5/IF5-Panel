@@ -26,26 +26,26 @@ function Validate() {
      */
     var rules = {
         VOID: function (i, options) {
-            var value = options[i].value || '';
+            var value = $.trim(options[i].value) || '';
             return ((value === null) || (value.length < 1)) ? false : true;
         },
         EQUALS: function (i, options) {
-            var value = options[i].value || '';
-            var compareValue = options[i].compareValue || null;
+            var value = $.trim(options[i].value) || '';
+            var compareValue = $.trim(options[i].compareValue) || '';
             return (value !== compareValue) ? false : true;
         },
         MIN: function (i, options) {
-            var value = options[i].value || '';
-            var min = options[i].min || 1;
+            var value = $.trim(options[i].value) || '';
+            var min = parseInt(options[i].min) || 1;
             return (value.length < min) ? false : true;
         },
         MAX: function (i, options) {
-            var value = options[i].value || '';
-            var max = options[i].max || 10;
+            var value = $.trim(options[i].value) || '';
+            var max = parseInt(options[i].max) || 10;
             return (value.length > max) ? false : true;
         },
         DEFAULT: function (i, options, type) {
-            var value = options[i].value || null;
+            var value = $.trim(options[i].value) || '';
             return (!regExr[type].test(value)) ? false : true;
         }
     };
