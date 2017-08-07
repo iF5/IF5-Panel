@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Repositories\Panel\UserRepository;
 use Illuminate\Http\Request;
-
 use SendGrid;
+
+use App\Http\Constants\SendGrid AS SendGridConst;
 
 class PasswordController extends Controller
 {
+
 
     /**
      * @var UserRepository
@@ -31,7 +33,7 @@ class PasswordController extends Controller
     public function index()
     {
 
-        $this->sendgrid();
+        //$this->sendgrid();
         return view('auth.passwords.email');
     }
 
@@ -53,40 +55,42 @@ class PasswordController extends Controller
 
         $data = [
             'name' => $user->name,
+            'email' => $user->email,
             'link' => route('password-reset.edit', [
                 'token' => sha1(sha1($user->email))
             ])
         ];
 
-        return view('auth.passwords.message', $data);
+        $sendGrid = $this->sendGrid($data);
 
+        $redirectData = [
+            'success' => true,
+            'message' => 'Solicitação realizada com sucesso, uma mensagem foi enviada para seu e-mail.'
+        ];
 
-        /**
-         * return redirect()->route('auth.passwords.email')->with([
-         * 'success' => true,
-         * 'message' => 'Solicitação realizada com sucesso, para proseguir olhe seu email'
-         * ]);
-         * */
+        if (!(int)$sendGrid === 200) {
+            $redirectData = [
+                'success' => false,
+                'message' => 'Erro interno por favor tenter mais tarde'
+            ];
+        }
+
+        return redirect()->route('password-reset.edit')->with($redirectData);
 
     }
 
-    protected function sendgrid()
+    protected function sendGrid($data)
     {
-        $from = new SendGrid\Email('Admin IF5', "admin@if5.com.br");
-        $subject = "Testando api send grid";
-        $to = new SendGrid\Email("Jurandi", "jurandico@gmail.com");
-        $content = new SendGrid\Content("text/plain", "and easy to do anywhere, even with PHP");
-        $mail = new SendGrid\Mail($from, $subject, $to, $content);
+        $from = new SendGrid\Email(SendGridConst::SENDER_NAME, SendGridConst::SENDER_EMAIL);
+        $to = new SendGrid\Email($data['name'], $data['email']);
 
-        $apiKey = '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';//getenv('SENDGRID_API_KEY');
-        $sg = new \SendGrid($apiKey);
+        $html = \View::make('auth.passwords.message', $data)->render();
+        $content = new SendGrid\Content("text/html", $html);
+        $mail = new SendGrid\Mail($from, SendGridConst::PASSWORD_RESET_SUBJECT, $to, $content);
+        $sg = new \SendGrid(SendGridConst::API_KEY);
 
         $response = $sg->client->mail()->send()->post($mail);
-        echo $response->statusCode();
-        print_r($response->headers());
-        echo $response->body();
-
-        dd('END');
+        return $response->statusCode();
     }
 
     /**
