@@ -5,13 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Repositories\Panel\UserRepository;
 use Illuminate\Http\Request;
-use SendGrid;
-
-use App\Http\Constants\SendGrid AS SendGridConst;
+use App\Services\SendGridService;
 
 class PasswordController extends Controller
 {
-
 
     /**
      * @var UserRepository
@@ -19,12 +16,22 @@ class PasswordController extends Controller
     protected $userRepository;
 
     /**
+     * @var SendGridService
+     */
+    protected $sendGridService;
+
+    /**
      * PasswordController constructor.
      * @param UserRepository $userRepository
+     * @param SendGridService $sendGridService
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(
+        UserRepository $userRepository,
+        SendGridService $sendGridService
+    )
     {
         $this->userRepository = $userRepository;
+        $this->sendGridService = $sendGridService;
     }
 
     /**
@@ -32,8 +39,6 @@ class PasswordController extends Controller
      */
     public function index()
     {
-
-        //$this->sendgrid();
         return view('auth.passwords.email');
     }
 
@@ -48,61 +53,31 @@ class PasswordController extends Controller
 
         if (!$user) {
             return redirect()->route('password-reset.index')->with([
-                'success' => false,
-                'message' => sprintf('O e-mail %s n&atilde;o encontrado!', $email)
+                'success' => false, 'message' => sprintf('O e-mail %s n&atilde;o encontrado.', $email)
             ]);
         }
 
-        $data = [
+        $content = \View::make('auth.passwords.message', [
             'name' => $user->name,
-            'email' => $user->email,
             'link' => route('password-reset.edit', [
                 'token' => sha1(sha1($user->email))
             ])
-        ];
+        ])->render();
 
-        $sendGrid = $this->sendGrid($data);
+        $sendGrid = $this->sendGridService
+            ->setReceiverName($user->name)
+            ->setReceiverEmail($user->email)
+            ->setSubject('Redefinição de senha')
+            ->setContent($content)
+            ->setIsTextHtml(true)
+            ->send();
 
-        $redirectData = [
-            'success' => true,
-            'message' => 'Solicitação realizada com sucesso, uma mensagem foi enviada para seu e-mail.'
-        ];
-
-        if (!(int)$sendGrid === 200) {
-            $redirectData = [
-                'success' => false,
-                'message' => 'Erro interno por favor tenter mais tarde'
-            ];
-        }
-
-        return redirect()->route('password-reset.edit')->with($redirectData);
-
-    }
-
-    protected function sendGrid($data)
-    {
-        $from = new SendGrid\Email(SendGridConst::SENDER_NAME, SendGridConst::SENDER_EMAIL);
-        $to = new SendGrid\Email($data['name'], $data['email']);
-
-        $html = \View::make('auth.passwords.message', $data)->render();
-        $content = new SendGrid\Content("text/html", $html);
-        $mail = new SendGrid\Mail($from, SendGridConst::PASSWORD_RESET_SUBJECT, $to, $content);
-        $sg = new \SendGrid(SendGridConst::API_KEY);
-
-        $response = $sg->client->mail()->send()->post($mail);
-        return $response->statusCode();
-    }
-
-    /**
-     * @param array $data
-     */
-    protected function sendEmail($data)
-    {
-        \Mail::send('auth.passwords.mail', $data, function ($message) use ($data) {
-            $message->to($data['email'])
-                ->subject('Redefini&ccedil;&atilde;o de senha')
-                ->from('robot@btg360.com.br');
-        });
+        return redirect()->route('password-reset.index')->with([
+            'success' => $sendGrid,
+            'message' => ($sendGrid)
+                ? 'Solicitação realizada com sucesso, uma mensagem foi enviada para o seu e-mail.'
+                : 'Erro inesperado, por favor tente mais tarde.'
+        ]);
     }
 
     /**
