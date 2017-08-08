@@ -30,7 +30,7 @@
                     <th>Nome</th>
                     <th>Cargo</th>
                     <th>Setor</th>
-                    <th>Telefone</th>
+                    <th>Celular</th>
                     <th>E-mail</th>
                     <th></th>
                     </thead>
@@ -53,7 +53,7 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->jobRole }}</td>
                             <td>{{ $user->department }}</td>
-                            <td>{{ $user->phone }}</td>
+                            <td>{{ $user->cellPhone }}</td>
                             <td>{{ $user->email }}</td>
                             <td>
                                 <a href="{{ route($route . '.edit', $user->id) }}"

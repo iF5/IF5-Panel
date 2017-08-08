@@ -124,7 +124,6 @@ class SendGridService
     public function getSubject()
     {
         return $this->subject;
-        return $this;
     }
 
     /**

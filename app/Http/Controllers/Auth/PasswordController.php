@@ -53,15 +53,13 @@ class PasswordController extends Controller
 
         if (!$user) {
             return redirect()->route('password-reset.index')->with([
-                'success' => false, 'message' => sprintf('O e-mail %s n&atilde;o encontrado.', $email)
+                'success' => false, 'message' => sprintf('O e-mail %s n&atilde;o foi encontrado.', $email)
             ]);
         }
 
         $content = \View::make('auth.passwords.message', [
             'name' => $user->name,
-            'link' => route('password-reset.edit', [
-                'token' => sha1(sha1($user->email))
-            ])
+            'link' => route('password-reset.edit', ['token' => sha1(sha1($user->email))])
         ])->render();
 
         $sendGrid = $this->sendGridService

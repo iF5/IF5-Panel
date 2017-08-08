@@ -10,7 +10,7 @@ class UserRepository extends User
     /**
      * @var int
      */
-    protected $totalPerPage = 2;
+    protected $totalPerPage = 20;
 
     /**
      * @var string
