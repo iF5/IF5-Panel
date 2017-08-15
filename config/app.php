@@ -5,8 +5,8 @@
  */
 function getUrl()
 {
-
-    return $_SERVER['HTTP_X_FORWARDED_PROTO'] ."://". $_SERVER['HTTP_HOST'];
+    return 'http://localhost';
+    //return $_SERVER['HTTP_X_FORWARDED_PROTO'] ."://". $_SERVER['HTTP_HOST'];
 }
 
 return [

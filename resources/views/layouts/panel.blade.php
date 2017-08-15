@@ -38,9 +38,9 @@
 
 </head>
 
-<body class="nav-md">
+<body class="nav-md" style="background: #FFFFFF;">
 <div class="container body">
-    <div class="main_container">
+    <div class="main_container" style="background: #2A3F54;">
         <div class="col-md-3 left_col">
             <div class="left_col scroll-view">
                 <div class="navbar nav_title" style="border: 0;">
@@ -197,13 +197,13 @@
         <!-- /top navigation -->
 
         <!-- page content -->
-    @yield('content')
+        @yield('content')
     <!-- /page content -->
 
         <!-- footer content -->
-        <footer>
+        <footer style="position: fixed; right: 0; bottom: 0; background: transparent;">
             <div class="pull-right">
-                &copy; 2005 - 2017 - fone:(11) 0000.0000 ou 0000.0000 - IF5
+                &copy; 2017 direitos reservados, Fone: 11 4385-5005
             </div>
             <div class="clearfix"></div>
         </footer>

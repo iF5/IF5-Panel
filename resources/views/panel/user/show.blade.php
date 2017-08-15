@@ -32,11 +32,11 @@
                     @if($routePrefix === 'profile')
 
                         <a href="{{ route('profile.edit') }}"
-                           class="btn btn-success btn-md" title="Editar"><span
+                           class="btn btn-success btn-sm" title="Editar"><span
                                     class="glyphicon glyphicon-pencil"></span>
                         </a>
                         <a href=""
-                           class="btn btn-primary btn-md modal-image" title="Imagem" data-toggle="modal"
+                           class="btn btn-primary btn-sm modal-image" title="Imagem" data-toggle="modal"
                            data-target="#upload" rel="{{ route('profile.upload') }}">
                             <span class="glyphicon glyphicon-picture"></span>
                         </a>
@@ -44,11 +44,11 @@
                     @else
 
                         <a href="{{ route( $routePrefix . '.edit', $user->id) }}"
-                           class="btn btn-success btn-md" title="Editar"><span
+                           class="btn btn-success btn-sm" title="Editar"><span
                                     class="glyphicon glyphicon-pencil"></span>
                         </a>
                         <a href="#"
-                           class="btn btn-danger btn-md modal-delete"
+                           class="btn btn-danger btn-sm modal-delete"
                            data-toggle="modal" data-target="#delete" title="Excluir"
                            rel="{{ route($routePrefix . '.destroy', $user->id) }}"><span
                                     class="glyphicon glyphicon-trash"></span>

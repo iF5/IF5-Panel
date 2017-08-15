@@ -46,21 +46,6 @@
                 <li class="list-group-item"><strong>&Uacute;ltima atualiza&ccedil;&atilde;o
                         : </strong> {{ \Carbon\Carbon::parse($company->updatedAt)->format('d/m/Y H:i:s') }}</li>
                 <li class="list-group-item">
-
-                    <a href="{{ route('user-company.identify', $company->id) }}"
-                       class="btn btn-primary btn-md" title="Usu&aacute;rios"><span
-                                class="glyphicon glyphicon-user"></span></a>
-
-                    <a href="{{ route('provider.identify', $company->id) }}"
-                       class="btn btn-warning btn-md" title="Prestadores de servi&ccedil;os"><span
-                                class="glyphicon glyphicon-briefcase"></span></a>
-                    <td>
-                        <a href="{{ route('report.identify', $company->id) }}"
-                           class="btn btn-primary btn-md" title="Relat&oacute;rios"><span
-                                    class="glyphicon glyphicon-signal"></span></a>
-                    </td>
-
-                    @can('onlyAdmin')
                     <a href="{{ route('company.edit', $company->id) }}"
                        class="btn btn-success btn-md" title="Editar"><span
                                 class="glyphicon glyphicon-pencil"></span></a>
@@ -71,9 +56,6 @@
                        data-target="#delete"
                        rel="{{ route('company.destroy', $company->id) }}"><span
                                 class="glyphicon glyphicon-trash"></span></a>
-
-                    @endcan
-
                 </li>
             </ul>
         </div>

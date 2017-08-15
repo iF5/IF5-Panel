@@ -61,16 +61,6 @@
                                rev="Tem certeza que deseja aprovar este registro?"><span
                                         class="glyphicon glyphicon-thumbs-up"></span></a>
                         @endif
-                        @if($provider->status)
-                            <a href="{{ route('user-provider.identify', ['id' => $provider->id]) }}"
-                               class="btn btn-primary btn-md"><span
-                                        class="glyphicon glyphicon-user"></span></a>
-
-                            <a href="{{ route('employee.identify', [$provider->id]) }}"
-                               class="btn btn-warning btn-md"><span
-                                        class="glyphicon glyphicon-list-alt"></span></a>
-                        @endif
-
                         @can('onlyAdmin')
                             <a href="{{ route('provider.edit', $provider->id) }}"
                                class="btn btn-success btn-md"><span

@@ -27,13 +27,11 @@
                 <div class="col-md-12" style="margin-top: 20px;">
                     <table id="provider-table" class="table table-bordred table-striped">
                         <thead>
+                        <th></th>
                         <th>Nome</th>
-                        <th>Cnpj</th>
-                        <th>Usu&aacute;rios</th>
-                        <th>Funcion&aacute;rios</th>
-                        @can('onlyAdmin')
-                            <th></th>
-                        @endcan
+                        <th>Nome Fantasia</th>
+                        <th>CNPJ</th>
+                        <th>Telefone</th>
                         <th></th>
                         </thead>
                         <tbody>
@@ -41,43 +39,48 @@
                         @forelse($providers as $provider)
                             <tr @if(!$provider->status) class="line-light-red" @endif>
                                 <td>
-                                    <a href="{{ route('provider.show', ['id' => $provider->id]) }}">{{ $provider->name }}</a>
+                                    <div class="btn-group">
+                                        <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                            <span class='glyphicon glyphicon-cog'></span> <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li>
+                                                <a href="{{ route('provider.show', ['id' => $provider->id]) }}">Abrir</a>
+                                            </li>
+                                            @if($provider->status)
+                                                <li>
+                                                    <a href="{{ route('employee.identify', [$provider->id]) }}">Funcion&aacute;rios</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('user-provider.identify', ['id' => $provider->id]) }}">Usu&aacute;rios</a>
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </div>
                                 </td>
-                                <td>{{ $provider->cnpj }}</td>
-                                @if(!$provider->status)
-                                    <td colspan="4">
+                                <td>{{ $provider->name }}</td>
+                                @if($provider->status)
+                                    <td>{{ $provider->fantasyName }}</td>
+                                    <td>{{ $provider->cnpj }}</td>
+                                    <td>{{ $provider->phone }}</td>
+                                @else
+                                    <td colspan="3">
                                         Cadastro aguardando aprova&ccedil;&atilde;o
                                     </td>
-                                @else
-                                    <td>
-                                        <a href="{{ route('user-provider.identify', ['id' => $provider->id]) }}"
-                                           class="btn btn-primary btn-xs"><span
-                                                    class="glyphicon glyphicon-user"></span></a>
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('employee.identify', [$provider->id]) }}"
-                                           class="btn btn-primary btn-xs"><span
-                                                    class="glyphicon glyphicon-list-alt"></span></a>
-
-                                    </td>
-                                    @can('onlyAdmin')
-                                        <td>
-                                            <a href="{{ route('provider.edit', $provider->id) }}"
-                                               class="btn btn-success btn-xs"><span
-                                                        class="glyphicon glyphicon-pencil"></span></a>
-
-                                        </td>
-                                    @endcan
-                                    <td>
-                                        <a href="#"
-                                           class="btn btn-danger btn-xs modal-delete" data-title="Excluir"
-                                           data-toggle="modal"
-                                           data-target="#delete"
-                                           rel="{{ route('provider.destroy', $provider->id) }}"><span
-                                                    class="glyphicon glyphicon-trash"></span></a>
-                                    </td>
                                 @endif
-
+                                <td>
+                                    @can('onlyAdmin')
+                                        <a href="{{ route('provider.edit', $provider->id) }}"
+                                           class="btn btn-success btn-xs"><span
+                                                    class="glyphicon glyphicon-pencil"></span></a>
+                                    @endcan
+                                    <a href="#"
+                                       class="btn btn-danger btn-xs modal-delete" data-title="Excluir"
+                                       data-toggle="modal"
+                                       data-target="#delete"
+                                       rel="{{ route('provider.destroy', $provider->id) }}"><span
+                                                class="glyphicon glyphicon-trash"></span></a>
+                                </td>
                             </tr>
                         @empty
                             <tr>

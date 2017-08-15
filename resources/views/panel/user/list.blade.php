@@ -26,13 +26,12 @@
             <div class="col-md-12" style="margin-top: 20px;">
                 <table id="users-table" class="table table-bordred table-striped">
                     <thead>
+                    <th></th>
                     <th>Nome</th>
-                    <th>Cpf</th>
                     <th>Cargo</th>
                     <th>Setor</th>
-                    <th>Telefone</th>
+                    <th>Celular</th>
                     <th>E-mail</th>
-                    <th></th>
                     <th></th>
                     </thead>
                     <tbody>
@@ -40,19 +39,27 @@
                     @forelse($users as $user)
                         <tr>
                             <td>
-                                <a href="{{ route($route . '.show', $user->id) }}">{{ $user->name }}</a>
+                                <div class="btn-group">
+                                    <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                        <span class='glyphicon glyphicon-cog'></span> <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a href="{{ route($route . '.show', $user->id) }}">Abrir</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </td>
-                            <td>{{ $user->cpf }}</td>
+                            <td>{{ $user->name }}</td>
                             <td>{{ $user->jobRole }}</td>
                             <td>{{ $user->department }}</td>
-                            <td>{{ $user->phone }}</td>
+                            <td>{{ $user->cellPhone }}</td>
                             <td>{{ $user->email }}</td>
                             <td>
                                 <a href="{{ route($route . '.edit', $user->id) }}"
                                    class="btn btn-success btn-xs" title="Editar"><span
                                             class="glyphicon glyphicon-pencil"></span></a>
-                            </td>
-                            <td>
+
                                 <a href=""
                                    class="btn btn-danger btn-xs modal-delete" title="Excluir" data-toggle="modal"
                                    data-target="#delete" rel="{{ route($route . '.destroy', $user->id)  }}">
@@ -62,7 +69,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" align="center">Nenhum usu&aacute;rio foi encontrado.</td>
+                            <td colspan="7" align="center">Nenhum usu&aacute;rio foi encontrado.</td>
                         </tr>
                     @endforelse
 

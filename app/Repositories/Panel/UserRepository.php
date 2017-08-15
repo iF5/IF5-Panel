@@ -10,7 +10,7 @@ class UserRepository extends User
     /**
      * @var int
      */
-    protected $totalPerPage = 2;
+    protected $totalPerPage = 20;
 
     /**
      * @var string
@@ -119,6 +119,24 @@ class UserRepository extends User
     {
         $filter = $this->filter(['id', '=', $id]);
         return User::where($filter)->first();
+    }
+
+    /**
+     * @param string $email
+     * @return mixed
+     */
+    public function findByEmail($email)
+    {
+        return User::where('email', '=', $email)->first();
+    }
+
+    /**
+     * @param string $token
+     * @return mixed
+     */
+    public function findByDuoSha1Token($token)
+    {
+        return User::whereRaw(sprintf("SHA1(SHA1(email)) = '%s'", $token))->first();
     }
 
 }
