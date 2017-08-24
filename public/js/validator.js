@@ -84,7 +84,7 @@ $(function(){
         validator.voidIds = [
             "#name", "#fantasyName", "#activityBranch", "#cnpj",
             "#stateInscription", "#municipalInscription", "#mainCnae",
-            "#fax", "#cep", "#street", "#number", "#district", "#city",
+            "#phone","#cep", "#street", "#number", "#district", "#city",
             "#state", "#responsibleName", "#cellPhone", "#email"
         ];
 

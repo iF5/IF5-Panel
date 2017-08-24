@@ -14,40 +14,36 @@
             </div>
 
             <div class="col-md-12" style="overflow-x: auto; min-height: 350px;">
-                <table class="table table-bordered" style="width:auto;">
+                <table class="table table-bordered">
                     <thead>
                     <tr>
                         <th>
-                            <div style="width: 200px; text-align: center;">Funcion&aacute;rio</div>
+                            <div style="width: 200px; text-align: center;">Documentos</div>
                         </th>
-                        @foreach($documents as $document)
+                        @foreach($employees as $employee)
                             <th>
                                 <div style="width: 200px; text-align: center;">
-                                    {{ $document->name }}
+                                    {{ $employee->employeeName }}
                                 </div>
                             </th>
                         @endforeach
                     </tr>
                     </thead>
                     <tbody>
-                    @forelse($employees as $employee)
+                    @foreach($documents as $key => $document)
                         <tr>
-                            <td style="text-align: center;">
-                                <strong>{{ $employee['name'] }}</strong>
+                            <td>
+                                <strong>{{ $key }}</strong>
                             </td>
-                            @foreach($employee['documents'] as $key => $value)
+                            @foreach($document as  $value)
                                 <td style="text-align: center;">
-                                    @if($value)
+                                    @if($value['documentQuantity'] > 0)
                                         <i class="fa fa-check"></i>
                                     @endif
                                 </td>
                             @endforeach
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="{{ $totalDocuments + 1 }}">Nenhum relat&oacute;rio de funcion&aacute;rio foi encontrado.</td>
-                        </tr>
-                    @endforelse
+                    @endforeach
                     </tbody>
                 </table>
             </div>

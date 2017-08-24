@@ -165,7 +165,7 @@ $(function () {
     function hostName() {
         var hostname = $(location).attr('hostname');
         if(hostname == "localhost"){
-            return hostname + ":4545/Api/public/";
+            return hostname + ":4545/public/";
         }
         return hostname;
     }

@@ -71,7 +71,7 @@
                                        class="typeahead form-control" data-provide="typeahead" autocomplete="off">
                             </div>
                             <div class="form-group col-xs-4">
-                                <label for="phone">Telefone :</label>
+                                <label for="phone">Telefone* :</label>
                                 <input type="phone" id="phone" name="phone"
                                        value="{{ $company->phone or old('phone') }}"
                                        class="form-control">
@@ -130,7 +130,7 @@
                                        class="form-control">
                             </div>
                             <div class="form-group col-xs-4">
-                                <label for="cellPhone">Celular :</label>
+                                <label for="cellPhone">Celular* :</label>
                                 <input type="cellPhone" id="cellPhone" name="cellPhone"
                                        value="{{ $company->cellPhone or old('cellPhone') }}"
                                        class="form-control">
