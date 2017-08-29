@@ -288,14 +288,14 @@ class EmployeeController extends Controller
             $company = \Session::get('company');
             $data = [
                 'Clientes' => route('company.index'),
-                $company->name => route('company.show', $company->id)
+                $company->fantasyName => route('company.show', $company->id)
             ];
         }
 
         if (\Session::has('provider')) {
             $provider = \Session::get('provider');
             $data['Prestadores de servi&ccedil;os'] = route('provider.index');
-            $data[$provider->name] = route('provider.show', $provider->id);
+            $data[$provider->fantasyName] = route('provider.show', $provider->id);
         }
 
         $data['Funcion&aacute;rios'] = route('employee.index');

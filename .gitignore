@@ -8,10 +8,10 @@ Homestead.yaml
 .localhost
 /nbproject/private/
 /nbproject
-
+storage/
 # Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
-.ebextensions/
+#.elasticbeanstalk/*
+#!.elasticbeanstalk/*.cfg.yml
+#!.elasticbeanstalk/*.global.yml
+#.ebextensions/
 
