@@ -291,7 +291,7 @@ class ProviderController extends Controller
             $company = \Session::get('company');
             $data = [
                 'Clientes' => route('company.index'),
-                $company->name => route('company.show', $company->id)
+                $company->fantasyName => route('company.show', $company->id)
             ];
         }
 
