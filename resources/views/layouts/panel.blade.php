@@ -80,6 +80,15 @@
                             @endcan
                             @can('onlyAdmin')
                                 <li>
+                                    <a href="#"><i class="fa fa-folder-open"></i>Documentos<span
+                                                class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="#">Tipos</a></li>
+                                        <li><a href="#">Grupos</a></li>
+                                        <li><a href="#">Lista</a></li>
+                                    </ul>
+                                </li>
+                                <li>
                                     <a href="{{ route('company.index') }}"><i class="fa fa-building-o"></i> Clientes
                                     </a>
                                 </li>
@@ -197,7 +206,7 @@
         <!-- /top navigation -->
 
         <!-- page content -->
-        @yield('content')
+    @yield('content')
     <!-- /page content -->
 
         <!-- footer content -->
