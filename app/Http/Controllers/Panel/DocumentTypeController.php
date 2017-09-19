@@ -3,26 +3,20 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Traits\LogTrait;
-use App\Repositories\Panel\RelationshipRepository;
-use App\Repositories\Panel\CompanyRepository;
+use App\Repositories\Panel\DocumentTypeRepository;
 use App\Services\BreadcrumbService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class CompanyController extends Controller
+class DocumentTypeController extends Controller
 {
 
     use LogTrait;
 
     /**
-     * @var CompanyRepository
+     * @var DocumentTypeRepository
      */
-    private $companyRepository;
-
-    /**
-     * @var RelationshipRepository
-     */
-    private $relationshipRepository;
+    private $documentTypeRepository;
 
     /**
      * @var BreadcrumbService
@@ -30,20 +24,25 @@ class CompanyController extends Controller
     private $breadcrumbService;
 
     /**
-     * @var array
+     * DocumentTypeController constructor.
+     * @param DocumentTypeRepository $documentTypeRepository
+     * @param BreadcrumbService $breadcrumbService
      */
-    private $states;
-
     public function __construct(
-        CompanyRepository $companyRepository,
-        RelationshipRepository $relationshipRepository,
+        DocumentTypeRepository $documentTypeRepository,
         BreadcrumbService $breadcrumbService
     )
     {
-        $this->companyRepository = $companyRepository;
-        $this->relationshipRepository = $relationshipRepository;
+        $this->documentTypeRepository = $documentTypeRepository;
         $this->breadcrumbService = $breadcrumbService;
-        $this->states = \Config::get('states');
+    }
+
+    /**
+     * @return string
+     */
+    protected function logTitle()
+    {
+        return 'Tipos de documentos';
     }
 
     /**
@@ -54,17 +53,22 @@ class CompanyController extends Controller
     public function index()
     {
         $keyword = \Request::input('keyword');
-        $companies = ($keyword) ?
-            $this->companyRepository->findLike('name', $keyword) :
-            $this->companyRepository->findOrderBy();
+        $documentTypes = ($keyword) ?
+            $this->documentTypeRepository->findLike('name', $keyword) :
+            $this->documentTypeRepository->findOrderBy();
 
-        return view('panel.company.list', [
+        return view('panel.document-types.list', [
             'keyword' => $keyword,
-            'companies' => $companies,
+            'documentTypes' => $documentTypes,
             'breadcrumbs' => $this->getBreadcrumb()
         ]);
     }
 
+    /**
+     * @param array $data
+     * @param string $action
+     * @return mixed
+     */
     protected function formRequest($data, $action = null)
     {
         $now = (new \DateTime())->format('Y-m-d H:i:s');
@@ -84,10 +88,9 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        return view('panel.company.form', [
-            'company' => $this->companyRepository,
-            'states' => $this->states,
-            'route' => 'company.store',
+        return view('panel.document-types.form', [
+            'company' => $this->documentTypeRepository,
+            'route' => 'document-types.store',
             'method' => 'POST',
             'parameters' => [],
             'breadcrumbs' => $this->getBreadcrumb('Cadastrar')
@@ -103,30 +106,20 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $this->validate(
-            $request, $this->companyRepository->validateRules(), $this->companyRepository->validateMessages()
+            $request, $this->documentTypeRepository->validateRules(), $this->documentTypeRepository->validateMessages()
         );
 
         $data = $this->formRequest($request->all(), 'store');
-        $company = $this->companyRepository->create($data);
-        $this->createLog('Empresa', 'POST', $data);
+        $documentType = $this->documentTypeRepository->create($data);
+        $this->createLog('POST', $data);
 
-        return redirect()->route('company.create')->with([
+        return redirect()->route('document-types.create')->with([
             'success' => true,
-            'message' => 'Cliente cadastrado com sucesso!',
-            'route' => 'company.show',
-            'id' => $company->id
+            'message' => 'Tipo de documento cadastrado com sucesso!',
+            'route' => 'document-types.show',
+            'id' => $documentType->id
         ]);
     }
-
-    /**
-     * @param int $id
-     * @return int
-     */
-    /*private function checkId($id)
-    {
-        return (\Auth::user()->role === 'admin') ? $id : \Auth::user()->companyId;
-    }
-    */
 
     /**
      * Display the specified resource.
@@ -214,7 +207,7 @@ class CompanyController extends Controller
     protected function getBreadcrumb($location = null)
     {
         return $this->breadcrumbService->push([
-            'Clientes' => route('company.index'),
+            'Tipos de documentos' => route('document-types.index'),
             $location => null
         ])->get();
     }

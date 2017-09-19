@@ -83,9 +83,10 @@
                                     <a href="#"><i class="fa fa-folder-open"></i>Documentos<span
                                                 class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="#">Tipos</a></li>
-                                        <li><a href="#">Grupos</a></li>
-                                        <li><a href="#">Lista</a></li>
+                                        <li><a href="{{ route('document-types.index') }}">Tipos</a></li>
+                                        <li><a href="#">Clientes</a></li>
+                                        <li><a href="#">Prestadores de servi&ccedil;os</a></li>
+                                        <li><a href="#">Funcion&aacute;rios</a></li>
                                     </ul>
                                 </li>
                                 <li>

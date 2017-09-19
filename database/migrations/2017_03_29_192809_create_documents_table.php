@@ -11,6 +11,7 @@ class CreateDocumentsTable extends Migration
      *
      * @return void
      */
+    /*
     public function up()
     {
         Schema::create('documents', function (Blueprint $table) {
@@ -22,6 +23,24 @@ class CreateDocumentsTable extends Migration
             $table->boolean('isYearly')->default(false);
             $table->boolean('isSolicited')->default(false);
             $table->boolean('provider')->default(false);
+        });
+    }
+    */
+
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('documents', function (Blueprint $table) {
+            $table->increments('id')->unsigned();
+            $table->string('name');
+            $table->tinyInteger('periodicity')->comment = '1 = Periódicos, 2 = Quando Solicitado';
+            $table->integer('validity')->unsigned();
+            $table->integer('documentTypeId')->unsigned();
+            $table->integer('entityId')->unsigned();
         });
     }
 

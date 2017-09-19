@@ -3,9 +3,10 @@
 namespace App\Repositories\Panel;
 
 use App\Models\Company;
+use App\Models\DocumentType;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class CompanyRepository extends Company
+class DocumentTypeRepository extends DocumentType
 {
 
     protected $totalPerPage = 20;
@@ -18,7 +19,7 @@ class CompanyRepository extends Company
     public function findLike($field, $keyword = null)
     {
         try {
-            return Company::where($field, 'like', "%{$keyword}%")->paginate($this->totalPerPage);
+            return $this->where($field, 'like', "%{$keyword}%")->paginate($this->totalPerPage);
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
@@ -32,7 +33,7 @@ class CompanyRepository extends Company
     public function findOrderBy($field = 'id', $type = 'desc')
     {
         try {
-            return Company::orderBy($field, $type)->paginate($this->totalPerPage);
+            return $this->orderBy($field, $type)->paginate($this->totalPerPage);
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }

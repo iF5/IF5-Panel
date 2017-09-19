@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCacheTable extends Migration
+class CreateDocumentTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateCacheTable extends Migration
      */
     public function up()
     {
-        Schema::create('cache', function (Blueprint $table) {
-            $table->string('key')->unique();
-            $table->text('value');
-            $table->integer('expiration');
+        Schema::create('document_types', function (Blueprint $table) {
+            $table->increments('id')->unsigned();
+            $table->string('name');
+            $table->dateTime('createdAt')->nullable();
+            $table->dateTime('updatedAt')->nullable();
         });
     }
 
@@ -27,6 +28,6 @@ class CreateCacheTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cache');
+        Schema::dropIfExists('document_types');
     }
 }

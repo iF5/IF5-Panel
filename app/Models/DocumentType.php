@@ -4,20 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Report extends Model
+class DocumentType extends Model
 {
-    protected $table = 'reports';
+    protected $table = 'document_types';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'name',
-        'referenceDate',
-        'fileName',
-        'fileOriginalName',
-        'companyId',
-        'createdAt',
-        'sentAt'
+        'name'
     ];
 
     /**
@@ -28,8 +22,7 @@ class Report extends Model
     public function validateRules()
     {
         return [
-            'name' => 'required',
-            'referenceDate' => 'required'
+            'name' => 'required'
         ];
     }
 
@@ -41,9 +34,7 @@ class Report extends Model
     public function validateMessages()
     {
         return [
-            'name.required' => 'O campo nome é obrigatório.',
-            'referenceDate' => 'O campo data de referência fantasia é obrigatório.'
+            'name.required' => 'O campo nome é obrigatório.'
         ];
     }
-
 }
