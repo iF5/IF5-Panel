@@ -28,7 +28,7 @@
 
                             <div class="form-group col-xs-8">
                                 <label for="name">Nome* :</label>
-                                <input type="text" id="name" name="name" value="{{ $company->name or old('name') }}"
+                                <input type="text" id="name" name="name" value="{{ $documentType->name or old('name') }}"
                                        class="form-control">
                             </div>
 

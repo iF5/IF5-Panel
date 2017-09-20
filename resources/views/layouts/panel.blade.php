@@ -84,7 +84,7 @@
                                                 class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="{{ route('document-types.index') }}">Tipos</a></li>
-                                        <li><a href="#">Clientes</a></li>
+                                        <li><a href="{{ route('document-companies.index') }}">Clientes</a></li>
                                         <li><a href="#">Prestadores de servi&ccedil;os</a></li>
                                         <li><a href="#">Funcion&aacute;rios</a></li>
                                     </ul>

@@ -1,48 +1,42 @@
 <?php
 
-namespace App\Http\Controllers\Panel;
+namespace App\Http\Traits;
 
-use App\Http\Traits\LogTrait;
-use App\Repositories\Panel\DocumentTypeRepository;
-use App\Services\BreadcrumbService;
+use App\Repositories\Panel\DocumentRepository;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
-class DocumentTypeController extends Controller
+trait DocumentTrait
 {
-
     use LogTrait;
 
     /**
-     * @var DocumentTypeRepository
+     * @var DocumentRepository
      */
-    private $documentTypeRepository;
+    private $documentRepository;
 
     /**
-     * @var BreadcrumbService
+     * @return null
      */
-    private $breadcrumbService;
-
-    /**
-     * DocumentTypeController constructor.
-     * @param DocumentTypeRepository $documentTypeRepository
-     * @param BreadcrumbService $breadcrumbService
-     */
-    public function __construct(
-        DocumentTypeRepository $documentTypeRepository,
-        BreadcrumbService $breadcrumbService
-    )
+    public function getRoute()
     {
-        $this->documentTypeRepository = $documentTypeRepository;
-        $this->breadcrumbService = $breadcrumbService;
+        return null;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    protected function logTitle()
+    public function getEntityGroup()
     {
-        return 'Tipos de documentos';
+        return 1;
+    }
+
+    /**
+     * @param string $location
+     * @return array
+     */
+    protected function getBreadcrumb($location = null)
+    {
+        return [];
     }
 
     /**
@@ -53,13 +47,13 @@ class DocumentTypeController extends Controller
     public function index()
     {
         $keyword = \Request::input('keyword');
-        $documentTypes = ($keyword) ?
-            $this->documentTypeRepository->findLike('name', $keyword) :
-            $this->documentTypeRepository->findOrderBy();
+        $documents = ($keyword) ?
+            $this->documentRepository->findLike('name', $keyword) :
+            $this->documentRepository->findOrderBy();
 
-        return view('panel.document-types.list', [
+        return view('panel.document.list', [
             'keyword' => $keyword,
-            'documentTypes' => $documentTypes,
+            'documents' => $documents,
             'breadcrumbs' => $this->getBreadcrumb()
         ]);
     }
@@ -88,8 +82,8 @@ class DocumentTypeController extends Controller
      */
     public function create()
     {
-        return view('panel.document-types.form', [
-            'company' => $this->documentTypeRepository,
+        return view('panel.document.form', [
+            'company' => $this->documentRepository,
             'route' => 'document-types.store',
             'method' => 'POST',
             'parameters' => [],
@@ -188,18 +182,6 @@ class DocumentTypeController extends Controller
         $this->documentTypeRepository->destroy($id);
         $this->createLog('DELETE', ['id' => $id]);
         return redirect()->route('document-types.index');
-    }
-
-    /**
-     * @param null $location
-     * @return array
-     */
-    protected function getBreadcrumb($location = null)
-    {
-        return $this->breadcrumbService->push([
-            'Tipos de documentos' => route('document-types.index'),
-            $location => null
-        ])->get();
     }
 
 }

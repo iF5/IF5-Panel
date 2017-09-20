@@ -37,10 +37,12 @@ class CreateDocumentsTable extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->string('name');
-            $table->tinyInteger('periodicity')->comment = '1 = Periódicos, 2 = Quando Solicitado';
+            $table->tinyInteger('periodicity')->default(1)->comment = '1 = Periódicos, 2 = Quando Solicitado';
             $table->integer('validity')->unsigned();
             $table->integer('documentTypeId')->unsigned();
-            $table->integer('entityId')->unsigned();
+            $table->integer('entityGroup')->unsigned()->comment = '1 = company, 2 = provider, 3 = employee';
+            $table->dateTime('createdAt');
+            $table->dateTime('updatedAt');
         });
     }
 

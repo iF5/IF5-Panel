@@ -6,12 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class DocumentType extends Model
 {
+    /**
+     * @var string
+     */
     protected $table = 'document_types';
 
+    /**
+     * @var bool
+     */
     public $timestamps = false;
 
+    /**
+     * @var array
+     */
     protected $fillable = [
-        'name'
+        'name',
+        'createdAt',
+        'updatedAt'
     ];
 
     /**
@@ -19,7 +30,7 @@ class DocumentType extends Model
      *
      * @return array
      */
-    public function validateRules()
+    public function rules()
     {
         return [
             'name' => 'required'
@@ -31,7 +42,7 @@ class DocumentType extends Model
      *
      * @return array
      */
-    public function validateMessages()
+    public function messages()
     {
         return [
             'name.required' => 'O campo nome é obrigatório.'

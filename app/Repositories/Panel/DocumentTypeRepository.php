@@ -47,7 +47,7 @@ class DocumentTypeRepository extends DocumentType
     public function getName($id, $field = 'name')
     {
         try {
-            return Company::where('id', '=', $id)->pluck($field)->first();
+            return $this->where('id', '=', $id)->pluck($field)->first();
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
@@ -60,7 +60,7 @@ class DocumentTypeRepository extends DocumentType
     public function findById($id)
     {
         try {
-            return (object)Company::find($id)->original;
+            return $this->find($id)->original;
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }

@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <a class="btn btn-success" href="{{ route('document-types.create') }}"> Cadastrar novo tipo de documento +</a>
+                    <a class="btn btn-success" href="{{ route('document-types.create') }}"> Cadastrar novo documento +</a>
                 </div>
 
                 <div class="col-md-12" style="margin-top: 20px;">
@@ -28,11 +28,13 @@
                         <thead>
                         <th></th>
                         <th>Name</th>
+                        <th>Periodicidade</th>
+                        <th>Validade</th>
                         <th>Cadastrado em</th>
                         <th></th>
                         </thead>
                         <tbody>
-                        @forelse($documentTypes as $document)
+                        @forelse($documents as $document)
                             <tr>
                                 <td>
                                     <div class="btn-group">
@@ -47,6 +49,8 @@
                                     </div>
                                 </td>
                                 <td>{{ $document->name }}</td>
+                                <td>{{ $document->periodicity }}</td>
+                                <td>{{ $document->validity }} dias</td>
                                 <td>{{ \Carbon\Carbon::parse($document->createdAt)->format('d/m/Y H:i:s') }}</td>
                                 <td>
                                     <a href="{{ route('document-types.edit', $document->id) }}"
@@ -62,7 +66,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" align="center">Nenhum tipo de documento foi encontrado.</td>
+                                <td colspan="6" align="center">Nenhum documento foi encontrado.</td>
                             </tr>
                         @endforelse
                         </tbody>
@@ -71,9 +75,9 @@
                     <div class="clearfix"></div>
                     <!-- Paginacao -->
                     @if($keyword)
-                        {!! $documentTypes->appends(['keyword' => $keyword])->links() !!}
+                        {!! $documents->appends(['keyword' => $keyword])->links() !!}
                     @else
-                        {!! $documentTypes->links() !!}
+                        {!! $documents->links() !!}
                     @endif
                 </div>
             </div>

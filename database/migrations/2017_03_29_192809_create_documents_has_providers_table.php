@@ -15,11 +15,6 @@ class CreateDocumentsHasProvidersTable extends Migration
     {
         Schema::create('documents_has_providers', function (Blueprint $table) {
             $table->integer('documentId')->unsigned();
-            $table->integer('providerId')->unsigned();
-            $table->integer('validity')->unsigned();
-            $table->tinyInteger('status')->comment = '';
-            $table->dateTime('sentAt')->nullable();
-            $table->dateTime('approvedAt')->nullable();
         });
     }
 

@@ -16,7 +16,7 @@
 
                 <ul class="list-group">
                     <li class="list-group-item"><strong>A&ccedil;&atilde;o : </strong> {{ $verbs[$log->method] }}</li>
-                    <li class="list-group-item"><strong>Tit&uacute;lo : </strong> {{ $log->title }}</li>
+                    <li class="list-group-item"><strong>T&iacute;tulo : </strong> {{ $log->title }}</li>
                     <li class="list-group-item">
                         <strong>Usu&aacute;rio @if($log->role === 'admin') Administrador @endif : </strong><br/>
                         - Nome : {{ $log->name }} <br/>

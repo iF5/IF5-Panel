@@ -15,11 +15,6 @@ class CreateDocumentsHasEmployeesTable extends Migration
     {
         Schema::create('documents_has_employees', function (Blueprint $table) {
             $table->integer('documentId')->unsigned();
-            $table->integer('employeeId')->unsigned();
-            $table->integer('validity')->unsigned();
-            $table->tinyInteger('status')->comment = '';
-            $table->dateTime('sentAt')->nullable();
-            $table->dateTime('approvedAt')->nullable();
         });
     }
 

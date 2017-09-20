@@ -3,7 +3,6 @@
 namespace App\Http\Traits;
 
 use App\Models\Log;
-use Illuminate\Http\Request;
 
 trait LogTrait
 {
