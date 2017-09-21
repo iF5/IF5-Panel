@@ -1,6 +1,6 @@
 @extends('layouts.panel')
 
-@section('title', 'Gest&atilde;o de tipos de documentos')
+@section('title', 'Gest&atilde;o de documentos')
 
 @section('content')
     <!-- page content -->
@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <a class="btn btn-success" href="{{ route('document-types.create') }}"> Cadastrar novo documento +</a>
+                    <a class="btn btn-success" href="{{ route($route) }}"> Cadastrar novo documento +</a>
                 </div>
 
                 <div class="col-md-12" style="margin-top: 20px;">

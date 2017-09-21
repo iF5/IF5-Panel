@@ -38,27 +38,28 @@ class DocumentCompanyController extends Controller
     }
 
     /**
+     * @param null $action
      * @return string
      */
-    protected function logTitle()
+    public function getRoute($action = null)
     {
-        return 'Documentos de clientes';
-    }
-
-    /**
-     * @return string
-     */
-    public function getRoute()
-    {
-        return 'document-companies';
+        return sprintf('document-companies.%s', $action);
     }
 
     /**
      * @return int
      */
-    public function getEntityGroup()
+    protected function getEntityGroup()
     {
         return 1;
+    }
+
+    /**
+     * @return string
+     */
+    protected function logTitle()
+    {
+        return 'Documentos de clientes';
     }
 
     /**
@@ -68,7 +69,7 @@ class DocumentCompanyController extends Controller
     protected function getBreadcrumb($location = null)
     {
         return $this->breadcrumbService->push([
-            'Documentos de clientes' => route('document-companies.index'),
+            $this->logTitle() => route('document-companies.index'),
             $location => null
         ])->get();
     }

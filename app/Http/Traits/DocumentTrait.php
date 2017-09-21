@@ -15,9 +15,10 @@ trait DocumentTrait
     private $documentRepository;
 
     /**
+     * @param null $action
      * @return null
      */
-    public function getRoute()
+    public function getRoute($action = null)
     {
         return null;
     }
@@ -25,9 +26,9 @@ trait DocumentTrait
     /**
      * @return int
      */
-    public function getEntityGroup()
+    protected function getEntityGroup()
     {
-        return 1;
+        return 0;
     }
 
     /**
@@ -53,6 +54,7 @@ trait DocumentTrait
 
         return view('panel.document.list', [
             'keyword' => $keyword,
+            'route' => $this->getRoute('create'),
             'documents' => $documents,
             'breadcrumbs' => $this->getBreadcrumb()
         ]);
@@ -67,6 +69,7 @@ trait DocumentTrait
         $data = $request->all();
         $now = (new \DateTime())->format('Y-m-d H:i:s');
         $data['updatedAt'] = $now;
+        $data['entityGroup'] = $this->getEntityGroup();
 
         if (strtoupper($request->getMethod()) === 'POST') {
             $data['createdAt'] = $now;
@@ -83,8 +86,8 @@ trait DocumentTrait
     public function create()
     {
         return view('panel.document.form', [
-            'company' => $this->documentRepository,
-            'route' => 'document-types.store',
+            'documents' => $this->documentRepository,
+            'route' => $this->getRoute('store'),
             'method' => 'POST',
             'parameters' => [],
             'breadcrumbs' => $this->getBreadcrumb('Cadastrar')
@@ -100,18 +103,18 @@ trait DocumentTrait
     public function store(Request $request)
     {
         $this->validate(
-            $request, $this->documentTypeRepository->rules(), $this->documentTypeRepository->messages()
+            $request, $this->documentRepository->rules(), $this->documentRepository->messages()
         );
 
         $data = $this->formRequest($request);
-        $documentType = $this->documentTypeRepository->create($data);
+        $document = $this->documentRepository->create($data);
         $this->createLog('POST', $data);
 
-        return redirect()->route('document-types.create')->with([
+        return redirect()->route($this->getRoute('create'))->with([
             'success' => true,
-            'message' => 'Tipo de documento cadastrado com sucesso!',
-            'route' => 'document-types.show',
-            'id' => $documentType->id
+            'message' => 'Documento cadastrado com sucesso!',
+            'route' => 'document.show',
+            'id' => $document->id
         ]);
     }
 
@@ -123,8 +126,8 @@ trait DocumentTrait
      */
     public function show($id)
     {
-        return view('panel.document-types.show', [
-            'documentType' => $this->documentTypeRepository->findOrFail($id),
+        return view('panel.document.show', [
+            'document' => $this->documentRepository->findOrFail($id),
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
     }
@@ -137,9 +140,9 @@ trait DocumentTrait
      */
     public function edit($id)
     {
-        return view('panel.document-types.form', [
-            'documentType' => $this->documentTypeRepository->findOrFail($id),
-            'route' => 'document-types.update',
+        return view('panel.document.form', [
+            'documentType' => $this->documentRepository->findOrFail($id),
+            'route' => $this->getRoute('update'),
             'method' => 'PUT',
             'parameters' => [$id],
             'breadcrumbs' => $this->getBreadcrumb('Editar')
@@ -156,17 +159,17 @@ trait DocumentTrait
     public function update(Request $request, $id)
     {
         $this->validate(
-            $request, $this->documentTypeRepository->rules(), $this->documentTypeRepository->messages()
+            $request, $this->documentRepository->rules(), $this->documentRepository->messages()
         );
 
         $data = $this->formRequest($request);
-        $this->documentTypeRepository->findOrFail($id)->update($data);
+        $this->documentRepository->findOrFail($id)->update($data);
         $this->createLog('PUT', $data);
 
         return redirect()->route('document-types.edit', $id)->with([
             'success' => true,
-            'message' => 'Tipo de documento atualizado com sucesso!',
-            'route' => 'document-types.show',
+            'message' => 'Documento atualizado com sucesso!',
+            'route' => $this->getRoute('show'),
             'id' => $id
         ]);
     }
@@ -179,9 +182,9 @@ trait DocumentTrait
      */
     public function destroy($id)
     {
-        $this->documentTypeRepository->destroy($id);
+        $this->documentRepository->destroy($id);
         $this->createLog('DELETE', ['id' => $id]);
-        return redirect()->route('document-types.index');
+        return redirect()->route($this->getRoute('index'));
     }
 
 }
