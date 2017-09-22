@@ -23,7 +23,6 @@
                     @include('includes.form-validate')
 
                     <form id="document-form" method="post" action="{{ route($route, $parameters) }}">
-
                         {!! method_field($method) !!}
                         {!! csrf_field() !!}
 
@@ -35,37 +34,41 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-sm-5">
-                                <label for="periodicity">Per&iacute;odicidade* :</label>
-                                <select type="text" id="periodicity" name="periodicity" class="form-control">
-                                    <option value="0">periodicity</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-xs-2">
-                                <label for="cpf">Validade * :</label>
+                            <div class="form-group col-sm-2">
+                                <label for="cpf">Validade em dias* :</label>
                                 <input type="text" id="validity" name="validity"
                                        value="{{ $document->validity or old('validity') }}"
-                                       class="form-control">
+                                       class="form-control col-sm-1" placeholder="Apenas n&uacute;meros">
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-5">
-                                <label for="documentTypeId">Per&iacute;odicidade* :</label>
+                                <label for="documentTypeId">Tipo de documento* :</label>
                                 <select type="text" id="documentTypeId" name="documentTypeId" class="form-control">
-                                    <option value="0">documentTypeId</option>
+                                    @foreach($documentTypes as $row)
+                                        <option value="{{ $row->id }}"
+                                                @if($document->documentTypeId === $row->id) selected @endif>{{ $row->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
-
+                        <div class="row">
+                            <div class="form-group col-sm-5">
+                                <br />
+                                @foreach($periodicities as $key => $value)
+                                    <label class="radio-inline">
+                                        <input type="radio" name="periodicity" value="{{ $key }}"
+                                               @if($document->periodicity === $key) checked @endif>{{ $value }}
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="control-group" style="margin: 20px 0px 0px 12px;">
                                 <button type="submit" class="btn btn-success" id="btn-user-form">Salvar</button>
                             </div>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>

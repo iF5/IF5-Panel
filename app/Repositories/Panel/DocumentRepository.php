@@ -13,28 +13,35 @@ class DocumentRepository extends Document
     protected $totalPerPage = 20;
 
     /**
+     * @param int $entityGroup
      * @param string $field
-     * @param string|null $keyword
+     * @param null | string $keyword
      * @return mixed
      */
-    public function findLike($field, $keyword = null)
+    public function findLike($entityGroup, $field, $keyword = null)
     {
         try {
-            return $this->where($field, 'like', "%{$keyword}%")->paginate($this->totalPerPage);
+            return $this->where([
+                ['entityGroup', '=', $entityGroup],
+                [$field, 'like', "%{$keyword}%"],
+            ])->paginate($this->totalPerPage);
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
     }
 
     /**
+     * @param int $entityGroup
      * @param string $field
      * @param string $type
      * @return mixed
      */
-    public function findOrderBy($field = 'id', $type = 'desc')
+    public function findOrderBy($entityGroup, $field = 'id', $type = 'desc')
     {
         try {
-            return $this->orderBy($field, $type)->paginate($this->totalPerPage);
+            return $this->where([
+                ['entityGroup', '=', $entityGroup]
+            ])->orderBy($field, $type)->paginate($this->totalPerPage);
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }

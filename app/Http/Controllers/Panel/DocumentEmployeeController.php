@@ -9,7 +9,7 @@ use App\Repositories\Panel\DocumentTypeRepository;
 use App\Services\BreadcrumbService;
 
 
-class DocumentCompanyController extends Controller
+class DocumentEmployeeController extends Controller
 {
 
     use DocumentTrait;
@@ -52,7 +52,7 @@ class DocumentCompanyController extends Controller
      */
     public function getRoute($action = null)
     {
-        return sprintf('document-companies.%s', $action);
+        return sprintf('document-providers.%s', $action);
     }
 
     /**
@@ -60,7 +60,7 @@ class DocumentCompanyController extends Controller
      */
     protected function getEntityGroup()
     {
-        return 1;
+        return 3;
     }
 
     /**
@@ -68,7 +68,7 @@ class DocumentCompanyController extends Controller
      */
     protected function logTitle()
     {
-        return 'Documentos de clientes';
+        return 'Documentos de funcion&aacute;rios';
     }
 
     /**

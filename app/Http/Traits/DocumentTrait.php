@@ -2,15 +2,18 @@
 
 namespace App\Http\Traits;
 
-use App\Repositories\Panel\DocumentRepository;
-use Illuminate\Http\Request;
 
 trait DocumentTrait
 {
     use LogTrait;
 
     /**
-     * @var DocumentRepository
+     * @var \App\Repositories\Panel\DocumentTypeRepository
+     */
+    private $documentTypeRepository;
+
+    /**
+     * @var \App\Repositories\Panel\DocumentRepository
      */
     private $documentRepository;
 
@@ -41,6 +44,14 @@ trait DocumentTrait
     }
 
     /**
+     * @return mixed
+     */
+    protected function getPeriodicities()
+    {
+        return \Config::get('periodicities');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -49,22 +60,23 @@ trait DocumentTrait
     {
         $keyword = \Request::input('keyword');
         $documents = ($keyword) ?
-            $this->documentRepository->findLike('name', $keyword) :
-            $this->documentRepository->findOrderBy();
+            $this->documentRepository->findLike($this->getEntityGroup(), 'name', $keyword) :
+            $this->documentRepository->findOrderBy($this->getEntityGroup());
 
         return view('panel.document.list', [
             'keyword' => $keyword,
-            'route' => $this->getRoute('create'),
+            'route' => $this->getRoute(),
+            'periodicities' => $this->getPeriodicities(),
             'documents' => $documents,
             'breadcrumbs' => $this->getBreadcrumb()
         ]);
     }
 
     /**
-     * @param Request $request
-     * @return mixed
+     * @param \Illuminate\Http\Request $request
+     * @return array
      */
-    protected function formRequest(Request $request)
+    protected function formRequest(\Illuminate\Http\Request $request)
     {
         $data = $request->all();
         $now = (new \DateTime())->format('Y-m-d H:i:s');
@@ -85,8 +97,12 @@ trait DocumentTrait
      */
     public function create()
     {
+        $document = $this->documentRepository;
+        $document->periodicity = 1;
         return view('panel.document.form', [
-            'documents' => $this->documentRepository,
+            'document' => $document,
+            'documentTypes' => $this->documentTypeRepository->all(),
+            'periodicities' => $this->getPeriodicities(),
             'route' => $this->getRoute('store'),
             'method' => 'POST',
             'parameters' => [],
@@ -100,7 +116,7 @@ trait DocumentTrait
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(\Illuminate\Http\Request $request)
     {
         $this->validate(
             $request, $this->documentRepository->rules(), $this->documentRepository->messages()
@@ -113,7 +129,7 @@ trait DocumentTrait
         return redirect()->route($this->getRoute('create'))->with([
             'success' => true,
             'message' => 'Documento cadastrado com sucesso!',
-            'route' => 'document.show',
+            'route' => $this->getRoute('show'),
             'id' => $document->id
         ]);
     }
@@ -126,8 +142,12 @@ trait DocumentTrait
      */
     public function show($id)
     {
+        $document = $this->documentRepository->findOrFail($id);
         return view('panel.document.show', [
-            'document' => $this->documentRepository->findOrFail($id),
+            'document' => $document,
+            'documentType' => $this->documentTypeRepository->find($document->documentTypeId),
+            'periodicities' => $this->getPeriodicities(),
+            'route' => $this->getRoute(),
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
     }
@@ -141,7 +161,9 @@ trait DocumentTrait
     public function edit($id)
     {
         return view('panel.document.form', [
-            'documentType' => $this->documentRepository->findOrFail($id),
+            'document' => $this->documentRepository->findOrFail($id),
+            'documentTypes' => $this->documentTypeRepository->all(),
+            'periodicities' => $this->getPeriodicities(),
             'route' => $this->getRoute('update'),
             'method' => 'PUT',
             'parameters' => [$id],
@@ -156,7 +178,7 @@ trait DocumentTrait
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(\Illuminate\Http\Request $request, $id)
     {
         $this->validate(
             $request, $this->documentRepository->rules(), $this->documentRepository->messages()
@@ -166,7 +188,7 @@ trait DocumentTrait
         $this->documentRepository->findOrFail($id)->update($data);
         $this->createLog('PUT', $data);
 
-        return redirect()->route('document-types.edit', $id)->with([
+        return redirect()->route($this->getRoute('edit'), $id)->with([
             'success' => true,
             'message' => 'Documento atualizado com sucesso!',
             'route' => $this->getRoute('show'),
