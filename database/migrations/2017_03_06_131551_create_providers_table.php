@@ -33,6 +33,7 @@ class CreateProvidersTable extends Migration
             $table->string('responsibleName');
             $table->string('cellPhone')->nullable();
             $table->string('email');
+            $table->mediumText('documents')->nullable();
             $table->dateTime('createdAt');
             $table->dateTime('updatedAt');
             $table->unique(['name', 'cnpj']);

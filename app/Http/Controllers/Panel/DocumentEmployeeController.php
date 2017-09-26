@@ -52,7 +52,7 @@ class DocumentEmployeeController extends Controller
      */
     public function getRoute($action = null)
     {
-        return sprintf('document-providers.%s', $action);
+        return sprintf('document-employees.%s', $action);
     }
 
     /**

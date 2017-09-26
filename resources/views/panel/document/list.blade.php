@@ -30,7 +30,6 @@
                     <th>Name</th>
                     <th>Validade</th>
                     <th>Periodicidade</th>
-                    <th>Cadastrado em</th>
                     <th></th>
                     </thead>
                     <tbody>
@@ -51,7 +50,6 @@
                             <td>{{ $document->name }}</td>
                             <td>{{ $document->validity }} {{ ((int) $document->validity > 1) ? 'dias' : 'dia' }} </td>
                             <td>{{ $periodicities[$document->periodicity] }}</td>
-                            <td>{{ \Carbon\Carbon::parse($document->createdAt)->format('d/m/Y H:i:s') }}</td>
                             <td>
                                 <a href="{{ route($route . 'edit', $document->id) }}"
                                    class="btn btn-success btn-xs" title="Editar"><span

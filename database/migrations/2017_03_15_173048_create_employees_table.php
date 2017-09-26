@@ -36,6 +36,7 @@ class CreateEmployeesTable extends Migration
             $table->boolean('hasChildren')->default(false);
             $table->integer('providerId');
             $table->boolean('status')->default(false);
+            $table->mediumText('documents')->nullable();
             $table->dateTime('createdAt');
             $table->dateTime('updatedAt');
             $table->unique(['cpf', 'providerId']);
