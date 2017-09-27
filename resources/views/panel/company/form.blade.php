@@ -143,6 +143,72 @@
                                        class="form-control">
                             </div>
 
+                            <!-- Documents -->
+
+                            <div class="form-group col-xs-12" style="margin-top: 15px;">
+                                <div class="col-md-12">
+                                    <div class="panel panel-primary row">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" id="select-all" value=""/>
+                                                    &nbsp;&nbsp;Selecione os
+                                                    documentos necessários para o cliente
+                                                </label>
+                                            </h3>
+                                        </div>
+                                        <div style="width:100%; height:300px; overflow:auto;">
+                                            <table class="table table-bordered table-striped">
+                                                <tr>
+                                                    <td style="width: 5%; text-align: center;">
+                                                        <input type="checkbox" value="">
+                                                    </td>
+                                                    <td>Nome do documento teste nandooo</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 5%; text-align: center;">
+                                                        <input type="checkbox" value="">
+                                                    </td>
+                                                    <td>Nome do documento teste nandooo</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 5%; text-align: center;">
+                                                        <input type="checkbox" value="">
+                                                    </td>
+                                                    <td>Nome do documento teste nandooo</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 5%; text-align: center;">
+                                                        <input type="checkbox" value="">
+                                                    </td>
+                                                    <td>Nome do documento teste nandooo</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 5%; text-align: center;">
+                                                        <input type="checkbox" value="">
+                                                    </td>
+                                                    <td>Nome do documento teste nandooo</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 5%; text-align: center;">
+                                                        <input type="checkbox" value="">
+                                                    </td>
+                                                    <td>Nome do documento teste nandooo</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width: 5%; text-align: center;">
+                                                        <input type="checkbox" value="">
+                                                    </td>
+                                                    <td>Nome do documento teste nandooo</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- End Documents -->
+
                             <div class="clearfix"></div>
                             <div class="control-group" style="margin: 30px 0px 0px 12px;">
                                 <button type="submit" class="btn btn-success" id="btn-company-form">Salvar</button>
