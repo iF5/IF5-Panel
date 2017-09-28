@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Traits\LogTrait;
 use App\Repositories\Panel\CompanyRepository;
+use App\Repositories\Panel\DocumentRepository;
 use App\Repositories\Panel\RelationshipRepository;
 use App\Repositories\Panel\ProviderRepository;
 use Illuminate\Http\Request;
@@ -26,6 +27,11 @@ class ProviderController extends Controller
     private $companyRepository;
 
     /**
+     * @var DocumentRepository
+     */
+    private $documentRepository;
+
+    /**
      * @var RelationshipRepository
      */
     private $relationshipRepository;
@@ -43,12 +49,14 @@ class ProviderController extends Controller
     public function __construct(
         ProviderRepository $providerRepository,
         CompanyRepository $companyRepository,
+        DocumentRepository $documentRepository,
         RelationshipRepository $relationshipRepository,
         BreadcrumbService $breadcrumbService
     )
     {
         $this->providerRepository = $providerRepository;
         $this->companyRepository = $companyRepository;
+        $this->documentRepository = $documentRepository;
         $this->relationshipRepository = $relationshipRepository;
         $this->breadcrumbService = $breadcrumbService;
         $this->states = \Config::get('states');
@@ -70,6 +78,14 @@ class ProviderController extends Controller
     protected function getCompanyId()
     {
         return (\Session::has('company')) ? \Session::get('company')->id : \Auth::user()->companyId;
+    }
+
+    /**
+     * @return string
+     */
+    protected function logTitle()
+    {
+        return 'Prestadores de servi&ccedil;os';
     }
 
     /**
@@ -119,11 +135,30 @@ class ProviderController extends Controller
             $this->relationshipRepository->create('companies_has_providers', $data);
             $success = true;
             \Session::remove('cnpj');
-            $this->createLog('Prestador de servi&ccedil;os associar', 'POST', $data);
+            $this->createLog('POST', $data);
         }
 
         $breadcrumbs = $this->getBreadcrumb('Cadastrar/Incluir');
         return view('panel.provider.form-associate', compact('search', 'cnpj', 'provider', 'success', 'breadcrumbs'));
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return array
+     */
+    protected function formRequest(\Illuminate\Http\Request $request)
+    {
+        $data = $request->all();
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+        $data['companyId'] = $this->getCompanyId();
+        $data['documents'] = json_encode($data['documents']);
+        $data['updatedAt'] = $now;
+
+        if (strtoupper($request->getMethod()) === 'POST') {
+            $data['createdAt'] = $now;
+        }
+
+        return $data;
     }
 
     /**
@@ -142,23 +177,14 @@ class ProviderController extends Controller
 
         return view('panel.provider.form', [
             'provider' => $this->providerRepository,
+            'documents' => $this->documentRepository->findAllByEntity(2),
+            'selectedDocuments' => [],
             'states' => $this->states,
             'method' => 'POST',
             'route' => 'provider.store',
             'parameters' => [],
             'breadcrumbs' => $this->getBreadcrumb('Cadastrar')
         ]);
-    }
-
-    protected function formRequest($data, $action = null)
-    {
-        $now = (new \DateTime())->format('Y-m-d H:i:s');
-        if ($action === 'store') {
-            $data['createdAt'] = $now;
-        }
-        $data['updatedAt'] = $now;
-        $data['companyId'] = $this->getCompanyId();
-        return $data;
     }
 
     /**
@@ -170,10 +196,10 @@ class ProviderController extends Controller
     public function store(Request $request)
     {
         $this->validate(
-            $request, $this->providerRepository->validateRules(), $this->providerRepository->validateMessages()
+            $request, $this->providerRepository->rules(), $this->providerRepository->messages()
         );
 
-        $data = $this->formRequest($request->all(), 'store');
+        $data = $this->formRequest($request);
         $provider = $this->providerRepository->create($data);
         $this->relationshipRepository->create('companies_has_providers', [
             'companyId' => $this->getCompanyId(),
@@ -181,26 +207,16 @@ class ProviderController extends Controller
             'status' => $this->isAdmin()
         ]);
 
-        $this->createLog('Prestador de servi&ccedil;os', 'POST', $data);
-
+        $this->createLog('POST', $data);
         \Session::remove('cnpj');
+
         return redirect()
             ->route('provider.associate')
             ->with([
                 'success' => true,
-                'message' => 'Prestador de servi&ccedil;os cadastrado com sucesso!'
+                'message' => 'Prestador de servi&ccedil;o cadastrado com sucesso!'
             ]);
     }
-
-    /**
-     * @param int $id
-     * @return int
-     */
-    /*private function checkId($id)
-    {
-        return (in_array(\Auth::user()->role, ['admin', 'company'])) ? $id : \Auth::user()->providerId;
-    }
-    */
 
     /**
      * Display the specified resource.
@@ -214,6 +230,8 @@ class ProviderController extends Controller
 
         return view('panel.provider.show', [
             'provider' => $provider,
+            'documents' => $this->documentRepository->findAllByEntity(2),
+            'selectedDocuments' => json_decode($provider->documents, true),
             'states' => $this->states,
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
@@ -232,6 +250,8 @@ class ProviderController extends Controller
 
         return view('panel.provider.form', [
             'provider' => $provider,
+            'documents' => $this->documentRepository->findAllByEntity(2),
+            'selectedDocuments' => json_decode($provider->documents, true),
             'states' => $this->states,
             'route' => 'provider.update',
             'method' => 'PUT',
@@ -250,17 +270,16 @@ class ProviderController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate(
-            $request, $this->providerRepository->validateRules(), $this->providerRepository->validateMessages()
+            $request, $this->providerRepository->rules(), $this->providerRepository->messages()
         );
 
-        $data = $this->formRequest($request->all());
+        $data = $this->formRequest($request);
         $this->providerRepository->findOrFail($id)->update($data);
-
-        $this->createLog('Prestador de servi&ccedil;os', 'PUT', $data);
+        $this->createLog('PUT', $data);
 
         return redirect()->route('provider.edit', $id)->with([
             'success' => true,
-            'message' => 'Prestador de servi&ccedil;os atualizado com sucesso!'
+            'message' => 'Prestador de servi&ccedil;o atualizado com sucesso!'
         ]);
     }
 
@@ -272,12 +291,12 @@ class ProviderController extends Controller
      */
     public function destroy($id)
     {
-        $data =  [
+        $data = [
             'companyId' => $this->getCompanyId(),
             'providerId' => $id
         ];
         $this->relationshipRepository->destroy('companies_has_providers', $data);
-        $this->createLog('Prestador de servi&ccedil;os', 'DELETE', $data);
+        $this->createLog('DELETE', $data);
         return redirect()->route('provider.index');
     }
 

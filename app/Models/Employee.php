@@ -32,6 +32,7 @@ class Employee extends Model
         'hasChildren',
         'providerId',
         'status',
+        'documents',
         'createdAt',
         'updatedAt'
     ];
@@ -42,7 +43,7 @@ class Employee extends Model
      * @param null $id
      * @return array
      */
-    public function validateRules($id = NULL)
+    public function rules($id = NULL)
     {
         return [
             'name' => 'required',
@@ -71,7 +72,7 @@ class Employee extends Model
      *
      * @return array
      */
-    public function validateMessages()
+    public function messages()
     {
         return [
             'name.required' => 'O campo nome é obrigatório.',

@@ -21,14 +21,14 @@ class CompanyController extends Controller
     private $companyRepository;
 
     /**
-     * @var RelationshipRepository
-     */
-    private $relationshipRepository;
-
-    /**
      * @var DocumentRepository
      */
     private $documentRepository;
+
+    /**
+     * @var RelationshipRepository
+     */
+    private $relationshipRepository;
 
     /**
      * @var BreadcrumbService
@@ -43,20 +43,20 @@ class CompanyController extends Controller
     /**
      * CompanyController constructor.
      * @param CompanyRepository $companyRepository
-     * @param RelationshipRepository $relationshipRepository
      * @param DocumentRepository $documentRepository
+     * @param RelationshipRepository $relationshipRepository
      * @param BreadcrumbService $breadcrumbService
      */
     public function __construct(
         CompanyRepository $companyRepository,
-        RelationshipRepository $relationshipRepository,
         DocumentRepository $documentRepository,
+        RelationshipRepository $relationshipRepository,
         BreadcrumbService $breadcrumbService
     )
     {
         $this->companyRepository = $companyRepository;
-        $this->relationshipRepository = $relationshipRepository;
         $this->documentRepository = $documentRepository;
+        $this->relationshipRepository = $relationshipRepository;
         $this->breadcrumbService = $breadcrumbService;
         $this->states = \Config::get('states');
     }
@@ -66,7 +66,7 @@ class CompanyController extends Controller
      */
     protected function logTitle()
     {
-        return 'Empresa';
+        return 'Clientes';
     }
 
     /**
@@ -117,7 +117,7 @@ class CompanyController extends Controller
         return view('panel.company.form', [
             'company' => $this->companyRepository,
             'documents' => $this->documentRepository->findAllByEntity(1),
-            'documentSelection' => [],
+            'selectedDocuments' => [],
             'states' => $this->states,
             'route' => 'company.store',
             'method' => 'POST',
@@ -135,7 +135,7 @@ class CompanyController extends Controller
     public function store(Request $request)
     {
         $this->validate(
-            $request, $this->companyRepository->validateRules(), $this->companyRepository->validateMessages()
+            $request, $this->companyRepository->rules(), $this->companyRepository->messages()
         );
 
         $data = $this->formRequest($request);
@@ -151,16 +151,6 @@ class CompanyController extends Controller
     }
 
     /**
-     * @param int $id
-     * @return int
-     */
-    /*private function checkId($id)
-    {
-        return (\Auth::user()->role === 'admin') ? $id : \Auth::user()->companyId;
-    }
-    */
-
-    /**
      * Display the specified resource.
      *
      * @param  int $id
@@ -173,7 +163,7 @@ class CompanyController extends Controller
         return view('panel.company.show', [
             'company' => $company,
             'documents' => $this->documentRepository->findAllByEntity(1),
-            'documentSelection' => json_decode($company->documents, true),
+            'selectedDocuments' => json_decode($company->documents, true),
             'states' => $this->states,
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
@@ -192,7 +182,7 @@ class CompanyController extends Controller
         return view('panel.company.form', [
             'company' => $company,
             'documents' => $this->documentRepository->findAllByEntity(1),
-            'documentSelection' => json_decode($company->documents, true),
+            'selectedDocuments' => json_decode($company->documents, true),
             'states' => $this->states,
             'route' => 'company.update',
             'method' => 'PUT',
@@ -211,7 +201,7 @@ class CompanyController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate(
-            $request, $this->companyRepository->validateRules($id), $this->companyRepository->validateMessages()
+            $request, $this->companyRepository->rules($id), $this->companyRepository->messages()
         );
 
         $data = $this->formRequest($request);

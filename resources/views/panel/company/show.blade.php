@@ -45,13 +45,15 @@
                     <li class="list-group-item"><strong>Celular: </strong> {{ $company->cellPhone }}</li>
                     <li class="list-group-item"><strong>E-mail: </strong> {{ $company->email }}</li>
 
+                    <!-- Documents -->
                     <li class="list-group-item"><strong>Documentos: </strong><br/>
                         @foreach($documents as $document)
-                            @if(in_array($document->id, $documentSelection))
+                            @if(in_array($document->id, $selectedDocuments))
                                 &nbsp;&nbsp;-&nbsp;{{$document->name}}<br />
                             @endif
                         @endforeach
                     </li>
+                    <!-- End Documents -->
 
                     <li class="list-group-item"><strong>Cadastrado em
                             : </strong> {{ \Carbon\Carbon::parse($company->createdAt)->format('d/m/Y H:i:s') }}</li>

@@ -29,6 +29,7 @@ class Provider extends Model
         'responsibleName',
         'cellPhone',
         'email',
+        'documents',
         'createdAt',
         'updatedAt'
     ];
@@ -40,7 +41,7 @@ class Provider extends Model
      * @param null $userId
      * @return array
      */
-    public function validateRules($id = null, $userId = null)
+    public function rules($id = null, $userId = null)
     {
         return [
             'name' => 'required',
@@ -66,7 +67,7 @@ class Provider extends Model
      *
      * @return array
      */
-    public function validateMessages()
+    public function messages()
     {
         return [
             'name.required' => 'O campo nome é obrigatório.',

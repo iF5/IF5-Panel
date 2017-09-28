@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Traits\AuthTrait;
 use App\Http\Traits\LogTrait;
+use App\Repositories\Panel\DocumentRepository;
 use App\Repositories\Panel\EmployeeRepository;
 use App\Repositories\Panel\ProviderRepository;
 use App\Repositories\Panel\RelationshipRepository;
@@ -22,14 +23,19 @@ class EmployeeController extends Controller
     private $employeeRepository;
 
     /**
-     * @var RelationshipRepository
-     */
-    private $relationshipRepository;
-
-    /**
      * @var ProviderRepository
      */
     private $providerRepository;
+
+    /**
+     * @var DocumentRepository
+     */
+    private $documentRepository;
+
+    /**
+     * @var RelationshipRepository
+     */
+    private $relationshipRepository;
 
     /**
      * @var BreadcrumbService
@@ -41,19 +47,37 @@ class EmployeeController extends Controller
      */
     private $states;
 
+    /**
+     * EmployeeController constructor.
+     * @param EmployeeRepository $employeeRepository
+     * @param ProviderRepository $providerRepository
+     * @param DocumentRepository $documentRepository
+     * @param RelationshipRepository $relationshipRepository
+     * @param BreadcrumbService $breadcrumbService
+     */
     public function __construct(
         EmployeeRepository $employeeRepository,
-        RelationshipRepository $relationshipRepository,
         ProviderRepository $providerRepository,
+        DocumentRepository $documentRepository,
+        RelationshipRepository $relationshipRepository,
         BreadcrumbService $breadcrumbService
     )
     {
         $this->employeeRepository = $employeeRepository;
-        $this->relationshipRepository = $relationshipRepository;
         $this->providerRepository = $providerRepository;
+        $this->documentRepository = $documentRepository;
+        $this->relationshipRepository = $relationshipRepository;
         $this->breadcrumbService = $breadcrumbService;
         $this->states = \Config::get('states');
 
+    }
+
+    /**
+     * @return string
+     */
+    protected function logTitle()
+    {
+        return 'Funcion&aacute;rios';
     }
 
     /**
@@ -95,83 +119,25 @@ class EmployeeController extends Controller
         ]);
     }
 
-    protected function formRequest($data, $action = null)
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return array
+     */
+    protected function formRequest(\Illuminate\Http\Request $request)
     {
+        $data = $request->all();
         $now = (new \DateTime())->format('Y-m-d H:i:s');
-        if ($action === 'store') {
-            $data['createdAt'] = $now;
-        }
-        $data['updatedAt'] = $now;
         $data['salaryCap'] = str_replace(['.', ','], ['', '.'], $data['salaryCap']);
         //$data['salaryCap'] = number_format($data['salaryCap'], 2, ',', '');
         $data['status'] = $this->isAdmin();
+        $data['documents'] = json_encode($data['documents']);
+        $data['updatedAt'] = $now;
+
+        if (strtoupper($request->getMethod()) === 'POST') {
+            $data['createdAt'] = $now;
+        }
+
         return $data;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $this->employeeRepository->providerId = $this->getProviderId();
-        $this->employeeRepository->hasChildren = 0;
-        $companies = $this->getCompanies();
-
-        return view('panel.employee.form', [
-            'employee' => $this->employeeRepository,
-            'states' => $this->states,
-            'companies' => $companies,
-            'route' => 'employee.store',
-            'method' => 'POST',
-            'parameters' => [],
-            'breadcrumbs' => $this->getBreadcrumb('Cadastrar')
-        ]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $this->validate(
-            $request, $this->employeeRepository->validateRules(), $this->employeeRepository->validateMessages()
-        );
-
-        $data = $this->formRequest($request->all(), 'store');
-        $employee = $this->employeeRepository->create($data);
-        $this->createRelationshipByCompany($employee->id, $data['companies']);
-
-        $this->createLog('Funcion&aacute;rio', 'POST', $data);
-
-        return redirect()->route('employee.create')->with([
-            'success' => true,
-            'message' => 'Funcion&aacute;rio cadastrado com sucesso!',
-            'route' => 'employee.show',
-            'id' => $employee->id
-        ]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $employee = $this->employeeRepository->find($id);
-        $companies = $this->employeeRepository->findCompanyByProvider($this->getProviderId());
-
-        return view('panel.employee.show', [
-            'employee' => $employee,
-            'companies' => $companies,
-            'breadcrumbs' => $this->getBreadcrumb('Visualizar')
-        ]);
     }
 
     /**
@@ -197,6 +163,74 @@ class EmployeeController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $this->employeeRepository->providerId = $this->getProviderId();
+        $this->employeeRepository->hasChildren = 0;
+
+        return view('panel.employee.form', [
+            'employee' => $this->employeeRepository,
+            'companies' => $this->getCompanies(),
+            'documents' => $this->documentRepository->findAllByEntity(3),
+            'selectedDocuments' => [],
+            'states' => $this->states,
+            'route' => 'employee.store',
+            'method' => 'POST',
+            'parameters' => [],
+            'breadcrumbs' => $this->getBreadcrumb('Cadastrar')
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $this->validate(
+            $request, $this->employeeRepository->rules(), $this->employeeRepository->messages()
+        );
+
+        $data = $this->formRequest($request);
+        $employee = $this->employeeRepository->create($data);
+        $this->createRelationshipByCompany($employee->id, $data['companies']);
+        $this->createLog('POST', $data);
+
+        return redirect()->route('employee.create')->with([
+            'success' => true,
+            'message' => 'Funcion&aacute;rio cadastrado com sucesso!',
+            'route' => 'employee.show',
+            'id' => $employee->id
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $employee = $this->employeeRepository->find($id);
+        $companies = $this->employeeRepository->findCompanyByProvider($this->getProviderId());
+
+        return view('panel.employee.show', [
+            'employee' => $employee,
+            'companies' => $companies,
+            'documents' => $this->documentRepository->findAllByEntity(3),
+            'selectedDocuments' => json_decode($employee->documents, true),
+            'breadcrumbs' => $this->getBreadcrumb('Visualizar')
+        ]);
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int $id
@@ -205,12 +239,13 @@ class EmployeeController extends Controller
     public function edit($id)
     {
         $employee = $this->employeeRepository->findOrFail($id);
-        $companies = $this->getCompanies($id);
-        #dd($employee);
+
         return view('panel.employee.form', [
             'employee' => $employee,
+            'companies' => $this->getCompanies($id),
+            'documents' => $this->documentRepository->findAllByEntity(3),
+            'selectedDocuments' => json_decode($employee->documents, true),
             'states' => $this->states,
-            'companies' => $companies,
             'route' => 'employee.update',
             'method' => 'PUT',
             'parameters' => [$id],
@@ -228,14 +263,13 @@ class EmployeeController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate(
-            $request, $this->employeeRepository->validateRules($id), $this->employeeRepository->validateMessages()
+            $request, $this->employeeRepository->rules($id), $this->employeeRepository->messages()
         );
 
-        $data = $this->formRequest($request->all());
+        $data = $this->formRequest($request);
         $this->employeeRepository->findOrFail($id)->update($data);
         $this->createRelationshipByCompany($id, $data['companies']);
-
-        $this->createLog('Funcion&aacute;rio', 'PUT', $data);
+        $this->createLog('PUT', $data);
 
         return redirect()->route('employee.edit', $id)->with([
             'success' => true,
@@ -257,8 +291,7 @@ class EmployeeController extends Controller
         $this->relationshipRepository->destroy('employees_has_companies', [
             'employeeId' => $id
         ]);
-
-        $this->createLog('Funcion&aacute;rio', 'DELETE', ['id' => $id]);
+        $this->createLog('DELETE', ['id' => $id]);
 
         return redirect()->route('employee.index');
     }

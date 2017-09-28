@@ -40,7 +40,7 @@ class Company extends Model
      * @param null $id
      * @return array
      */
-    public function validateRules($id = null)
+    public function rules($id = null)
     {
         return [
             'name' => 'required',
@@ -68,7 +68,7 @@ class Company extends Model
      *
      * @return array
      */
-    public function validateMessages()
+    public function messages()
     {
         return [
             'name.required' => 'O campo nome é obrigatório.',

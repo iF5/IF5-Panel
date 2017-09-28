@@ -47,6 +47,17 @@
                     
                     <li class="list-group-item"><strong>Status
                             : </strong> {{ ($provider->status)? 'Ok' : 'Aguardando aprovação' }}</li>
+
+                    <!-- Documents -->
+                    <li class="list-group-item"><strong>Documentos: </strong><br/>
+                        @foreach($documents as $document)
+                            @if(in_array($document->id, $selectedDocuments))
+                                &nbsp;&nbsp;-&nbsp;{{$document->name}}<br />
+                            @endif
+                        @endforeach
+                    </li>
+                    <!-- End Documents -->
+
                     <li class="list-group-item"><strong>Cadastrado em
                             : </strong> {{ \Carbon\Carbon::parse($provider->createdAt)->format('d/m/Y H:i:s') }}</li>
                     <li class="list-group-item"><strong>&Uacute;ltima atualiza&ccedil;&atilde;o
