@@ -46,4 +46,20 @@ class DocumentRepository extends Document
             throw new ModelNotFoundException;
         }
     }
+
+    /**
+     * @param int $entityGroup
+     * @return mixed
+     */
+    public function findAllByEntity($entityGroup)
+    {
+        try {
+            return $this->where([
+                ['entityGroup', '=', $entityGroup]
+            ])->get();
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
 }

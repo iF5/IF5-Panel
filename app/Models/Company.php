@@ -29,6 +29,7 @@ class Company extends Model
         'responsibleName',
         'cellPhone',
         'email',
+        'documents',
         'createdAt',
         'updatedAt'
     ];

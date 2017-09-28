@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Traits\LogTrait;
+use App\Repositories\Panel\DocumentRepository;
 use App\Repositories\Panel\RelationshipRepository;
 use App\Repositories\Panel\CompanyRepository;
 use App\Services\BreadcrumbService;
@@ -25,6 +26,11 @@ class CompanyController extends Controller
     private $relationshipRepository;
 
     /**
+     * @var DocumentRepository
+     */
+    private $documentRepository;
+
+    /**
      * @var BreadcrumbService
      */
     private $breadcrumbService;
@@ -34,16 +40,33 @@ class CompanyController extends Controller
      */
     private $states;
 
+    /**
+     * CompanyController constructor.
+     * @param CompanyRepository $companyRepository
+     * @param RelationshipRepository $relationshipRepository
+     * @param DocumentRepository $documentRepository
+     * @param BreadcrumbService $breadcrumbService
+     */
     public function __construct(
         CompanyRepository $companyRepository,
         RelationshipRepository $relationshipRepository,
+        DocumentRepository $documentRepository,
         BreadcrumbService $breadcrumbService
     )
     {
         $this->companyRepository = $companyRepository;
         $this->relationshipRepository = $relationshipRepository;
+        $this->documentRepository = $documentRepository;
         $this->breadcrumbService = $breadcrumbService;
         $this->states = \Config::get('states');
+    }
+
+    /**
+     * @return string
+     */
+    protected function logTitle()
+    {
+        return 'Empresa';
     }
 
     /**
@@ -65,17 +88,24 @@ class CompanyController extends Controller
         ]);
     }
 
-    protected function formRequest($data, $action = null)
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return array
+     */
+    protected function formRequest(\Illuminate\Http\Request $request)
     {
+        $data = $request->all();
         $now = (new \DateTime())->format('Y-m-d H:i:s');
-
+        $data['documents'] = json_encode($data['documents']);
         $data['updatedAt'] = $now;
-        if ($action === 'store') {
+
+        if (strtoupper($request->getMethod()) === 'POST') {
             $data['createdAt'] = $now;
         }
 
         return $data;
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -86,6 +116,8 @@ class CompanyController extends Controller
     {
         return view('panel.company.form', [
             'company' => $this->companyRepository,
+            'documents' => $this->documentRepository->findAllByEntity(1),
+            'documentSelection' => [],
             'states' => $this->states,
             'route' => 'company.store',
             'method' => 'POST',
@@ -106,9 +138,9 @@ class CompanyController extends Controller
             $request, $this->companyRepository->validateRules(), $this->companyRepository->validateMessages()
         );
 
-        $data = $this->formRequest($request->all(), 'store');
+        $data = $this->formRequest($request);
         $company = $this->companyRepository->create($data);
-        $this->createLog('Empresa', 'POST', $data);
+        $this->createLog('POST', $data);
 
         return redirect()->route('company.create')->with([
             'success' => true,
@@ -140,6 +172,8 @@ class CompanyController extends Controller
 
         return view('panel.company.show', [
             'company' => $company,
+            'documents' => $this->documentRepository->findAllByEntity(1),
+            'documentSelection' => json_decode($company->documents, true),
             'states' => $this->states,
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
@@ -157,6 +191,8 @@ class CompanyController extends Controller
 
         return view('panel.company.form', [
             'company' => $company,
+            'documents' => $this->documentRepository->findAllByEntity(1),
+            'documentSelection' => json_decode($company->documents, true),
             'states' => $this->states,
             'route' => 'company.update',
             'method' => 'PUT',
@@ -178,9 +214,9 @@ class CompanyController extends Controller
             $request, $this->companyRepository->validateRules($id), $this->companyRepository->validateMessages()
         );
 
-        $data = $this->formRequest($request->all());
+        $data = $this->formRequest($request);
         $this->companyRepository->findOrFail($id)->update($data);
-        $this->createLog('Empresa', 'PUT', $data);
+        $this->createLog('PUT', $data);
 
         return redirect()->route('company.edit', $id)->with([
             'success' => true,
@@ -202,7 +238,7 @@ class CompanyController extends Controller
         $this->relationshipRepository->destroy('companies_has_providers', [
             'companyId' => $id
         ]);
-        $this->createLog('Empresa', 'DELETE', ['id' => $id]);
+        $this->createLog('DELETE', ['id' => $id]);
 
         return redirect()->route('company.index');
     }

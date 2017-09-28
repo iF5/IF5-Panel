@@ -159,48 +159,16 @@
                                         </div>
                                         <div style="width:100%; height:300px; overflow:auto;">
                                             <table class="table table-bordered table-striped">
-                                                <tr>
-                                                    <td style="width: 5%; text-align: center;">
-                                                        <input type="checkbox" value="">
-                                                    </td>
-                                                    <td>Nome do documento teste nandooo</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width: 5%; text-align: center;">
-                                                        <input type="checkbox" value="">
-                                                    </td>
-                                                    <td>Nome do documento teste nandooo</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width: 5%; text-align: center;">
-                                                        <input type="checkbox" value="">
-                                                    </td>
-                                                    <td>Nome do documento teste nandooo</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width: 5%; text-align: center;">
-                                                        <input type="checkbox" value="">
-                                                    </td>
-                                                    <td>Nome do documento teste nandooo</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width: 5%; text-align: center;">
-                                                        <input type="checkbox" value="">
-                                                    </td>
-                                                    <td>Nome do documento teste nandooo</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width: 5%; text-align: center;">
-                                                        <input type="checkbox" value="">
-                                                    </td>
-                                                    <td>Nome do documento teste nandooo</td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width: 5%; text-align: center;">
-                                                        <input type="checkbox" value="">
-                                                    </td>
-                                                    <td>Nome do documento teste nandooo</td>
-                                                </tr>
+                                                @foreach($documents as $document)
+                                                    <tr>
+                                                        <td style="width: 5%; text-align: center;">
+                                                            <input type="checkbox" value="{{$document->id}}"
+                                                                   name="documents[]"
+                                                                   @if(in_array($document->id, $documentSelection)) checked @endif>
+                                                        </td>
+                                                        <td>{{$document->name}}</td>
+                                                    </tr>
+                                                @endforeach
                                             </table>
                                         </div>
                                     </div>
