@@ -53,10 +53,37 @@ class DocumentRepository extends Document
      */
     public function findAllByEntity($entityGroup)
     {
+        return $this->findWhere([
+            ['entityGroup', '=', $entityGroup]
+        ]);
+    }
+
+    /**
+     * @param int $periodicityId
+     * @param int $entityGroup
+     * @return mixed
+     */
+    public function findByPeriodicity($periodicityId, $entityGroup)
+    {
+        return $this->findWhere([
+            ['periodicity', '=', $periodicityId],
+            ['entityGroup', '=', $entityGroup]
+        ]);
+    }
+
+    /**
+     * @param array $where
+     * @param bool $toSql
+     * @return mixed
+     */
+    public function findWhere(array $where = [], $toSql = false)
+    {
         try {
-            return $this->where([
-                ['entityGroup', '=', $entityGroup]
-            ])->get();
+            $stmt = $this->where($where);
+            if ($toSql) {
+                dd($stmt->toSql());
+            }
+            return $stmt->get();
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }

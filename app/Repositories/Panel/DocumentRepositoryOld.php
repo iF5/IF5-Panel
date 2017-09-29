@@ -70,7 +70,7 @@ class DocumentRepositoryOld extends Document
                                 WHERE
                                 d.$docTypeField = 1
                                 ORDER BY d.id;";
-            //dd($sql);
+            dd($sql);
             return DB::select(DB::raw($sql));
         } catch (\Exception $e) {
             echo $e->getMessage();
