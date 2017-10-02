@@ -65,4 +65,18 @@ class CompanyRepository extends Company
         }
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function findDocuments($id)
+    {
+        try {
+            return json_decode($this->find($id)->documents, true);
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+
+    }
+
 }

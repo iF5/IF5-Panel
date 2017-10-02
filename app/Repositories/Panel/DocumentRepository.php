@@ -42,6 +42,7 @@ class DocumentRepository extends Document
             return $this->where([
                 ['entityGroup', '=', $entityGroup]
             ])->orderBy($field, $type)->paginate($this->totalPerPage);
+
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
@@ -53,40 +54,57 @@ class DocumentRepository extends Document
      */
     public function findAllByEntity($entityGroup)
     {
-        return $this->findWhere([
-            ['entityGroup', '=', $entityGroup]
-        ]);
-    }
-
-    /**
-     * @param int $periodicityId
-     * @param int $entityGroup
-     * @return mixed
-     */
-    public function findByPeriodicity($periodicityId, $entityGroup)
-    {
-        return $this->findWhere([
-            ['periodicity', '=', $periodicityId],
-            ['entityGroup', '=', $entityGroup]
-        ]);
-    }
-
-    /**
-     * @param array $where
-     * @param bool $toSql
-     * @return mixed
-     */
-    public function findWhere(array $where = [], $toSql = false)
-    {
         try {
-            $stmt = $this->where($where);
-            if ($toSql) {
-                dd($stmt->toSql());
-            }
-            return $stmt->get();
+            return $this->where([
+                ['entityGroup', '=', $entityGroup]
+            ])->get();
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
     }
+
+    /**
+     * @param int $periodicity
+     * @param int $entityGroup
+     * @param array $documents
+     * @return mixed
+     */
+    public function findByPeriodicity($periodicity, $entityGroup, array $documents = [])
+    {
+        try {
+            return $this->where([
+                ['periodicity', '=', $periodicity],
+                ['entityGroup', '=', $entityGroup]
+            ])->whereIn('id', $documents)->get();
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+    /**
+     * @param int $periodicity
+     * @param string $referenceDate
+     * @param int $entityGroup
+     * @return mixed
+     */
+    public function findByReferenceDate($referenceDate, $periodicity, $entityGroup)
+    {
+        try {
+            return $this->join('document_checklists', function ($join) {
+                return $join->on('document_checklists.documentId', '=', 'documents.id');
+            })->where([
+                ['documents.periodicity', '=', $periodicity],
+                ['documents.entityGroup', '=', $entityGroup],
+                ['document_checklists.referenceDate', '=', sprintf('%s-%s-01',
+                    substr($referenceDate, 3, 4),
+                    substr($referenceDate, 0, 2)
+                )]
+            ])->get();
+
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
 
 }

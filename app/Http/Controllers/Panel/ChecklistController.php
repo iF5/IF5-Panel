@@ -71,7 +71,7 @@ class ChecklistController extends Controller
     public function identify($id)
     {
         \Session::put('company', $this->companyRepository->findById($id));
-        return redirect()->route('checklist-company.index', ['periodicity' => 1]);
+        return redirect()->route('checklist.company.index', ['periodicity' => 1]);
     }
 
     /**
@@ -82,14 +82,27 @@ class ChecklistController extends Controller
         return (\Session::has('company')) ? \Session::get('company')->id : \Auth::user()->companyId;
     }
 
+    /**
+     * @param Request $request
+     * @param $periodicity
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index(Request $request, $periodicity)
     {
-        $referenceDate = \Request::input('referenceDate');
+        $referenceDate = $request->input('referenceDate');
+        if ($referenceDate) {
+            $documents = $this->documentRepository->findByReferenceDate($referenceDate, $periodicity, 1);
+        } else {
+            $documents = $this->documentRepository->findByPeriodicity(
+                $periodicity, 1, $this->companyRepository->findDocuments($this->getCompanyId())
+            );
+        }
 
         return view('panel.checklist.index', [
+            'referenceDate' => $referenceDate,
             'periodicities' => $this->periodicities,
-            'periodicityId' => (int)$periodicity,
-            'documents' => $this->documentRepository->findByPeriodicity($periodicity, 1),
+            'periodicity' => (int)$periodicity,
+            'documents' => $documents,
             'breadcrumbs' => $this->getBreadcrumb('Checklist')
         ]);
     }
