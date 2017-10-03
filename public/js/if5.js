@@ -118,28 +118,22 @@ $(function () {
     });
 
     //On upload employee documents
-    $('.modal-document-upload').on('click', function () {
-        var myId = this.id.replace("modal-document-upload-", "");
-        var date = $("#referenceDateField-" + myId).val();
+    $('.modal-document-upload').on('click', function (e) {
+        e.preventDefault();
 
-        if(date != "") {
-            var arrDate = date.split("/");
-            date = arrDate[1] + "-" + arrDate[0];
+        //var myId = this.id.replace("modal-document-upload-", "");
+        //var date = $("#referenceDateField-" + myId).val();
 
-            new Upload({
-                formElement: '#dz-modal-upload',
-                submitElement: '#dz-modal-submit',
-                messageElement: '#dz-modal-message',
-                url: this.rel + "/" + date
-            });
-        }else{
-            alert("Preencha a data de referencia.");
-            return false;
-        }
+        new Upload({
+            formElement: '#dz-modal-upload',
+            submitElement: '#dz-modal-submit',
+            messageElement: '#dz-modal-message',
+            url: "/"
+        });
     });
 
     //On validate documents
-    $('.modal-document-validated').on('click', function(event){
+    $('.modal-document-validated').on('click', function (event) {
         event.preventDefault();
         $.ajax({
             url: this.href,
@@ -147,7 +141,7 @@ $(function () {
             dataType: 'json',
             contentType: 'application/json',
             success: function (data) {
-                if(data.status == "success"){
+                if (data.status == "success") {
                     location.reload();
                 }
             }
@@ -155,8 +149,8 @@ $(function () {
     });
 
     $('input.typeahead').typeahead({
-        source:  function (query, process) {
-            return $.get("//" + hostName() + '/cnae/' + query, { query: query }, function (data) {
+        source: function (query, process) {
+            return $.get("//" + hostName() + '/cnae/' + query, {query: query}, function (data) {
                 return process(data);
             });
         }
@@ -164,14 +158,14 @@ $(function () {
 
     function hostName() {
         var hostname = $(location).attr('hostname');
-        if(hostname == "localhost"){
+        if (hostname == "localhost") {
             return hostname + ":4545/public/";
         }
         return hostname;
     }
 
     //On validate documents
-    $('.modal-document-invalidated').on('click', function(event){
+    $('.modal-document-invalidated').on('click', function (event) {
         event.preventDefault();
         $.ajax({
             url: this.href,
@@ -179,7 +173,7 @@ $(function () {
             dataType: 'json',
             contentType: 'application/json',
             success: function (data) {
-                if(data.status == "success"){
+                if (data.status == "success") {
                     location.reload();
                 }
             }
@@ -187,7 +181,7 @@ $(function () {
     });
 
     //On download documents
-    $('.modal-document-download').on('click', function(event){
+    $('.modal-document-download').on('click', function (event) {
         event.preventDefault();
         window.location = this.href;
     });
@@ -218,7 +212,7 @@ $(function () {
     $('#cep').mask('99999-999');
     //$('#rg').mask('99.999.999-9');
     $('.dateMask').mask('99/99/9999');
-    $('.moneyMask').maskMoney({showSymbol:false, symbol:'R$', decimal:',', thousands:'.'});
+    $('.moneyMask').maskMoney({showSymbol: false, symbol: 'R$', decimal: ',', thousands: '.'});
     $('#pis').mask('999.99999.99-9');
     $('.referenceDateField').mask('99/9999');
     $('#referenceDateSearch').mask('99/9999');
