@@ -20,6 +20,7 @@ class CreateDocumentChecklistsTable extends Migration
             $table->date('referenceDate');
             $table->integer('validity')->unsigned();
             $table->tinyInteger('status')->default(1)->comment = '1 = enviado, 2 = aprovado, 3 = reprovado';
+            $table->text('description');
             $table->dateTime('sentAt');
             $table->dateTime('resentAt')->nullable();
             $table->dateTime('approvedAt')->nullable();

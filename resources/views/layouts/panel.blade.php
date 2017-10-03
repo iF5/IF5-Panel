@@ -287,7 +287,8 @@
 
 <script src="{{ asset('js/dropzone.js') }}" type="text/javascript"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
+<!-- https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js -->
+<script src="{{ asset('js/cdnjs/bootstrap3-typeahead.min.js') }}"></script>
 
 <!-- Custom Theme Scripts -->
 <script src="{{ asset('build/js/custom.min.js') }}" type="text/javascript"></script>

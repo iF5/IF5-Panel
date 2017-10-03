@@ -120,15 +120,26 @@ $(function () {
     //On upload employee documents
     $('.modal-document-upload').on('click', function (e) {
         e.preventDefault();
+        var periodicity = $('#periodicity').val();
+        var documentId = this.rel;
+        var referenceDate = $('#referenceDate' + documentId).val();
+        var validity = $('#validity' + documentId).val();
 
-        //var myId = this.id.replace("modal-document-upload-", "");
-        //var date = $("#referenceDateField-" + myId).val();
+        if (!(referenceDate) || !(validity)) {
+            alert('Preencha os campos em branco!');
+            return false;
+        }
 
+        $('#upload').modal('show');
         new Upload({
             formElement: '#dz-modal-upload',
             submitElement: '#dz-modal-submit',
             messageElement: '#dz-modal-message',
-            url: "/"
+            url: this.href,
+            data: {
+                periodicity: periodicity,
+                documentId: documentId
+            }
         });
     });
 
@@ -214,6 +225,6 @@ $(function () {
     $('.dateMask').mask('99/99/9999');
     $('.moneyMask').maskMoney({showSymbol: false, symbol: 'R$', decimal: ',', thousands: '.'});
     $('#pis').mask('999.99999.99-9');
-    $('.referenceDateField').mask('99/9999');
+    $('.referenceDate').mask('99/9999');
     $('#referenceDateSearch').mask('99/9999');
 });
