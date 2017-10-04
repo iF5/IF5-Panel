@@ -84,6 +84,8 @@ function Upload(options) {
  */
 $(function () {
 
+    var validate = new Validate();
+
     //On delete
     $('.modal-delete').on('click', function () {
         $('#form-modal-delete').attr({action: this.rel});
@@ -120,13 +122,16 @@ $(function () {
     //On upload employee documents
     $('.modal-document-upload').on('click', function (e) {
         e.preventDefault();
-        var periodicity = $('#periodicity').val();
-        var documentId = this.rel;
-        var referenceDate = $('#referenceDate' + documentId).val();
-        var validity = $('#validity' + documentId).val();
+        var referenceDate = '#referenceDate' + this.rel;
+        var validity = '#validity' + this.rel;
+        var data = {};
 
-        if (!(referenceDate) || !(validity)) {
-            alert('Preencha os campos em branco!');
+        data[referenceDate] = {value: $(referenceDate).val(), type: 'VOID', message: 'Preencha a data referencia'};
+        data[validity] = {value: $(validity).val(), type: 'NUMBER', message: 'Preencha a validade'};
+        var response = validate.assert(data);
+
+        if (!response.isSuccess) {
+            alert(response.messages);
             return false;
         }
 
@@ -137,8 +142,10 @@ $(function () {
             messageElement: '#dz-modal-message',
             url: this.href,
             data: {
-                periodicity: periodicity,
-                documentId: documentId
+                periodicity: $('#periodicity').val(),
+                documentId: this.rel,
+                referenceDate: $(referenceDate).val(),
+                validity: $(validity).val()
             }
         });
     });
@@ -212,6 +219,11 @@ $(function () {
                 $('#state').val(data.estado);
             }
         });
+    });
+
+    $('.btn-read-more').on('click', function(e){
+        e.preventDefault();
+        $(this).siblings('.text-read-more').slideToggle(400);
     });
 
     //Masks
