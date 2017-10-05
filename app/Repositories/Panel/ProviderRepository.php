@@ -91,6 +91,15 @@ class ProviderRepository extends Provider
         }
     }
 
+    public function findAll()
+    {
+        try {
+            return Provider::all();
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
     /**
      * @return mixed
      */
