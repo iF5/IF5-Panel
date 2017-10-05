@@ -80,11 +80,30 @@ function Upload(options) {
 }
 
 /**
+ * @param message
+ */
+function modalAlert(message) {
+    var alert = $('#alert');
+    if(typeof(message) !== undefined){
+        alert.find('.modal-body').html(message);
+    }
+    alert.modal('show');
+}
+
+
+/**
  * Triggers
  */
 $(function () {
 
     var validate = new Validate();
+
+    /**
+     * Reset input border color
+     */
+    $('input').on('focus', function () {
+        $(this).css('border', '');
+    });
 
     //On delete
     $('.modal-delete').on('click', function () {
@@ -124,14 +143,14 @@ $(function () {
         e.preventDefault();
         var referenceDate = '#referenceDate' + this.rel;
         var validity = '#validity' + this.rel;
-        var data = {};
 
-        data[referenceDate] = {value: $(referenceDate).val(), type: 'VOID', message: 'Preencha a data referencia'};
-        data[validity] = {value: $(validity).val(), type: 'NUMBER', message: 'Preencha a validade'};
+        var data = {};
+        data[referenceDate] = {value: $(referenceDate).val(), type: 'VOID'};
+        data[validity] = {value: $(validity).val(), type: 'NUMBER'};
         var response = validate.assert(data);
 
         if (!response.isSuccess) {
-            alert(response.messages);
+            modalAlert();
             return false;
         }
 
@@ -221,10 +240,12 @@ $(function () {
         });
     });
 
-    $('.btn-read-more').on('click', function(e){
+    $('.btn-read-more').on('click', function (e) {
         e.preventDefault();
         $(this).siblings('.text-read-more').slideToggle(400);
     });
+
+
 
     //Masks
     $('#cnpj').mask('99.999.999/9999-99');
