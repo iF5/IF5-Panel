@@ -132,7 +132,7 @@
                                 </p>
                             </td>
                             <td>
-                                <a href=""
+                                <a href="{{ route('checklist.company.store') }}"
                                    class="btn {{ ($document->status < 1) ? 'btn-success' : 'btn-warning' }} btn-md modal-document-upload"
                                    rel="{{ $document->id }}"
                                    title="Enviar documento">

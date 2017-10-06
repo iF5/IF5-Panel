@@ -12,3 +12,6 @@ Route::get('checklist-company/{id}/identify', 'Panel\ChecklistController@identif
 
 Route::get('checklist-company/{periodicity}', 'Panel\ChecklistController@index')
     ->middleware('can:isAdminAndProvider')->name('checklist.company.index');
+
+Route::post('checklist-company/store', 'Panel\ChecklistController@store')
+    ->middleware('can:onlyAdmin')->name('checklist.company.store');

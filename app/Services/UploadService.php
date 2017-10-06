@@ -10,6 +10,11 @@ class UploadService
     private $dir;
 
     /**
+     * @var int
+     */
+    private $permission = 0777;
+
+    /**
      * @var array
      */
     private $allowedExtensions;
@@ -39,16 +44,27 @@ class UploadService
 
     /**
      * @param string $dir
+     * @param int $permission
      * @return $this
      */
-    public function setDir($dir)
+    public function setDir($dir, $permission = 0777)
     {
         $this->dir = $dir;
+        $this->permission = $permission;
+
         if (!file_exists($this->dir)) {
-            mkdir($this->dir, 0777, true);
+            mkdir($this->dir, $this->permission, true);
         }
 
         return $this;
+    }
+
+    /**
+     * Permission to directory
+     */
+    private function chmodDir()
+    {
+        exec(sprintf('chmod %d -R %s', $this->permission, storage_path()));
     }
 
     /**
