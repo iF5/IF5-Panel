@@ -4,74 +4,143 @@ namespace App\Services;
 
 class UploadService
 {
-
-    private $file;
-
+    /**
+     * @var string
+     */
     private $dir;
 
-    private $extensions = [];
+    /**
+     * @var array
+     */
+    private $allowedExtensions;
 
-    private $response = (object)[
-        'error' => false
+    /**
+     * @var string
+     */
+    private $allowedExtensionsMessage;
+
+    /**
+     * @var int
+     */
+    private $maximumSize;
+
+    /**
+     * @var string
+     */
+    private $maximumSizeMessage;
+
+    /**
+     * @var array
+     */
+    private $response = [
+        'error' => false,
+        'message' => null
     ];
 
-    public function createDir($dir)
+    /**
+     * @param string $dir
+     * @return $this
+     */
+    public function setDir($dir)
     {
-        if (!file_exists($dir)) {
-            mkdir($dir, 0777, true);
+        $this->dir = $dir;
+        if (!file_exists($this->dir)) {
+            mkdir($this->dir, 0777, true);
         }
+
+        return $this;
     }
 
-    public function move($dir, $file)
+    /**
+     * @param array $allowedExtensions
+     * @param null | string $message
+     * @return $this
+     */
+    public function setAllowedExtensions(array $allowedExtensions = [], $message = null)
     {
-
+        $this->allowedExtensions = $allowedExtensions;
+        $this->allowedExtensionsMessage = $message;
+        return $this;
     }
 
-    public function a()
+    /**
+     * @param int $maximumSize
+     * @param null | string $message
+     * @return $this
+     */
+    public function setMaximumSize($maximumSize, $message = null)
     {
-        $referenceDate = $referenceDate . "-01";
+        $this->maximumSize = (int)$maximumSize;
+        $this->maximumSizeMessage = $message;
+        return $this;
+    }
 
-        $file = $request->file('file');
-        $extension = $file->getClientOriginalExtension();
-        if (!in_array($extension, $this->extensions)) {
-            return response()->json([
-                'message' => 'Só são permitidos arquivos do tipo ' . implode(', ', $this->extensions) . '.'
-            ]);
+    /**
+     * @param mixed $file
+     * @return bool
+     */
+    private function validateExtension($file)
+    {
+        if (!$this->allowedExtensions) {
+            return true;
         }
 
-        $date = $this->explodeDate($referenceDate);
-        $employeeId = session('employee')->id;
-        $providerId = session('provider') ? session('provider')->id : \Auth::user()->providerId;
+        if (!in_array($file->getClientOriginalExtension(), $this->allowedExtensions)) {
+            $this->response = [
+                'error' => true,
+                'message' => $this->allowedExtensionsMessage
+            ];
+            return false;
+        }
+        return true;
+    }
 
-        $finalFileName = sha1($employeeId . "-" . $documentId . "-" . $referenceDate);
-        $originalFileName = $file->getClientOriginalName();
-
-        $dir = storage_path() . "/upload/documents/{$providerId}/{$employeeId}/{$documentId}/{$date['year']}/{$date['month']}";
-        if (!file_exists($dir)) {
-            mkdir($dir, 0777, true);
+    /**
+     * @param mixed $file
+     * @return bool
+     */
+    private function validateSize($file)
+    {
+        if (!$this->maximumSize) {
+            return true;
         }
 
-        $finalFileName = sprintf('%s.%s', $finalFileName, $extension);
-        $isMoved = $file->move($dir, $finalFileName);
-        if (!$isMoved) {
-            return response()->json([
-                'message' => "Falha ao enviar o arquivo <b>{$originalFileName}</b> por favor tente novamente!"
-            ]);
+        if ($file->getClientSize() > $this->maximumSize) {
+            $this->response = [
+                'error' => true,
+                'message' => $this->maximumSizeMessage
+            ];
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param mixed $file
+     * @param null | string $customName
+     * @param null | string $message
+     * @return array|object
+     */
+    public function move($file, $customName = null, $message = null)
+    {
+        if (!$this->validateExtension($file)) {
+            return (object)$this->response;
         }
 
-        $documentData =
-            ['employeeId' => $employeeId,
-                'documentId' => $documentId,
-                'status' => 1,
-                'referenceDate' => $referenceDate,
-                'finalFileName' => $finalFileName,
-                'originalFileName' => $originalFileName];
+        if (!$this->validateSize($file)) {
+            return (object)$this->response;
+        }
 
-        $this->createLog('Checklist upload', 'PUT', $documentData);
-        $this->documentRepository->saveDocument($documentData);
-        return response()->json([
-            'message' => "O arquivo <b>{$originalFileName}</b> foi enviado com sucesso!"
-        ]);
+        $name = ($customName) ? $customName : $file->getClientOriginalName();
+        if (!$file->move($this->dir, $name)) {
+            return (object)$this->response = [
+                'error' => true,
+                'message' => sprintf('Internal error trying to upload file: %s', $file->getClientOriginalName())
+            ];
+        }
+
+        $this->response['message'] = $message;
+        return (object)$this->response;
     }
 
 }
