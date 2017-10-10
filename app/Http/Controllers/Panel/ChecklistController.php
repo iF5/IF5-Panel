@@ -6,10 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\LogTrait;
 use App\Repositories\Panel\CompanyRepository;
 use App\Repositories\Panel\DocumentChecklistRepository;
-use Faker\Provider\DateTime;
 use Illuminate\Http\Request;
 use App\Repositories\Panel\DocumentRepository;
-use App\Repositories\Panel\RelationshipRepository;
 use App\Services\BreadcrumbService;
 use App\Services\UploadService;
 use App\Services\StringService;
@@ -33,11 +31,6 @@ class ChecklistController extends Controller
      * @var DocumentRepository
      */
     private $documentRepository;
-
-    /**
-     * @var RelationshipRepository
-     */
-    private $relationshipRepository;
 
     /**
      * @var BreadcrumbService
@@ -73,11 +66,19 @@ class ChecklistController extends Controller
         3 => 'Reprovado'
     ];
 
+    /**
+     * ChecklistController constructor.
+     * @param DocumentChecklistRepository $documentChecklistRepository
+     * @param CompanyRepository $companyRepository
+     * @param DocumentRepository $documentRepository
+     * @param BreadcrumbService $breadcrumbService
+     * @param StringService $stringService
+     * @param UploadService $uploadService
+     */
     public function __construct(
         DocumentChecklistRepository $documentChecklistRepository,
         CompanyRepository $companyRepository,
         DocumentRepository $documentRepository,
-        RelationshipRepository $relationshipRepository,
         BreadcrumbService $breadcrumbService,
         StringService $stringService,
         UploadService $uploadService
@@ -86,7 +87,6 @@ class ChecklistController extends Controller
         $this->documentChecklistRepository = $documentChecklistRepository;
         $this->companyRepository = $companyRepository;
         $this->documentRepository = $documentRepository;
-        $this->relationshipRepository = $relationshipRepository;
         $this->breadcrumbService = $breadcrumbService;
         $this->uploadService = $uploadService;
         $this->stringService = $stringService;
@@ -100,7 +100,7 @@ class ChecklistController extends Controller
     public function identify($id)
     {
         \Session::put('company', $this->companyRepository->findById($id));
-        return redirect()->route('checklist.company.index', ['periodicity' => 1]);
+        return redirect()->route('checklist.company.index', [1]);
     }
 
     /**
@@ -109,6 +109,29 @@ class ChecklistController extends Controller
     protected function getCompanyId()
     {
         return (\Session::has('company')) ? \Session::get('company')->id : \Auth::user()->companyId;
+    }
+
+    /**
+     * @param string $referenceDate
+     * @param string $format
+     * @return string
+     */
+    protected function toReferenceDate($referenceDate, $format = 'Y-m-d')
+    {
+        $referenceDate = sprintf('01-%s', str_replace('/', '-', $referenceDate));
+        return (new \DateTime($referenceDate))->format($format);
+    }
+
+    /**
+     * @param string $referenceDate
+     * @return string
+     */
+    protected function dir($referenceDate)
+    {
+        $referenceDate = $this->toReferenceDate($referenceDate, 'Y/m');
+        return sprintf('%s/upload/documents/companies/%s/%d/',
+            storage_path(), $referenceDate, $this->getCompanyId()
+        );
     }
 
     /**
@@ -135,29 +158,6 @@ class ChecklistController extends Controller
             'documents' => $documents,
             'breadcrumbs' => $this->getBreadcrumb('Checklist')
         ]);
-    }
-
-    /**
-     * @param string $referenceDate
-     * @param string $format
-     * @return string
-     */
-    protected function toReferenceDate($referenceDate, $format = 'Y-m-d')
-    {
-        $referenceDate = sprintf('01-%s', str_replace('/', '-', $referenceDate));
-        return (new \DateTime($referenceDate))->format($format);
-    }
-
-    /**
-     * @param string $referenceDate
-     * @return string
-     */
-    protected function dir($referenceDate)
-    {
-        $referenceDate = $this->toReferenceDate($referenceDate, 'Y/m');
-        return sprintf('%s/upload/documents/companies/%s/%d/',
-            storage_path(), $referenceDate, $this->getCompanyId()
-        );
     }
 
     /**
@@ -220,8 +220,58 @@ class ChecklistController extends Controller
             $entityGroup, $entityId, $documentId, $this->toReferenceDate($referenceDate)
         )->first();
 
-        $path = sprintf('%s%s', $this->dir($referenceDate, $document->fileName));
-        return response()->download($path);
+        return response()->download(
+            $this->dir($referenceDate) . $document->fileName
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function approve(Request $request)
+    {
+        $this->update($request, [
+            'status' => 2,
+            'approvedAt' => (new \DateTime())->format('Y-m-d H:i:s')
+        ]);
+
+        return redirect()->route('checklist.company.index', [
+            $request->get('periodicity'),
+            'referenceDate' => $this->toReferenceDate($request->get('referenceDate'), 'm/Y')
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function disapprove(Request $request)
+    {
+        $this->update($request, [
+            'status' => 3,
+            'observation' => $request->get('observation'),
+            'reusedAt' => (new \DateTime())->format('Y-m-d H:i:s')
+        ]);
+
+        return redirect()->route('checklist.company.index', [
+            $request->get('periodicity'),
+            'referenceDate' => $this->toReferenceDate($request->get('referenceDate'), 'm/Y')
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param array $data
+     */
+    protected function update(Request $request, $data)
+    {
+        $this->documentChecklistRepository->findBy(
+            $request->get('entityGroup'),
+            $request->get('entityId'),
+            $request->get('documentId'),
+            $request->get('referenceDate')
+        )->update($data);
     }
 
     /**

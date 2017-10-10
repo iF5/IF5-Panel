@@ -3,57 +3,57 @@
 @section('title', 'Empresa/Prestador')
 
 @section('content')
-    <!-- page content -->
-    <div class="right_col" role="main" xmlns="http://www.w3.org/1999/html">
+        <!-- page content -->
+<div class="right_col" role="main" xmlns="http://www.w3.org/1999/html">
 
-        <div class="row">
-            <div class="x_panel">
-                <div class="x_title">
-                    <!-- menu breadcrumb -->
-                    @include('includes.breadcrumb')
-                </div>
+    <div class="row">
+        <div class="x_panel">
+            <div class="x_title">
+                <!-- menu breadcrumb -->
+                @include('includes.breadcrumb')
+            </div>
 
-                <div class="col-md-3">
-                    <form action=""
-                          method="get">
-                        <div class="input-group">
-                            @if($referenceDate)
-                                <span class="input-group-addon">
-                                <a href="{{ route('checklist.company.index', ['periodicity' => $periodicity]) }}"
+            <div class="col-md-3">
+                <form action="" method="get">
+                    <div class="input-group">
+                        @if($referenceDate)
+                            <span class="input-group-addon">
+                                <a href="{{ route('checklist.company.index', [$periodicity]) }}"
                                    title="Limpar busca">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </a>
                             </span>
-                            @endif
-                            <input class="form-control referenceDate" type="text" name="referenceDate"
-                                   title="Data Referencia - Mes e Ano" placeholder="mm/aaaa"
-                                   value="{{ $referenceDate or '' }}" required>
+                        @endif
+                        <input class="form-control referenceDate" type="text" name="referenceDate"
+                               title="Data Referencia - Mes e Ano" placeholder="mm/aaaa"
+                               value="{{ $referenceDate or '' }}" required>
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>
                                 </button>
                             </span>
-                        </div>
-                    </form>
-                    <div class="clearfix"></div>
-                </div>
+                    </div>
+                </form>
+                <div class="clearfix"></div>
+            </div>
 
-                <div class="col-md-12">
-                    <div class="clearfix"></div>
-                </div>
+            <div class="col-md-12">
+                <div class="clearfix"></div>
+            </div>
 
-                <div class="col-md-16">
-                    <!-- Nav tabs -->
-                    <ul class="nav nav-tabs">
-                        @foreach($periodicities as $key => $value)
-                            <li @if($key === $periodicity) class="active" @endif>
-                                <a href="{{route('checklist.company.index', ['periodicity' => $key])}}">{{ $value }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
+            <div class="col-md-16">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs">
+                    @foreach($periodicities as $key => $value)
+                        <li @if($key === $periodicity) class="active" @endif>
+                            <a href="{{route('checklist.company.index', [$key, 'referenceDate' => $referenceDate])}}">{{ $value }}</a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
 
-                <div class="col-md-16">
+            <div class="col-md-16">
 
+                <form>
                     <input type="hidden" id="periodicity" value="{{ $periodicity }}"/>
 
                     <!-- Tab panes -->
@@ -70,6 +70,8 @@
                         @forelse($documents as $document)
                             <tr>
                                 <td>
+                                    <input type="hidden" id="data{{$document->id}}"
+                                           value="entityGroup={{$document->entityGroup}}&entityId={{$document->entityId}}&documentId={{$document->documentId}}&referenceDate={{$document->referenceDate}}&periodicity={{$periodicity}}"/>
                                     <div class="btn-group">
                                         <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
                                             <span class='glyphicon glyphicon-cog'></span> <span class="caret"></span>
@@ -78,20 +80,23 @@
                                             <ul class="dropdown-menu" role="menu">
                                                 <li>
                                                     <a href="{{ route('checklist.company.download', [
-                                                        'entityGroup' => $document->entityGroup,
-                                                        'entityId' => $document->entityId,
-                                                        'documentId' => $document->documentId,
-                                                        'referenceDate' => DateFormat::to($document->referenceDate, 'm-Y')
+                                                        $document->entityGroup,
+                                                        $document->entityId,
+                                                        $document->documentId,
+                                                        DateFormat::to($document->referenceDate, 'm-Y')
                                                         ]) }}">Baixar</a>
                                                 </li>
                                                 @can('onlyAdmin')
-                                                    <li>
-                                                        <a href="">Aprovar</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="" rev="{{ $document->id }}" data-toggle="modal"
-                                                           data-target="#description">Reprovar</a>
-                                                    </li>
+                                                <li>
+                                                    <a href="{{ route('checklist.company.approve') }}"
+                                                       class="checklist-approve"
+                                                       rel="{{$document->id}}">Aprovar</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ route('checklist.company.disapprove') }}"
+                                                       class="checklist-disapprove"
+                                                       rel="{{$document->id}}">Reprovar</a>
+                                                </li>
                                                 @endcan
                                             </ul>
                                         @endif
@@ -137,19 +142,17 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if($document->status)
-                                        <a href="{{ route('checklist.company.store') }}"
-                                           class="btn btn-warning btn-md modal-document-upload"
-                                           rel="{{ $document->id }}"
-                                           title="Reenviar documento">Reenviar
+                                    @if($document->status === 2)
+                                        <a href="#" class="btn btn-success btn-md" title="Documento OK">
+                                            <span class="glyphicon glyphicon glyphicon-ok"></span>
                                         </a>
                                     @else
                                         <a href="{{ route('checklist.company.store') }}"
-                                           class="btn btn-success btn-md modal-document-upload"
+                                           class="btn btn-warning btn-md modal-document-upload" title="Enviar documento"
                                            rel="{{ $document->id }}"
-                                           title="Enviar documento">Enviar
-                                        </a>
+                                        ><span class="glyphicon glyphicon-cloud-upload"></span></a>
                                     @endif
+
                                 </td>
                             </tr>
                         @empty
@@ -160,10 +163,11 @@
 
                         </tbody>
                     </table>
-                </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- /page content -->
+<!-- /page content -->
 @endsection

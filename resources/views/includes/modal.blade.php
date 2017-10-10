@@ -1,5 +1,5 @@
-<!-- modal-delete -->
-<div class="modal fade" id="alert" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
+<!-- modal-alert -->
+<div class="modal fade" id="modal-alert" tabindex="-1" role="dialog" aria-labelledby="modal-alert" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -18,7 +18,35 @@
         </div>
     </div>
 </div>
-<!-- /modal-delete -->
+<!-- /modal-alert -->
+
+<!-- modal-update -->
+<div class="modal fade" id="modal-confirm" tabindex="-1" role="dialog" aria-labelledby="modal-confirm" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span
+                            class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                <h4 class="modal-title custom_align" id="Heading">Aten&ccedil;&atilde;o</h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer ">
+                <form id="form-modal-confirm" method="post" action="" style="float: right;">
+
+                    {!! method_field('PUT') !!}
+                    {!! csrf_field() !!}
+
+                    <button class="btn btn-success" type="submit"><span class="glyphicon glyphicon-ok-sign"></span> Sim
+                    </button>
+                </form>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><span
+                            class="glyphicon glyphicon-remove"></span> N&atilde;o
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /modal-update -->
 
 <!-- modal-delete -->
 <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="delete" aria-hidden="true">
@@ -117,22 +145,22 @@
 </div>
 <!-- /modal-upload -->
 
-<!-- modal-upload -->
-<div class="modal fade" id="description" tabindex="-1" role="dialog" aria-labelledby="description" aria-hidden="true"
+<!-- modal-observation -->
+<div class="modal fade" id="modal-observation" tabindex="-1" role="dialog" aria-labelledby="modal-observation" aria-hidden="true"
      data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <a href="" class="close"><span class="glyphicon glyphicon-remove"></span></a>
-                <h4 class="modal-title custom_align" id="Heading">Descriç&atilde;o</h4>
+                <h4 class="modal-title custom_align" id="Heading">Observação</h4>
             </div>
             <div class="modal-body">
-                <form id="form-description" method="post" action="">
+                <form id="form-modal-observation" method="post" action="">
                     {!! method_field('PUT') !!}
                     {!! csrf_field() !!}
                     <div class="row">
                         <div class="form-group" style="padding: 12px;">
-                            <textarea type="description" name="description" class="form-control" rows="8"></textarea>
+                            <textarea type="observation" name="observation" class="form-control" rows="8"></textarea>
                         </div>
                     </div>
                     <div class="row">
@@ -145,4 +173,4 @@
         </div>
     </div>
 </div>
-<!-- /modal-upload -->
+<!-- /modal-observation -->

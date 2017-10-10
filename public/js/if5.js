@@ -10,7 +10,7 @@ Dropzone.autoDiscover = false;
  * @param options
  * @constructor
  */
-function Upload(options) {
+function If5Upload(options) {
 
     var _options = {
         formElement: options.formElement || null,
@@ -80,14 +80,62 @@ function Upload(options) {
 }
 
 /**
- * @param message
+ * Custom modal
+ *
+ * @constructor
  */
-function modalAlert(message) {
-    var alert = $('#alert');
-    if(typeof(message) !== undefined){
-        alert.find('.modal-body').html(message);
-    }
-    alert.modal('show');
+function If5Modal() {
+
+    /**
+     * @param message
+     */
+    this.alert = function (message) {
+        var alert = $('#modal-alert');
+        if (message !== undefined) {
+            alert.find('.modal-body').html(message);
+        }
+        alert.modal('show');
+    };
+
+    /**
+     * @param message
+     */
+    this.confirm = function (message) {
+        var alert = $('#modal-confirm');
+        if (message !== undefined) {
+            alert.find('.modal-body').html(message);
+        }
+        alert.modal('show');
+    };
+
+}
+
+
+/**
+ * Custom form
+ *
+ * @constructor
+ */
+function If5Form() {
+
+    /**
+     * @param form
+     * @param queryString
+     * @param type
+     */
+    this.addInput = function (form, queryString, type) {
+        var all = queryString.split('&');
+        for (var i = 0; all.length; i++) {
+            var row = all[i].split('=');
+            var input = $('<input>').attr({
+                'type': (type === undefined) ? 'hidden' : type,
+                'name': row[0],
+                'value': row[1]
+            });
+            $(form).append(input);
+        }
+    };
+
 }
 
 
@@ -96,6 +144,8 @@ function modalAlert(message) {
  */
 $(function () {
 
+    var if5Modal = new If5Modal();
+    var if5Form = new If5Form();
     var validate = new Validate();
 
     /**
@@ -119,7 +169,7 @@ $(function () {
 
     //On upload profile image
     $('.modal-image').on('click', function () {
-        new Upload({
+        new If5Upload({
             formElement: '#dz-modal-upload',
             submitElement: '#dz-modal-submit',
             messageElement: '#dz-modal-message',
@@ -130,7 +180,7 @@ $(function () {
     //On upload report
     $('.modal-report-upload').on('click', function (e) {
         e.preventDefault();
-        new Upload({
+        new If5Upload({
             formElement: '#dz-modal-upload',
             submitElement: '#dz-modal-submit',
             messageElement: '#dz-modal-message',
@@ -138,7 +188,7 @@ $(function () {
         });
     });
 
-    //On upload employee documents
+    //On upload documents
     $('.modal-document-upload').on('click', function (e) {
         e.preventDefault();
         var data = {};
@@ -149,12 +199,12 @@ $(function () {
         var response = validate.assert(data);
 
         if (!response.isSuccess) {
-            modalAlert();
+            if5Modal.alert();
             return false;
         }
 
         $('#upload').modal('show');
-        new Upload({
+        new If5Upload({
             formElement: '#dz-modal-upload',
             submitElement: '#dz-modal-submit',
             messageElement: '#dz-modal-message',
@@ -168,21 +218,45 @@ $(function () {
         });
     });
 
-    //On validate documents
-    $('.modal-document-validated').on('click', function (event) {
-        event.preventDefault();
-        $.ajax({
-            url: this.href,
-            type: "GET",
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (data) {
-                if (data.status == "success") {
-                    location.reload();
-                }
-            }
-        });
+    /**
+     * On checklist disapprove
+     */
+    $('.checklist-approve').on('click', function (e) {
+        e.preventDefault();
+        if5Modal.confirm('Tem certeza que deseja aprovar esse documento?');
+        var form = $('#form-modal-confirm').attr({'action': this.href});
+        if5Form.addInput(form, $('#data' + this.rel).val());
+        form.submit();
     });
+
+    /**
+     * On checklist disapprove
+     */
+    $('.checklist-disapprove').on('click', function (e) {
+        e.preventDefault();
+        $('#modal-observation').modal('show');
+        var form = $('#form-modal-observation').attr({'action': this.href});
+        if5Form.addInput(form, $('#data' + this.rel).val());
+        form.submit();
+    });
+
+
+    //On validate documents
+    /*$('.modal-document-validated').on('click', function (event) {
+     event.preventDefault();
+     $.ajax({
+     url: this.href,
+     type: "GET",
+     dataType: 'json',
+     contentType: 'application/json',
+     success: function (data) {
+     if (data.status == "success") {
+     location.reload();
+     }
+     }
+     });
+     });
+     */
 
     $('input.typeahead').typeahead({
         source: function (query, process) {
@@ -201,26 +275,26 @@ $(function () {
     }
 
     //On validate documents
-    $('.modal-document-invalidated').on('click', function (event) {
-        event.preventDefault();
-        $.ajax({
-            url: this.href,
-            type: "GET",
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (data) {
-                if (data.status == "success") {
-                    location.reload();
-                }
-            }
-        });
-    });
+    /*$('.modal-document-invalidated').on('click', function (event) {
+     event.preventDefault();
+     $.ajax({
+     url: this.href,
+     type: "GET",
+     dataType: 'json',
+     contentType: 'application/json',
+     success: function (data) {
+     if (data.status == "success") {
+     location.reload();
+     }
+     }
+     });
+     });*/
 
     //On download documents
-    $('.modal-document-download').on('click', function (event) {
-        event.preventDefault();
-        window.location = this.href;
-    });
+    /*$('.modal-document-download').on('click', function (event) {
+     event.preventDefault();
+     window.location = this.href;
+     });*/
 
     //Api correios
     $('#cep').on('blur', function () {
@@ -239,11 +313,13 @@ $(function () {
         });
     });
 
+    /**
+     *
+     */
     $('.btn-read-more').on('click', function (e) {
         e.preventDefault();
         $(this).siblings('.text-read-more').slideToggle(400);
     });
-
 
 
     //Masks
@@ -259,4 +335,5 @@ $(function () {
     $('#pis').mask('999.99999.99-9');
     $('.referenceDate').mask('99/9999');
     $('#referenceDateSearch').mask('99/9999');
+
 });

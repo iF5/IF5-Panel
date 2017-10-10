@@ -26,7 +26,7 @@ class DocumentChecklist extends Model
         'referenceDate',
         'validity',
         'status',
-        'description',
+        'observation',
         'sentAt',
         'resentAt',
         'approvedAt',
