@@ -90,7 +90,7 @@ class DocumentRepository extends Document
     public function findByReferenceDate($referenceDate, $periodicity, $entityGroup)
     {
         try {
-            return $this->join('document_checklists', function ($join) {
+            return $this->leftJoin('document_checklists', function ($join) {
                 return $join->on('document_checklists.documentId', '=', 'documents.id');
             })->where([
                 ['documents.periodicity', '=', $periodicity],

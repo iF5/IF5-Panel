@@ -15,3 +15,7 @@ Route::get('checklist-company/{periodicity}', 'Panel\ChecklistController@index')
 
 Route::post('checklist-company/store', 'Panel\ChecklistController@store')
     ->middleware('can:onlyAdmin')->name('checklist.company.store');
+
+
+Route::post('checklist-company/download/{entityGroup}/{entityId}/{documentId}/{referenceDate}', 'Panel\ChecklistController@download')
+    ->middleware('can:onlyAdmin')->name('checklist.company.download');

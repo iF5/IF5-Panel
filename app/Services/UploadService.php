@@ -37,10 +37,7 @@ class UploadService
     /**
      * @var array
      */
-    private $response = [
-        'error' => false,
-        'message' => null
-    ];
+    private $response;
 
     /**
      * @param string $dir
@@ -147,16 +144,20 @@ class UploadService
             return (object)$this->response;
         }
 
-        $name = ($customName) ? $customName : $file->getClientOriginalName();
-        if (!$file->move($this->dir, $name)) {
-            return (object)$this->response = [
+        $fileName = ($customName) ? $customName : $file->getClientOriginalName();
+        if (!$file->move($this->dir, $fileName)) {
+            return (object)[
                 'error' => true,
                 'message' => sprintf('Internal error trying to upload file: %s', $file->getClientOriginalName())
             ];
         }
 
-        $this->response['message'] = $message;
-        return (object)$this->response;
+        return (object)[
+            'error' => false,
+            'message' => $message,
+            'fileName' => $fileName,
+            'originalFileName' => $file->getClientOriginalName()
+        ];
     }
 
 }

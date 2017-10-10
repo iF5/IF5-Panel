@@ -141,10 +141,9 @@ $(function () {
     //On upload employee documents
     $('.modal-document-upload').on('click', function (e) {
         e.preventDefault();
+        var data = {};
         var referenceDate = '#referenceDate' + this.rel;
         var validity = '#validity' + this.rel;
-
-        var data = {};
         data[referenceDate] = {value: $(referenceDate).val(), type: 'VOID'};
         data[validity] = {value: $(validity).val(), type: 'NUMBER'};
         var response = validate.assert(data);

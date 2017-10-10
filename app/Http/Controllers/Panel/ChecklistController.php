@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\LogTrait;
 use App\Repositories\Panel\CompanyRepository;
 use App\Repositories\Panel\DocumentChecklistRepository;
+use Faker\Provider\DateTime;
 use Illuminate\Http\Request;
 use App\Repositories\Panel\DocumentRepository;
 use App\Repositories\Panel\RelationshipRepository;
@@ -18,6 +19,9 @@ class ChecklistController extends Controller
 
     use LogTrait;
 
+    /**
+     * @var DocumentChecklistRepository
+     */
     private $documentChecklistRepository;
 
     /**
@@ -59,6 +63,15 @@ class ChecklistController extends Controller
      * @var array
      */
     private $periodicities;
+
+    /**
+     * @var array
+     */
+    private $status = [
+        1 => 'Aguardando aprova&ccedil;&atilde;o',
+        2 => 'Aprovado',
+        3 => 'Reprovado'
+    ];
 
     public function __construct(
         DocumentChecklistRepository $documentChecklistRepository,
@@ -116,6 +129,7 @@ class ChecklistController extends Controller
 
         return view('panel.checklist.index', [
             'referenceDate' => $referenceDate,
+            'status' => $this->status,
             'periodicities' => $this->periodicities,
             'periodicity' => (int)$periodicity,
             'documents' => $documents,
@@ -124,106 +138,91 @@ class ChecklistController extends Controller
     }
 
     /**
-     * @param int $year
-     * @param int $month
-     * @param int $documentId
+     * @param string $referenceDate
+     * @param string $format
      * @return string
      */
-    protected function dir($year, $month, $documentId)
+    protected function toReferenceDate($referenceDate, $format = 'Y-m-d')
     {
-        return sprintf('%s/upload/documents/companies/%d/%d/%d/%d/',
-            storage_path(), $year, $month, $this->getCompanyId(), $documentId
+        $referenceDate = sprintf('01-%s', str_replace('/', '-', $referenceDate));
+        return (new \DateTime($referenceDate))->format($format);
+    }
+
+    /**
+     * @param string $referenceDate
+     * @return string
+     */
+    protected function dir($referenceDate)
+    {
+        $referenceDate = $this->toReferenceDate($referenceDate, 'Y/m');
+        return sprintf('%s/upload/documents/companies/%s/%d/',
+            storage_path(), $referenceDate, $this->getCompanyId()
         );
     }
 
-
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request)
     {
-        $referenceDate = $request->get('referenceDate');
-        $year = substr($referenceDate, 3, 4);
-        $month = substr($referenceDate, 0, 2);
-        $file = $request->file('file');
+        $upload = $this->upload($request);
+        if (!$upload->error) {
+            $this->documentChecklistRepository->createOrUpdate([
+                'entityGroup' => 1,
+                'entityId' => $this->getCompanyId(),
+                'documentId' => $request->get('documentId'),
+                'referenceDate' => $this->toReferenceDate($request->get('referenceDate')),
+                'validity' => (int)$request->get('validity'),
+                'status' => 1,
+                'sentAt' => (new \DateTime())->format('Y-m-d H:i:s'),
+                'fileName' => $upload->fileName,
+                'originalFileName' => $upload->originalFileName
+            ]);
+        }
 
-        $data = [
-            'entityGroup' => 1,
-            'entityId' => $this->getCompanyId(),
-            'documentId' => $request->get('documentId'),
-            'referenceDate' => sprintf('%d-%d-01', $year, $month),
-            'validity' => (int)$request->get('validity'),
-            'status' => 1,
-            'sentAt' => (new \DateTime())->format('Y-m-d H:i:s'),
-            'fileName',
-            'originalFileName' => $file->getClientOriginalName()
-        ];
-
-    }
-
-    protected function upload(Request $request, $year, $month)
-    {
-        $year = substr('09/2017', 3, 4);
-        $month = substr('09/2017', 0, 2);
-        $documentId = 1;
-        $file = $request->file('file');
-
-        $upload = $this->uploadService
-            ->setDir($this->dir($year, $month, $request->get('documentId')))
-            ->setAllowedExtensions(
-                $this->extensions,
-                sprintf('S&oacute; &eacute; permitido arquivo: %s', implode($this->extensions))
-            )->move($file, $this->stringService->toSlug('Test ação.pdf'));
-
-        $upload->message = '';
         return response()->json($upload);
     }
 
-    public function uploadlala(Request $request, $documentId, $referenceDate)
+    /**
+     * @param Request $request
+     * @return array|object
+     */
+    protected function upload(Request $request)
     {
-
-        $referenceDate = $referenceDate . "-01";
-
+        $document = $this->documentRepository->find($request->get('documentId'));
         $file = $request->file('file');
-        $extension = $file->getClientOriginalExtension();
-        if (!in_array($extension, $this->extensions)) {
-            return response()->json([
-                'message' => 'Só são permitidos arquivos do tipo ' . implode(', ', $this->extensions) . '.'
-            ]);
-        }
+        $fileName = sprintf('%d-%s-%s.pdf',
+            $document->id,
+            $this->stringService->toSlug($document->name),
+            $this->toReferenceDate($request->get('referenceDate'), 'm-Y')
+        );
 
-        $date = $this->explodeDate($referenceDate);
-        $employeeId = session('employee')->id;
-        $providerId = session('provider') ? session('provider')->id : \Auth::user()->providerId;
-
-        $finalFileName = sha1($employeeId . "-" . $documentId . "-" . $referenceDate);
-        $originalFileName = $file->getClientOriginalName();
-
-        $dir = storage_path() . "/upload/documents/{$providerId}/{$employeeId}/{$documentId}/{$date['year']}/{$date['month']}";
-        if (!file_exists($dir)) {
-            mkdir($dir, 0777, true);
-        }
-
-        $finalFileName = sprintf('%s.%s', $finalFileName, $extension);
-        $isMoved = $file->move($dir, $finalFileName);
-        if (!$isMoved) {
-            return response()->json([
-                'message' => "Falha ao enviar o arquivo <b>{$originalFileName}</b> por favor tente novamente!"
-            ]);
-        }
-
-        $documentData =
-            ['employeeId' => $employeeId,
-                'documentId' => $documentId,
-                'status' => 1,
-                'referenceDate' => $referenceDate,
-                'finalFileName' => $finalFileName,
-                'originalFileName' => $originalFileName];
-
-        $this->createLog('Checklist upload', 'PUT', $documentData);
-        $this->documentRepository->saveDocument($documentData);
-        return response()->json([
-            'message' => "O arquivo <b>{$originalFileName}</b> foi enviado com sucesso!"
-        ]);
+        return $this->uploadService
+            ->setDir($this->dir($request->get('referenceDate')))
+            ->setAllowedExtensions(
+                $this->extensions, sprintf('S&oacute; &eacute; permitido arquivo: %s', implode($this->extensions))
+            )->move(
+                $file, $fileName, sprintf('O arquivo %s foi enviado com sucesso', $file->getClientOriginalName())
+            );
     }
 
+    /**
+     * @param $entityGroup
+     * @param $entityId
+     * @param $documentId
+     * @param $referenceDate
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function download($entityGroup, $entityId, $documentId, $referenceDate)
+    {
+        $document = $this->documentChecklistRepository->findBy(
+            $entityGroup, $entityId, $documentId, $this->toReferenceDate($referenceDate)
+        )->first();
+
+        $path = sprintf('%s%s', $this->dir($referenceDate, $document->fileName));
+        return response()->download($path);
+    }
 
     /**
      * @param null $location
