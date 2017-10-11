@@ -117,4 +117,13 @@ class EmployeeRepository extends Employee
         }
     }
 
+    public function findAll()
+    {
+        try {
+            return Employee::all();
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
 }
