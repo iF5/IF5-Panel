@@ -61,6 +61,7 @@ class ChecklistController extends Controller
      * @var array
      */
     private $status = [
+        0 => 'Aguardando envio',
         1 => 'Aguardando aprova&ccedil;&atilde;o',
         2 => 'Aprovado',
         3 => 'Reprovado'
@@ -118,7 +119,11 @@ class ChecklistController extends Controller
      */
     protected function toReferenceDate($referenceDate, $format = 'Y-m-d')
     {
-        $referenceDate = sprintf('01-%s', str_replace('/', '-', $referenceDate));
+        $referenceDate = str_replace('/', '-', $referenceDate);
+        if(strlen($referenceDate) < 10){
+            $referenceDate = sprintf('01-%s', $referenceDate);
+        }
+
         return (new \DateTime($referenceDate))->format($format);
     }
 
@@ -251,6 +256,7 @@ class ChecklistController extends Controller
         $this->update($request, [
             'status' => 3,
             'observation' => $request->get('observation'),
+            'approvedAt' => null,
             'reusedAt' => (new \DateTime())->format('Y-m-d H:i:s')
         ]);
 
