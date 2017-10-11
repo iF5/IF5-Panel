@@ -69,38 +69,13 @@ class DocumentRepository extends Document
      * @param array $documents
      * @return mixed
      */
-    public function findByPeriodicity($periodicity, $entityGroup, array $documents = [])
+    public function findByChecklist($periodicity, $entityGroup, array $documents = [])
     {
         try {
             return $this->where([
                 ['periodicity', '=', $periodicity],
                 ['entityGroup', '=', $entityGroup]
             ])->whereIn('id', $documents)->get();
-        } catch (\Exception $e) {
-            throw new ModelNotFoundException;
-        }
-    }
-
-    /**
-     * @param int $periodicity
-     * @param string $referenceDate
-     * @param int $entityGroup
-     * @return mixed
-     */
-    public function findByReferenceDate($referenceDate, $periodicity, $entityGroup)
-    {
-        try {
-            return $this->leftJoin('document_checklists', function ($join) {
-                return $join->on('document_checklists.documentId', '=', 'documents.id');
-            })->where([
-                ['documents.periodicity', '=', $periodicity],
-                ['documents.entityGroup', '=', $entityGroup],
-                ['document_checklists.referenceDate', '=', sprintf('%s-%s-01',
-                    substr($referenceDate, 3, 4),
-                    substr($referenceDate, 0, 2)
-                )]
-            ])->get();
-
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }

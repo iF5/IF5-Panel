@@ -120,7 +120,7 @@ class ChecklistController extends Controller
     protected function toReferenceDate($referenceDate, $format = 'Y-m-d')
     {
         $referenceDate = str_replace('/', '-', $referenceDate);
-        if(strlen($referenceDate) < 10){
+        if (strlen($referenceDate) < 10) {
             $referenceDate = sprintf('01-%s', $referenceDate);
         }
 
@@ -128,14 +128,33 @@ class ChecklistController extends Controller
     }
 
     /**
-     * @param string $referenceDate
+     * @param int $year
+     * @param int $month
      * @return string
      */
-    protected function dir($referenceDate)
+    protected function getDir($year, $month)
     {
-        $referenceDate = $this->toReferenceDate($referenceDate, 'Y/m');
-        return sprintf('%s/upload/documents/companies/%s/%d/',
-            storage_path(), $referenceDate, $this->getCompanyId()
+        return sprintf('%s/upload/documents/companies/%d/%d/%d/',
+            storage_path(), $year, $month, $this->getCompanyId()
+        );
+    }
+
+    /**
+     * @param int $year
+     * @param int $month
+     * @param int $periodicity
+     * @return mixed
+     */
+    protected function getDocuments($year, $month, $periodicity)
+    {
+        if ($year && $month) {
+            return $this->documentChecklistRepository->findDocumentByChecklist(
+                sprintf('%d-%d-01', $year, $month), $periodicity, 1
+            );
+        }
+
+        return $this->documentRepository->findByChecklist(
+            $periodicity, 1, $this->companyRepository->findDocuments($this->getCompanyId())
         );
     }
 
@@ -146,21 +165,16 @@ class ChecklistController extends Controller
      */
     public function index(Request $request, $periodicity)
     {
-        $referenceDate = $request->input('referenceDate');
-        if ($referenceDate) {
-            $documents = $this->documentRepository->findByReferenceDate($referenceDate, $periodicity, 1);
-        } else {
-            $documents = $this->documentRepository->findByPeriodicity(
-                $periodicity, 1, $this->companyRepository->findDocuments($this->getCompanyId())
-            );
-        }
+        $year = $request->input('year');
+        $month = $request->input('month');
 
         return view('panel.checklist.index', [
-            'referenceDate' => $referenceDate,
+            'year' => $year,
+            'month' => $month,
             'status' => $this->status,
             'periodicities' => $this->periodicities,
             'periodicity' => (int)$periodicity,
-            'documents' => $documents,
+            'documents' => $this->getDocuments($year, $month, $periodicity),
             'breadcrumbs' => $this->getBreadcrumb('Checklist')
         ]);
     }
@@ -177,7 +191,7 @@ class ChecklistController extends Controller
                 'entityGroup' => 1,
                 'entityId' => $this->getCompanyId(),
                 'documentId' => $request->get('documentId'),
-                'referenceDate' => $this->toReferenceDate($request->get('referenceDate')),
+                'referenceDate' => sprintf('%d-%d-01', $request->get('year'), $request->get('month')),
                 'validity' => (int)$request->get('validity'),
                 'status' => 1,
                 'sentAt' => (new \DateTime())->format('Y-m-d H:i:s'),
@@ -197,14 +211,15 @@ class ChecklistController extends Controller
     {
         $document = $this->documentRepository->find($request->get('documentId'));
         $file = $request->file('file');
-        $fileName = sprintf('%d-%s-%s.pdf',
+        $fileName = sprintf('%d-%s-%d-%d.pdf',
             $document->id,
             $this->stringService->toSlug($document->name),
-            $this->toReferenceDate($request->get('referenceDate'), 'm-Y')
+            $request->get('month'),
+            $request->get('year')
         );
 
         return $this->uploadService
-            ->setDir($this->dir($request->get('referenceDate')))
+            ->setDir($this->getDir($request->get('year'), $request->get('month')))
             ->setAllowedExtensions(
                 $this->extensions, sprintf('S&oacute; &eacute; permitido arquivo: %s', implode($this->extensions))
             )->move(
@@ -213,20 +228,22 @@ class ChecklistController extends Controller
     }
 
     /**
-     * @param $entityGroup
-     * @param $entityId
-     * @param $documentId
-     * @param $referenceDate
+     * @param int $entityGroup
+     * @param int $entityId
+     * @param int $documentId
+     * @param string $referenceDate
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function download($entityGroup, $entityId, $documentId, $referenceDate)
     {
         $document = $this->documentChecklistRepository->findBy(
-            $entityGroup, $entityId, $documentId, $this->toReferenceDate($referenceDate)
+            $entityGroup, $entityId, $documentId, $referenceDate
         )->first();
 
+        $year = $this->toReferenceDate($referenceDate, 'Y');
+        $month = $this->toReferenceDate($referenceDate, 'm');
         return response()->download(
-            $this->dir($referenceDate) . $document->fileName
+            $this->getDir($year, $month) . $document->fileName
         );
     }
 
@@ -243,7 +260,8 @@ class ChecklistController extends Controller
 
         return redirect()->route('checklist.company.index', [
             $request->get('periodicity'),
-            'referenceDate' => $this->toReferenceDate($request->get('referenceDate'), 'm/Y')
+            'month' => $this->toReferenceDate($request->get('referenceDate'), 'm'),
+            'year' => $this->toReferenceDate($request->get('referenceDate'), 'Y')
         ]);
     }
 
@@ -262,7 +280,8 @@ class ChecklistController extends Controller
 
         return redirect()->route('checklist.company.index', [
             $request->get('periodicity'),
-            'referenceDate' => $this->toReferenceDate($request->get('referenceDate'), 'm/Y')
+            'month' => $this->toReferenceDate($request->get('referenceDate'), 'm'),
+            'year' => $this->toReferenceDate($request->get('referenceDate'), 'Y')
         ]);
     }
 

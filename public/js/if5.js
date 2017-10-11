@@ -136,38 +136,62 @@ function If5Form() {
         }
     };
 
+    this.isVoid = function (fields) {
+        var rows = fields.split(',');
+        var data = {};
+
+        for (var i = 0; rows.length; i++) {
+            //data[rows[i]] = {value: $(rows[i]).val(), type: 'VOID'};
+            data[i] = i;
+        }
+
+        alert(data);
+/*
+        var response = new Validate().assert(data);
+        if (!response.isSuccess) {
+            new if5Modal().alert();
+        }
+
+        return response.isSuccess;*/
+    }
+
 }
 
+var validate = new Validate();
+var if5Modal = new If5Modal();
+var if5Form = new If5Form();
 
 /**
  * Triggers
  */
 $(function () {
 
-    var if5Modal = new If5Modal();
-    var if5Form = new If5Form();
-    var validate = new Validate();
-
     /**
-     * Reset input border color
+     * Reset fields border color
      */
-    $('input').on('focus', function () {
+    $('input,select,textarea').on('focus', function () {
         $(this).css('border', '');
     });
 
-    //On delete
+    /**
+     * On delete
+     */
     $('.modal-delete').on('click', function () {
         $('#form-modal-delete').attr({action: this.rel});
         //$('.alert-message-delete').text(this.rev);
     });
 
-    //On delete
+    /**
+     * On delete
+     */
     $('.modal-update').on('click', function () {
         $('#form-modal-update').attr({action: this.rel});
         $('.alert-message-update').text(this.rev);
     });
 
-    //On upload profile image
+    /**
+     * On upload profile image
+     */
     $('.modal-image').on('click', function () {
         new If5Upload({
             formElement: '#dz-modal-upload',
@@ -177,7 +201,9 @@ $(function () {
         });
     });
 
-    //On upload report
+    /**
+     * On upload report
+     */
     $('.modal-report-upload').on('click', function (e) {
         e.preventDefault();
         new If5Upload({
@@ -188,13 +214,15 @@ $(function () {
         });
     });
 
-    //On upload documents
+    /**
+     * On upload documents
+     */
     $('.modal-document-upload').on('click', function (e) {
         e.preventDefault();
-        var data = {};
-        var referenceDate = '#referenceDate' + this.rel;
+        var month = '#month' + this.rel;
         var validity = '#validity' + this.rel;
-        data[referenceDate] = {value: $(referenceDate).val(), type: 'VOID'};
+        var data = {};
+        data[month] = {value: $(month).val(), type: 'VOID'};
         data[validity] = {value: $(validity).val(), type: 'NUMBER'};
         var response = validate.assert(data);
 
@@ -212,7 +240,8 @@ $(function () {
             data: {
                 periodicity: $('#periodicity').val(),
                 documentId: this.rel,
-                referenceDate: $(referenceDate).val(),
+                year: $('#year' + this.rel).val(),
+                month: $(month).val(),
                 validity: $(validity).val()
             }
         });
@@ -240,24 +269,9 @@ $(function () {
         form.submit();
     });
 
-
-    //On validate documents
-    /*$('.modal-document-validated').on('click', function (event) {
-     event.preventDefault();
-     $.ajax({
-     url: this.href,
-     type: "GET",
-     dataType: 'json',
-     contentType: 'application/json',
-     success: function (data) {
-     if (data.status == "success") {
-     location.reload();
-     }
-     }
-     });
-     });
+    /**
+     *
      */
-
     $('input.typeahead').typeahead({
         source: function (query, process) {
             return $.get("//" + hostName() + '/cnae/' + query, {query: query}, function (data) {
@@ -266,6 +280,10 @@ $(function () {
         }
     });
 
+    /**
+     *
+     * @returns {*}
+     */
     function hostName() {
         var hostname = $(location).attr('hostname');
         if (hostname == "localhost") {
@@ -274,29 +292,9 @@ $(function () {
         return hostname;
     }
 
-    //On validate documents
-    /*$('.modal-document-invalidated').on('click', function (event) {
-     event.preventDefault();
-     $.ajax({
-     url: this.href,
-     type: "GET",
-     dataType: 'json',
-     contentType: 'application/json',
-     success: function (data) {
-     if (data.status == "success") {
-     location.reload();
-     }
-     }
-     });
-     });*/
-
-    //On download documents
-    /*$('.modal-document-download').on('click', function (event) {
-     event.preventDefault();
-     window.location = this.href;
-     });*/
-
-    //Api correios
+    /**
+     * Api correios
+     */
     $('#cep').on('blur', function () {
         var cep = this.value.replace('-', '');
         $.ajax({
@@ -314,15 +312,16 @@ $(function () {
     });
 
     /**
-     *
+     * On read more
      */
     $('.btn-read-more').on('click', function (e) {
         e.preventDefault();
         $(this).siblings('.text-read-more').slideToggle(400);
     });
 
-
-    //Masks
+    /**
+     * Masks
+     */
     $('#cnpj').mask('99.999.999/9999-99');
     $('#cpf').mask('999.999.999-99');
     $('#phone').mask('99 9999-9999');
@@ -333,7 +332,6 @@ $(function () {
     $('.dateMask').mask('99/99/9999');
     $('.moneyMask').maskMoney({showSymbol: false, symbol: 'R$', decimal: ',', thousands: '.'});
     $('#pis').mask('999.99999.99-9');
-    $('.referenceDate').mask('99/9999');
     $('#referenceDateSearch').mask('99/9999');
 
 });

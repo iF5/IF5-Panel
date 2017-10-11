@@ -59,4 +59,27 @@ class DocumentChecklistRepository extends DocumentChecklist
         }
     }
 
+    /**
+     * @param int $periodicity
+     * @param string $referenceDate
+     * @param int $entityGroup
+     * @return mixed
+     */
+    public function findDocumentByChecklist($referenceDate, $periodicity, $entityGroup)
+    {
+        try {
+            return $this->leftJoin('documents', function ($join) {
+                return $join->on('documents.id', '=', 'document_checklists.documentId');
+            })->where([
+                ['documents.periodicity', '=', $periodicity],
+                ['documents.entityGroup', '=', $entityGroup],
+                ['document_checklists.referenceDate', '=', $referenceDate]
+            ])->get();
+
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+
 }
