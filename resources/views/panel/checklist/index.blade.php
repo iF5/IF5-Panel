@@ -25,14 +25,14 @@
                             </span>
                         @endif
                         <select class="form-control" id="month" name="month" style="width: 60%">
-                            <option value="00">M&ecirc;s</option>
+                            <option value="">M&ecirc;s</option>
                             @foreach(Period::getMonths() as $key => $value)
                                 <option value="{{ $key }}"
                                         @if($key == $month) selected @endif>{{ $value }}</option>
                             @endforeach
                         </select>
                         <select class="form-control" id="year" name="year" style="width: 40%">
-                            <option value="0000">Ano</option>
+                            <option value="">Ano</option>
                             @foreach(Period::getYears() as $value)
                                 <option value="{{ $value }}"
                                         @if($year == $value) selected @endif>{{ $value }}</option>

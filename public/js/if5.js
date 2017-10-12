@@ -140,19 +140,17 @@ function If5Form() {
         var rows = fields.split(',');
         var data = {};
 
-        for (var i = 0; rows.length; i++) {
-            //data[rows[i]] = {value: $(rows[i]).val(), type: 'VOID'};
-            data[i] = i;
+        for (var i = 0; i < rows.length; i++) {
+            var field = '#' + rows[i];
+            data[field] = {value: $(field).val(), type: 'VOID'};
         }
 
-        alert(data);
-/*
         var response = new Validate().assert(data);
         if (!response.isSuccess) {
-            new if5Modal().alert();
+            new If5Modal().alert();
         }
 
-        return response.isSuccess;*/
+        return response.isSuccess;
     }
 
 }
