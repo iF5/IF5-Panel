@@ -318,6 +318,13 @@ $(function () {
     });
 
     /**
+     *
+     */
+    $('.checkbox-on-all').on('click', function () {
+        $('.checkbox-on-item').prop('checked', this.checked);
+    });
+
+    /**
      * Masks
      */
     $('#cnpj').mask('99.999.999/9999-99');
