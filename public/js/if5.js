@@ -118,6 +118,19 @@ function If5Modal() {
  */
 function If5Form() {
 
+    var vClasses = {
+        'v-cep': 'CEP',
+        'v-cnpj': 'CNPJ',
+        'v-cpf': 'CPF',
+        'v-date': 'DATE',
+        'v-ddd': 'DDD',
+        'v-email': 'EMAIL',
+        'v-number': 'NUMBER',
+        'v-phone': 'PHONE',
+        'v-rg': 'RG',
+        'v-void': 'VOID'
+    };
+
     /**
      * @param form
      * @param queryString
@@ -136,40 +149,65 @@ function If5Form() {
         }
     };
 
-    this.isVoid = function (fields) {
-        var rows = fields.split(',');
-        var data = {};
+    /**
+     * On validate all form by class apply
+     *
+     * @param validateObject
+     */
+    this.onValidate = function (validateObject) {
 
-        for (var i = 0; i < rows.length; i++) {
-            var field = '#' + rows[i];
-            data[field] = {value: $(field).val(), type: 'VOID'};
-        }
+        var fields = 'input,select,textarea';
+        /**
+         * Submit the form event
+         */
+        $('.v-form').on('submit', function (e) {
+            var hasType = function (id) {
+                for (var i in vClasses) {
+                    if ($('#' + id).hasClass(i)) {
+                        return vClasses[i];
+                    }
+                }
+                return false;
+            };
 
-        var response = new Validate().assert(data);
-        if (!response.isSuccess) {
-            new If5Modal().alert();
-        }
+            var options = {};
+            $(this).find(fields).each(function (index, item) {
+                var type = hasType(item.id);
+                if (item.id && type) {
+                    options['#' + item.id] = {value: item.value, type: type};
+                }
+            });
 
-        return response.isSuccess;
-    }
+            var response = validateObject.assert(options);
+            if (!response.isSuccess) {
+                new If5Modal().alert();
+                e.preventDefault();
+            }
+        });
 
+        /**
+         * Reset fields border color
+         */
+        $(fields).on('click', function () {
+            $(this).css('border', '');
+        });
+    };
 }
 
-var validate = new Validate();
-var if5Modal = new If5Modal();
-var if5Form = new If5Form();
 
 /**
  * Triggers
  */
 $(function () {
 
+    var validate = new Validate();
+    var if5Modal = new If5Modal();
+    var if5Form = new If5Form();
+
     /**
-     * Reset fields border color
+     * Form validation
      */
-    $('input,select,textarea').on('focus', function () {
-        $(this).css('border', '');
-    });
+    if5Form.onValidate(validate);
 
     /**
      * On delete
@@ -323,6 +361,7 @@ $(function () {
     $('.checkbox-on-all').on('click', function () {
         $('.checkbox-on-item').prop('checked', this.checked);
     });
+
 
     /**
      * Masks

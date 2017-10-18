@@ -14,7 +14,7 @@
             </div>
 
             <div class="col-md-6">
-                <form action="" method="get" onsubmit="return new If5Form().isVoid('month,year')">
+                <form class="v-form" action="" method="get">
                     <div class="input-group">
                         @if($year and $month)
                             <span class="input-group-addon">
@@ -24,14 +24,14 @@
                                 </a>
                             </span>
                         @endif
-                        <select class="form-control" id="month" name="month" style="width: 60%">
+                        <select class="form-control v-void" id="month" name="month" style="width: 60%">
                             <option value="">M&ecirc;s</option>
                             @foreach(Period::getMonths() as $key => $value)
                                 <option value="{{ $key }}"
                                         @if($key == $month) selected @endif>{{ $value }}</option>
                             @endforeach
                         </select>
-                        <select class="form-control" id="year" name="year" style="width: 40%">
+                        <select class="form-control v-void" id="year" name="year" style="width: 40%">
                             <option value="">Ano</option>
                             @foreach(Period::getYears() as $value)
                                 <option value="{{ $value }}"
