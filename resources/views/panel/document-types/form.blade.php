@@ -21,7 +21,7 @@
 
                         @include('includes.form-validate')
 
-                        <form id="company-form" method="post" action="{{ route($route, $parameters) }}">
+                        <form class="v-form" method="post" action="{{ route($route, $parameters) }}">
 
                             {!! method_field($method) !!}
                             {!! csrf_field() !!}
@@ -29,7 +29,7 @@
                             <div class="form-group col-xs-8">
                                 <label for="name">Nome* :</label>
                                 <input type="text" id="name" name="name" value="{{ $documentType->name or old('name') }}"
-                                       class="form-control">
+                                       class="form-control v-void">
                             </div>
 
                             <div class="clearfix"></div>

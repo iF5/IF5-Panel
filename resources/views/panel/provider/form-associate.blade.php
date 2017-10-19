@@ -23,14 +23,14 @@
                             </div>
                         @endif
 
-                        <form class="form-inline" method="post" action="{{ route('provider.associate') }}">
+                        <form class="form-inline v-form" method="post" action="{{ route('provider.associate') }}">
                             {{ method_field('POST') }}
                             {{ csrf_field() }}
                             <input type="hidden" name="action" value="search"/>
                             <div class="input-group">
                                 <span class="input-group-addon">Digite o CNPJ
                             </span>
-                                <input type="text" id="cnpj" name="cnpj" value="{{ $cnpj }}" class="form-control">
+                                <input type="text" id="cnpj" name="cnpj" value="{{ $cnpj }}" class="form-control v-cnpj">
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-default" id="form-provider-associate"><i class="glyphicon glyphicon-search"></i>
                                 </button>

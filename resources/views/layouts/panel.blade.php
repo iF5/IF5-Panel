@@ -294,7 +294,6 @@
 <script src="{{ asset('build/js/custom.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/validate.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/if5.js') }}" type="text/javascript"></script>
-<!--<script src="{{ asset('js/validator.js') }}" type="text/javascript"></script>-->
 
 </body>
 </html>

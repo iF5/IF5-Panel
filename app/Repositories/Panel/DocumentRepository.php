@@ -64,7 +64,7 @@ class DocumentRepository extends Document
     }
 
     /**
-     * @param int $periodicityq
+     * @param int $periodicity
      * @param int $entityGroup
      * @param array $documents
      * @return mixed

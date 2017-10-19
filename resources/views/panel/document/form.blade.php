@@ -22,7 +22,7 @@
                     <!-- form validate -->
                     @include('includes.form-validate')
 
-                    <form id="document-form" method="post" action="{{ route($route, $parameters) }}">
+                    <form class="v-form" method="post" action="{{ route($route, $parameters) }}">
                         {!! method_field($method) !!}
                         {!! csrf_field() !!}
 
@@ -30,7 +30,7 @@
                             <div class="form-group col-sm-5">
                                 <label for="name">Nome* :</label>
                                 <input type="text" id="name" name="name" value="{{ $document->name or old('name') }}"
-                                       class="form-control">
+                                       class="form-control v-void">
                             </div>
                         </div>
                         <div class="row">
@@ -38,7 +38,7 @@
                                 <label for="cpf">Validade em dias* :</label>
                                 <input type="text" id="validity" name="validity"
                                        value="{{ $document->validity or old('validity') }}"
-                                       class="form-control col-sm-1" placeholder="Apenas n&uacute;meros">
+                                       class="form-control col-sm-1 v-number" placeholder="Apenas n&uacute;meros">
                             </div>
                         </div>
                         <div class="row">

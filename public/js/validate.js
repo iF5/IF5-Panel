@@ -145,6 +145,14 @@ function Validate() {
     }
 
     /**
+     * @param element
+     */
+    function scrollToElement(element) {
+        var to = parseInt($(element).offset().top) - 100;
+        $('html, body').animate({scrollTop: to}, 300);
+    }
+
+    /**
      * Routine to customize regular expression
      *
      * @param {string} key
@@ -161,13 +169,6 @@ function Validate() {
     this.setErrorBorderColor = function (value) {
         errorBorderColor = value;
     };
-
-    /**
-     * @param element
-     */
-    function scrollToElement(element) {
-        $('html, body').animate({scrollTop: parseInt($(element).offset().top) - 300}, 300);
-    }
 
     /**
      * Routine to validate data entry of type text, based on the parameter "type" .: [CEP, CNPJ, CPF, DATE, DDD, EMAIL, NUMBER, PHONE, RG, VOID]
@@ -206,12 +207,12 @@ function Validate() {
                 throw {messages: messages, fields: fields};
             }
         } catch (e) {
-            var firstItem = false;
+            var first = true;
             for (var i in e.fields) {
                 $(i).css({'border-color': errorBorderColor});
-                if (!firstItem) {
+                if (first) {
                     scrollToElement(i);
-                    firstItem = i;
+                    first = false;
                 }
             }
             response = {isSuccess: false, messages: e.messages};

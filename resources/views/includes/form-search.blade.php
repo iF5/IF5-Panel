@@ -1,4 +1,4 @@
-<form action="{{ route(\Route::getCurrentRoute()->getName()) }}" method="get">
+<form action="{{ route(\Route::getCurrentRoute()->getName()) }}" method="get" class="v-form">
     <div class="input-group">
         @if($keyword)
             <span class="input-group-addon">
@@ -7,10 +7,11 @@
                                 </a>
                             </span>
         @endif
-        <input class="form-control" type="text" id="keyword" name="keyword" placeholder="Buscar por"
+        <input class="form-control v-void" type="text" id="keyword" name="keyword" placeholder="Buscar por"
                value="{{ $keyword }}">
                             <span class="input-group-btn">
-                                <button type="submit" class="btn btn-default" id="btn-search"><i class="glyphicon glyphicon-search"></i>
+                                <button type="submit" class="btn btn-default" id="btn-search"><i
+                                            class="glyphicon glyphicon-search"></i>
                                 </button>
                             </span>
     </div>

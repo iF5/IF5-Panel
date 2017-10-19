@@ -119,6 +119,7 @@ function If5Modal() {
 function If5Form() {
 
     var vClasses = {
+        'v-void': 'VOID',
         'v-cep': 'CEP',
         'v-cnpj': 'CNPJ',
         'v-cpf': 'CPF',
@@ -127,34 +128,15 @@ function If5Form() {
         'v-email': 'EMAIL',
         'v-number': 'NUMBER',
         'v-phone': 'PHONE',
-        'v-rg': 'RG',
-        'v-void': 'VOID'
-    };
-
-    /**
-     * @param form
-     * @param queryString
-     * @param type
-     */
-    this.addInput = function (form, queryString, type) {
-        var all = queryString.split('&');
-        for (var i = 0; all.length; i++) {
-            var row = all[i].split('=');
-            var input = $('<input>').attr({
-                'type': (type === undefined) ? 'hidden' : type,
-                'name': row[0],
-                'value': row[1]
-            });
-            $(form).append(input);
-        }
+        'v-rg': 'RG'
     };
 
     /**
      * On validate all form by class apply
      *
-     * @param validateObject
+     * @param vObject
      */
-    this.onValidate = function (validateObject) {
+    this.onValidate = function (vObject) {
 
         var fields = 'input,select,textarea';
         /**
@@ -178,9 +160,8 @@ function If5Form() {
                 }
             });
 
-            var response = validateObject.assert(options);
+            var response = vObject.assert(options);
             if (!response.isSuccess) {
-                new If5Modal().alert();
                 e.preventDefault();
             }
         });
@@ -188,9 +169,27 @@ function If5Form() {
         /**
          * Reset fields border color
          */
-        $(fields).on('click', function () {
+        $(fields).on('focus', function () {
             $(this).css('border', '');
         });
+    };
+
+    /**
+     * @param form
+     * @param queryString
+     * @param type
+     */
+    this.addInput = function (form, queryString, type) {
+        var all = queryString.split('&');
+        for (var i = 0; all.length; i++) {
+            var row = all[i].split('=');
+            var input = $('<input>').attr({
+                'type': (type === undefined) ? 'hidden' : type,
+                'name': row[0],
+                'value': row[1]
+            });
+            $(form).append(input);
+        }
     };
 }
 
@@ -263,7 +262,7 @@ $(function () {
         var response = validate.assert(data);
 
         if (!response.isSuccess) {
-            if5Modal.alert();
+            //if5Modal.alert();
             return false;
         }
 
@@ -333,6 +332,8 @@ $(function () {
      */
     $('#cep').on('blur', function () {
         var cep = this.value.replace('-', '');
+
+        alert(cep);
         $.ajax({
             url: 'http://correiosapi.apphb.com/cep/' + cep,
             dataType: 'jsonp',
@@ -356,12 +357,11 @@ $(function () {
     });
 
     /**
-     *
+     * On selected all checkbox
      */
     $('.checkbox-on-all').on('click', function () {
         $('.checkbox-on-item').prop('checked', this.checked);
     });
-
 
     /**
      * Masks
