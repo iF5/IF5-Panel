@@ -332,8 +332,6 @@ $(function () {
      */
     $('#cep').on('blur', function () {
         var cep = this.value.replace('-', '');
-
-        alert(cep);
         $.ajax({
             url: 'http://correiosapi.apphb.com/cep/' + cep,
             dataType: 'jsonp',
