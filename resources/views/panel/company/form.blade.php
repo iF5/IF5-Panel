@@ -82,7 +82,7 @@
                             <div class="form-group col-xs-4">
                                 <label for="cep">CEP* :</label>
                                 <input type="text" id="cep" name="cep" value="{{ $company->cep or old('cep') }}"
-                                       class="form-control v-cep">
+                                       class="form-control">
                             </div>
                             <div class="form-group col-xs-4">
                                 <label for="street">Logradouro* :</label>
@@ -136,7 +136,7 @@
                                 <label for="email">E-mail* :</label>
                                 <input id="email" name="email"
                                        value="{{ $company->email or old('email') }}"
-                                       class="form-control v-email">
+                                       class="form-control">
                             </div>
 
                             <!-- Documents -->
