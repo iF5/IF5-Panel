@@ -203,6 +203,22 @@ class ChecklistController extends Controller
         return response()->json($upload);
     }
 
+    public function showPdf()
+    {
+        echo url('/');
+
+        ///src/IF5-Panel/storage/upload/documents/companies/2017/10/1/11-teste-10-2017.pdf
+        //11-teste-10-2017.pdf
+        //$pdf = sprintf('%s11-teste-10-2017.pdf', $this->getDir(2017, 10));
+
+        $pdf = sprintf('%s/../storage/upload/documents/companies/2017/10/1/11-teste-10-2017.pdf', url('/'));
+
+        return view('panel.checklist.show', [
+            'pdf' => $pdf,
+            'breadcrumbs' => $this->getBreadcrumb('Checklist')
+        ]);
+    }
+
     /**
      * @param Request $request
      * @return array|object

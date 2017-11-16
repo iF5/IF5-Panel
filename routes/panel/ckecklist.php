@@ -3,8 +3,8 @@
 Route::get('checklist-company/{id}/identify', 'Panel\ChecklistController@identify')
     ->middleware('can:onlyAdmin')->name('checklist.company.identify');
 
-Route::get('checklist-company/{periodicity}', 'Panel\ChecklistController@index')
-    ->middleware('can:isCompany')->name('checklist.company.index');
+Route::get('checklist-company/show-pdf', 'Panel\ChecklistController@showPdf')
+    ->middleware('can:isCompany')->name('checklist.company.show.pdf');
 
 Route::post('checklist-company/store', 'Panel\ChecklistController@store')
     ->middleware('can:isCompany')->name('checklist.company.store');
@@ -18,3 +18,5 @@ Route::put('checklist-company/approve', 'Panel\ChecklistController@approve')
 Route::put('checklist-company/disapprove', 'Panel\ChecklistController@disapprove')
     ->middleware('can:onlyAdmin')->name('checklist.company.disapprove');
 
+Route::get('checklist-company/{periodicity}', 'Panel\ChecklistController@index')
+    ->middleware('can:isCompany')->name('checklist.company.index');
