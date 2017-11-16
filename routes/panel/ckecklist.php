@@ -3,7 +3,7 @@
 Route::get('checklist-company/{id}/identify', 'Panel\ChecklistController@identify')
     ->middleware('can:onlyAdmin')->name('checklist.company.identify');
 
-Route::get('checklist-company/show-pdf', 'Panel\ChecklistController@showPdf')
+Route::get('checklist-company/{entityGroup}/{entityId}/{documentId}/{referenceDate}/show-pdf', 'Panel\ChecklistController@showPdf')
     ->middleware('can:isCompany')->name('checklist.company.show.pdf');
 
 Route::post('checklist-company/store', 'Panel\ChecklistController@store')

@@ -92,25 +92,16 @@
                                         @if($document->status)
                                             <ul class="dropdown-menu" role="menu">
                                                 <li>
-                                                    <a href="{{ route('checklist.company.download', [
+                                                    <a href="{{ route('checklist.company.show.pdf', [
                                                         $document->entityGroup,
                                                         $document->entityId,
                                                         $document->documentId,
                                                         $document->referenceDate
-                                                        ]) }}">Baixar</a>
-                                                </li>
-                                                @can('onlyAdmin')
-                                                <li>
-                                                    <a href="{{ route('checklist.company.approve') }}"
-                                                       class="checklist-approve"
-                                                       rel="{{$document->id}}">Aprovar</a>
+                                                        ]) }}">Visualizar</a>
                                                 </li>
                                                 <li>
-                                                    <a href="{{ route('checklist.company.disapprove') }}"
-                                                       class="checklist-disapprove"
-                                                       rel="{{$document->id}}">Reprovar</a>
+                                                    <a href="http://localhost:4545/IF5-Panel/public/../storage/upload/documents/companies/2017/11/2/2-termo-de-responsabilidade-e-uso-da-informacao-11-2017.pdf" download>Baixar</a>
                                                 </li>
-                                                @endcan
                                             </ul>
                                         @endif
                                     </div>
