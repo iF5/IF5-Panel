@@ -289,7 +289,7 @@ $(function () {
         e.preventDefault();
         if5Modal.confirm('Tem certeza que deseja aprovar esse documento?');
         var form = $('#form-modal-confirm').attr({'action': this.href});
-        if5Form.addInput(form, $('#data' + this.rel).val());
+        if5Form.addInput(form, $('#queryStringData').val());
         form.submit();
     });
 
@@ -300,7 +300,7 @@ $(function () {
         e.preventDefault();
         $('#modal-observation').modal('show');
         var form = $('#form-modal-observation').attr({'action': this.href});
-        if5Form.addInput(form, $('#data' + this.rel).val());
+        if5Form.addInput(form, $('#queryStringData').val());
         form.submit();
     });
 

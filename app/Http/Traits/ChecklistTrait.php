@@ -39,6 +39,14 @@ trait ChecklistTrait
     /**
      * @return int
      */
+    protected function getEntityGroup()
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
     protected function getEntityId()
     {
         return 0;
@@ -99,6 +107,17 @@ trait ChecklistTrait
         );
     }
 
+    /**
+     * @param int $year
+     * @param int $month
+     * @return string
+     */
+    protected function getDirWithHost($year, $month)
+    {
+        return sprintf('%s/../storage/upload/documents/%s/%d/%d/%d/',
+            url('/'), $this->getEntityName(), $year, $month, $this->getEntityId()
+        );
+    }
 
     /**
      * @param Request $request
@@ -117,6 +136,29 @@ trait ChecklistTrait
             'periodicities' => $this->getPeriodicities(),
             'periodicity' => (int)$periodicity,
             'documents' => $this->getDocuments($year, $month, $periodicity),
+            'pathFile' => $this->getDirWithHost($year, $month),
+            'breadcrumbs' => $this->getBreadcrumb('Checklist')
+        ]);
+    }
+
+    public function showPdf($documentId, $referenceDate, $periodicity)
+    {
+        $document = (new DocumentChecklistRepository())->findBy(
+            $this->getEntityGroup(),
+            $this->getEntityId(),
+            $documentId,
+            $referenceDate
+        )->first();
+
+        $year = $this->toReferenceDate($referenceDate, 'Y');
+        $month = $this->toReferenceDate($referenceDate, 'm');
+        $queryStringData = sprintf('entityGroup=%d&entityId=%d&documentId=%d&referenceDate=%s&periodicity=%d',
+            $this->getEntityGroup(), $this->getEntityId(), $documentId, $referenceDate, $periodicity
+        );
+
+        return view('panel.checklist.show', [
+            'pdf' => sprintf('%s%s', $this->getDirWithHost($year, $month), $document->fileName),
+            'queryStringData' => $queryStringData,
             'breadcrumbs' => $this->getBreadcrumb('Checklist')
         ]);
     }
@@ -134,7 +176,7 @@ trait ChecklistTrait
         $upload = $this->upload($request);
         if (!$upload->error) {
             $documentChecklistRepository->createOrUpdate([
-                'entityGroup' => 1,
+                'entityGroup' => $this->getEntityGroup(),
                 'entityId' => $this->getEntityId(),
                 'documentId' => $request->get('documentId'),
                 'referenceDate' => sprintf('%d-%d-01', $request->get('year'), $request->get('month')),

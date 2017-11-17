@@ -21,6 +21,10 @@
                     </object>
                 </div>
                 <div class="row" style="float: left; margin: 50px 0px;">
+
+                    <input type="hidden" id="queryStringData"
+                           value="{{ $queryStringData }}"/>
+
                     <a href="{{ route('checklist.company.approve') }}"
                        class="btn btn-success btn-lg checklist-approve" title="Aprovar"
                        rel="0"><span

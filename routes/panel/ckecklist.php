@@ -1,22 +1,23 @@
 <?php
 
-Route::get('checklist-company/{id}/identify', 'Panel\ChecklistController@identify')
+/**
+ * For company
+ */
+
+Route::get('checklist-company/{id}/identify', 'Panel\ChecklistCompanyController@identify')
     ->middleware('can:onlyAdmin')->name('checklist.company.identify');
 
-Route::get('checklist-company/{entityGroup}/{entityId}/{documentId}/{referenceDate}/show-pdf', 'Panel\ChecklistController@showPdf')
+Route::get('checklist-company/{documentId}/{referenceDate}/{periodicity}/show-pdf', 'Panel\ChecklistCompanyController@showPdf')
     ->middleware('can:isCompany')->name('checklist.company.show.pdf');
 
-Route::post('checklist-company/store', 'Panel\ChecklistController@store')
+Route::post('checklist-company/store', 'Panel\ChecklistCompanyController@store')
     ->middleware('can:isCompany')->name('checklist.company.store');
 
-Route::get('checklist-company/download/{entityGroup}/{entityId}/{documentId}/{referenceDate}', 'Panel\ChecklistController@download')
-    ->middleware('can:isCompany')->name('checklist.company.download');
-
-Route::put('checklist-company/approve', 'Panel\ChecklistController@approve')
+Route::put('checklist-company/approve', 'Panel\ChecklistCompanyController@approve')
     ->middleware('can:onlyAdmin')->name('checklist.company.approve');
 
-Route::put('checklist-company/disapprove', 'Panel\ChecklistController@disapprove')
+Route::put('checklist-company/disapprove', 'Panel\ChecklistCompanyController@disapprove')
     ->middleware('can:onlyAdmin')->name('checklist.company.disapprove');
 
-Route::get('checklist-company/{periodicity}', 'Panel\ChecklistController@index')
+Route::get('checklist-company/{periodicity}', 'Panel\ChecklistCompanyController@index')
     ->middleware('can:isCompany')->name('checklist.company.index');

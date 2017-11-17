@@ -134,7 +134,7 @@ class ChecklistController extends Controller
      */
     protected function getDir($year, $month)
     {
-        return sprintf('%s/upload/documents/companies/%d/%d/%d/',
+        return sprintf('%s/upload/documents/company/%d/%d/%d/',
             storage_path(), $year, $month, $this->getCompanyId()
         );
     }
@@ -206,11 +206,11 @@ class ChecklistController extends Controller
     public function showPdf()
     {
 
-        ///src/IF5-Panel/storage/upload/documents/companies/2017/10/1/11-teste-10-2017.pdf
+        ///src/IF5-Panel/storage/upload/documents/company/2017/10/1/11-teste-10-2017.pdf
         //11-teste-10-2017.pdf
         //$pdf = sprintf('%s11-teste-10-2017.pdf', $this->getDir(2017, 10));
 
-        $pdf = sprintf('%s/../storage/upload/documents/companies/2017/11/2/2-termo-de-responsabilidade-e-uso-da-informacao-11-2017.pdf', url('/'));
+        $pdf = sprintf('%s/../storage/upload/documents/company/2017/11/2/2-termo-de-responsabilidade-e-uso-da-informacao-11-2017.pdf', url('/'));
 
 
         return view('panel.checklist.show', [
