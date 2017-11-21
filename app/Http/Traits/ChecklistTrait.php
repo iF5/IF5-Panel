@@ -141,6 +141,12 @@ trait ChecklistTrait
         ]);
     }
 
+    /**
+     * @param $documentId
+     * @param $referenceDate
+     * @param $periodicity
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function showPdf($documentId, $referenceDate, $periodicity)
     {
         $document = (new DocumentChecklistRepository())->findBy(
@@ -157,6 +163,7 @@ trait ChecklistTrait
         );
 
         return view('panel.checklist.show', [
+            'document' => $document,
             'pdf' => sprintf('%s%s', $this->getDirWithHost($year, $month), $document->fileName),
             'queryStringData' => $queryStringData,
             'breadcrumbs' => $this->getBreadcrumb('Checklist')
