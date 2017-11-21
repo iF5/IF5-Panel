@@ -55,6 +55,14 @@ class ChecklistCompanyController extends Controller
     }
 
     /**
+     * @return string
+     */
+    protected function logTitle()
+    {
+        return 'Checklist clientes';
+    }
+
+    /**
      * @return int
      */
     protected function getEntityGroup()
@@ -75,7 +83,7 @@ class ChecklistCompanyController extends Controller
      */
     protected function getEntityName()
     {
-        return 'companies';
+        return 'company';
     }
 
     /**
@@ -85,7 +93,7 @@ class ChecklistCompanyController extends Controller
     public function identify($id)
     {
         \Session::put('company', $this->companyRepository->findById($id));
-        return redirect()->route('checklist.company.index', [1]);
+        return redirect()->route('checklist.company.index', [$this->getEntityGroup()]);
     }
 
     /**
@@ -108,13 +116,15 @@ class ChecklistCompanyController extends Controller
     }
 
     /**
+     * @param array $parameters
      * @param null $location
-     * @return array
+     * @return object
      */
-    protected function getBreadcrumb($location = null)
+    protected function getBreadcrumb($parameters = [], $location = null)
     {
         return $this->breadcrumbService->push([
             'Clientes' => route('company.index'),
+            'Checklist' => route('checklist.company.index', $parameters),
             $location => null
         ])->get();
     }

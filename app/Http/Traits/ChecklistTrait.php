@@ -72,10 +72,11 @@ trait ChecklistTrait
     }
 
     /**
+     * @param $parameters
      * @param null $location
      * @return array
      */
-    protected function getBreadcrumb($location = null)
+    protected function getBreadcrumb($parameters, $location = null)
     {
         return [];
     }
@@ -137,7 +138,11 @@ trait ChecklistTrait
             'periodicity' => (int)$periodicity,
             'documents' => $this->getDocuments($year, $month, $periodicity),
             'pathFile' => $this->getDirWithHost($year, $month),
-            'breadcrumbs' => $this->getBreadcrumb('Checklist')
+            'breadcrumbs' => $this->getBreadcrumb([
+                $periodicity,
+                'month' => $month,
+                'year' => $year
+            ], 'Documento')
         ]);
     }
 
@@ -158,15 +163,22 @@ trait ChecklistTrait
 
         $year = $this->toReferenceDate($referenceDate, 'Y');
         $month = $this->toReferenceDate($referenceDate, 'm');
+        $parameters = [$periodicity, 'month' => $month, 'year' => $year];
+
+        if (!$document) {
+            return redirect()->route(sprintf('checklist.%s.index', $this->getEntityName()), $parameters);
+        }
+
         $queryStringData = sprintf('entityGroup=%d&entityId=%d&documentId=%d&referenceDate=%s&periodicity=%d',
             $this->getEntityGroup(), $this->getEntityId(), $documentId, $referenceDate, $periodicity
         );
 
         return view('panel.checklist.show', [
             'document' => $document,
+            'status' => $this->status,
             'pdf' => sprintf('%s%s', $this->getDirWithHost($year, $month), $document->fileName),
             'queryStringData' => $queryStringData,
-            'breadcrumbs' => $this->getBreadcrumb('Checklist')
+            'breadcrumbs' => $this->getBreadcrumb($parameters, 'Documento')
         ]);
     }
 
@@ -223,6 +235,57 @@ trait ChecklistTrait
             );
     }
 
+
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function approve(Request $request)
+    {
+        $this->update($request, [
+            'status' => 2,
+            'approvedAt' => (new \DateTime())->format('Y-m-d H:i:s')
+        ]);
+
+        return redirect()->back();
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function disapprove(Request $request)
+    {
+        $this->update($request, [
+            'status' => 3,
+            'observation' => $request->get('observation'),
+            'approvedAt' => null,
+            'reusedAt' => (new \DateTime())->format('Y-m-d H:i:s')
+        ]);
+
+        return redirect()->back();
+    }
+
+    /**
+     * @param Request $request
+     * @param array $data
+     */
+    protected function update(Request $request, $data)
+    {
+        $this->createLog('POST', [
+            'checklistStatus' => ($data['status'] === 3) ? 'disapprove' : 'approve',
+            'referenceDate' => $this->toReferenceDate($request->get('referenceDate'), 'm/Y')
+        ]);
+
+        (new DocumentChecklistRepository())->findBy(
+            $request->get('entityGroup'),
+            $request->get('entityId'),
+            $request->get('documentId'),
+            $request->get('referenceDate')
+        )->update($data);
+    }
+
     /**
      * @param DocumentChecklistRepository $documentChecklistRepository
      * @param int $entityGroup
@@ -231,7 +294,7 @@ trait ChecklistTrait
      * @param string $referenceDate
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function download(
+    /*public function download(
         DocumentChecklistRepository $documentChecklistRepository,
         $entityGroup,
         $entityId,
@@ -250,63 +313,6 @@ trait ChecklistTrait
         return response()->download(
             $this->getDir($year, $month) . $document->fileName
         );
-    }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function approve(Request $request)
-    {
-        $this->update($request, [
-            'status' => 2,
-            'approvedAt' => (new \DateTime())->format('Y-m-d H:i:s')
-        ]);
-
-        return redirect()->route(sprintf('checklist.%s.index', $this->getEntityName()), [
-            $request->get('periodicity'),
-            'month' => $this->toReferenceDate($request->get('referenceDate'), 'm'),
-            'year' => $this->toReferenceDate($request->get('referenceDate'), 'Y')
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function disapprove(Request $request)
-    {
-        $this->update($request, [
-            'status' => 3,
-            'observation' => $request->get('observation'),
-            'approvedAt' => null,
-            'reusedAt' => (new \DateTime())->format('Y-m-d H:i:s')
-        ]);
-
-        return redirect()->route(sprintf('checklist.%s.index', $this->getEntityName()), [
-            $request->get('periodicity'),
-            'month' => $this->toReferenceDate($request->get('referenceDate'), 'm'),
-            'year' => $this->toReferenceDate($request->get('referenceDate'), 'Y')
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @param array $data
-     */
-    protected function update(Request $request, $data)
-    {
-        $this->createLog('POST', [
-            'checklistStatus' =>  ($data['status'] === 3) ? 'disapprove' : 'approve',
-            'referenceDate' => $this->toReferenceDate($request->get('referenceDate'), 'm/Y')
-        ]);
-
-        (new DocumentChecklistRepository())->findBy(
-            $request->get('entityGroup'),
-            $request->get('entityId'),
-            $request->get('documentId'),
-            $request->get('referenceDate')
-        )->update($data);
-    }
+    }*/
 
 }

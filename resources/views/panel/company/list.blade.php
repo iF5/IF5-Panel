@@ -46,7 +46,7 @@
                                                 <a href="{{ route('company.show', ['id' => $company->id]) }}">Abrir</a>
                                             </li>
                                             <li>
-                                                <a href="{{ route('checklist.company.identify', $company->id) }}">Documentos</a>
+                                                <a href="{{ route('checklist.company.identify', $company->id) }}">Checklist</a>
                                             </li>
                                             <li>
                                                 <a href="{{ route('report.identify', $company->id) }}">Relat&oacute;rios</a>
