@@ -76,7 +76,6 @@ class CompanyRepository extends Company
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
-
     }
 
 }

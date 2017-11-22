@@ -21,3 +21,25 @@ Route::put('checklist-company/disapprove', 'Panel\ChecklistCompanyController@dis
 
 Route::get('checklist-company/{periodicity}', 'Panel\ChecklistCompanyController@index')
     ->middleware('can:isCompany')->name('checklist.company.index');
+
+/**
+ * For provider
+ */
+
+Route::get('checklist-provider/{id}/identify', 'Panel\ChecklistProviderController@identify')
+    ->middleware('can:onlyAdmin')->name('checklist.provider.identify');
+
+Route::get('checklist-provider/{documentId}/{referenceDate}/{periodicity}/show-pdf', 'Panel\ChecklistProviderController@showPdf')
+    ->middleware('can:isProvider')->name('checklist.provider.show.pdf');
+
+Route::post('checklist-provider/store', 'Panel\ChecklistProviderController@store')
+    ->middleware('can:isProvider')->name('checklist.provider.store');
+
+Route::put('checklist-provider/approve', 'Panel\ChecklistProviderController@approve')
+    ->middleware('can:onlyAdmin')->name('checklist.provider.approve');
+
+Route::put('checklist-provider/disapprove', 'Panel\ChecklistProviderController@disapprove')
+    ->middleware('can:onlyAdmin')->name('checklist.provider.disapprove');
+
+Route::get('checklist-provider/{periodicity}', 'Panel\ChecklistProviderController@index')
+    ->middleware('can:isProvider')->name('checklist.provider.index');

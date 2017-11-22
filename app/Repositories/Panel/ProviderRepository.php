@@ -100,7 +100,7 @@ class ProviderRepository extends Provider
             return Provider::join('companies_has_providers', function ($join) {
                 return $join->on('companies_has_providers.providerId', '=', 'providers.id');
             })
-                ->join('companies', function($join){
+                ->join('companies', function ($join) {
                     return $join->on('companies.id', '=', 'companies_has_providers.companyId');
                 })
                 ->select(
@@ -120,7 +120,8 @@ class ProviderRepository extends Provider
      * @param int $companyId
      * @return mixed
      */
-    public function findByCompany($id, $companyId){
+    public function findByCompany($id, $companyId)
+    {
         try {
             return Provider::join('companies_has_providers', function ($join) {
                 return $join->on('companies_has_providers.providerId', '=', 'providers.id');
@@ -129,6 +130,19 @@ class ProviderRepository extends Provider
                     ['providers.id', '=', $id],
                     ['companies_has_providers.companyId', '=', $companyId]
                 ])->first();
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function findDocuments($id)
+    {
+        try {
+            return json_decode($this->find($id)->documents, true);
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }

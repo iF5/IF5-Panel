@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ChecklistTrait;
-use App\Repositories\Panel\CompanyRepository;
+use App\Repositories\Panel\ProviderRepository;
 use App\Repositories\Panel\DocumentChecklistRepository;
 use App\Repositories\Panel\DocumentRepository;
 use App\Services\BreadcrumbService;
-use App\Facades\Company;
+use App\Facades\Provider;
 
-class ChecklistCompanyController extends Controller
+class ChecklistProviderController extends Controller
 {
 
     use ChecklistTrait;
@@ -21,9 +21,9 @@ class ChecklistCompanyController extends Controller
     private $documentChecklistRepository;
 
     /**
-     * @var CompanyRepository
+     * @var ProviderRepository
      */
-    private $companyRepository;
+    private $providerRepository;
 
     /**
      * @var DocumentRepository
@@ -36,21 +36,21 @@ class ChecklistCompanyController extends Controller
     private $breadcrumbService;
 
     /**
-     * ChecklistController constructor.
+     * ChecklistProviderController constructor.
      * @param DocumentChecklistRepository $documentChecklistRepository
-     * @param CompanyRepository $companyRepository
+     * @param ProviderRepository $providerRepository
      * @param DocumentRepository $documentRepository
      * @param BreadcrumbService $breadcrumbService
      */
     public function __construct(
         DocumentChecklistRepository $documentChecklistRepository,
-        CompanyRepository $companyRepository,
+        ProviderRepository $providerRepository,
         DocumentRepository $documentRepository,
         BreadcrumbService $breadcrumbService
     )
     {
         $this->documentChecklistRepository = $documentChecklistRepository;
-        $this->companyRepository = $companyRepository;
+        $this->providerRepository = $providerRepository;
         $this->documentRepository = $documentRepository;
         $this->breadcrumbService = $breadcrumbService;
     }
@@ -60,7 +60,7 @@ class ChecklistCompanyController extends Controller
      */
     protected function logTitle()
     {
-        return 'Checklist clientes';
+        return 'Checklist prestadores de servi&ccedil;os';
     }
 
     /**
@@ -68,7 +68,7 @@ class ChecklistCompanyController extends Controller
      */
     protected function getEntityGroup()
     {
-        return Company::ID;
+        return Provider::ID;
     }
 
     /**
@@ -76,7 +76,7 @@ class ChecklistCompanyController extends Controller
      */
     protected function getEntityName()
     {
-        return Company::LABEL;
+        return Provider::LABEL;
     }
 
     /**
@@ -84,7 +84,7 @@ class ChecklistCompanyController extends Controller
      */
     protected function getEntityId()
     {
-        return Company::getCurrentId();
+        return Provider::getCurrentId();
     }
 
     /**
@@ -93,8 +93,8 @@ class ChecklistCompanyController extends Controller
      */
     public function identify($id)
     {
-        Company::persist($this->companyRepository->findById($id));
-        return redirect()->route('checklist.company.index', [1]);
+        Provider::persist($this->providerRepository->findById($id));
+        return redirect()->route('checklist.provider.index', [1]);
     }
 
     /**
@@ -112,7 +112,7 @@ class ChecklistCompanyController extends Controller
         }
 
         return $this->documentRepository->findByChecklist(
-            $periodicity, $this->getEntityGroup(), $this->companyRepository->findDocuments($this->getEntityId())
+            $periodicity, $this->getEntityGroup(), $this->providerRepository->findDocuments($this->getEntityId())
         );
     }
 
@@ -125,6 +125,7 @@ class ChecklistCompanyController extends Controller
     {
         return $this->breadcrumbService->push([
             'Clientes' => route('company.index'),
+            'Prestadores de serviços' => route('provider.index'),
             'Checklist' => route('checklist.company.index', $parameters),
             $location => null
         ])->get();

@@ -49,6 +49,9 @@
                                             </li>
                                             @if($provider->status)
                                                 <li>
+                                                    <a href="{{ route('checklist.provider.identify', $provider->id) }}">Checklist</a>
+                                                </li>
+                                                <li>
                                                     <a href="{{ route('employee.identify', [$provider->id]) }}">Funcion&aacute;rios</a>
                                                 </li>
                                                 <li>

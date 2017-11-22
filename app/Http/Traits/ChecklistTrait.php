@@ -41,15 +41,7 @@ trait ChecklistTrait
      */
     protected function getEntityGroup()
     {
-        return 0;
-    }
-
-    /**
-     * @return int
-     */
-    protected function getEntityId()
-    {
-        return 0;
+        return;
     }
 
     /**
@@ -57,7 +49,15 @@ trait ChecklistTrait
      */
     protected function getEntityName()
     {
-        return null;
+        return;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getEntityId()
+    {
+        return;
     }
 
     /**
@@ -86,7 +86,7 @@ trait ChecklistTrait
      * @param string $format
      * @return string
      */
-    protected function toReferenceDate($referenceDate, $format = 'Y-m-d')
+    protected function toDate($referenceDate, $format = 'Y-m-d')
     {
         $referenceDate = str_replace('/', '-', $referenceDate);
         if (strlen($referenceDate) < 10) {
@@ -134,6 +134,7 @@ trait ChecklistTrait
             'year' => $year,
             'month' => $month,
             'status' => $this->status,
+            'entityName' => $this->getEntityName(),
             'periodicities' => $this->getPeriodicities(),
             'periodicity' => (int)$periodicity,
             'documents' => $this->getDocuments($year, $month, $periodicity),
@@ -158,8 +159,8 @@ trait ChecklistTrait
             $this->getEntityGroup(), $this->getEntityId(), $documentId, $referenceDate
         );
 
-        $year = $this->toReferenceDate($referenceDate, 'Y');
-        $month = $this->toReferenceDate($referenceDate, 'm');
+        $year = $this->toDate($referenceDate, 'Y');
+        $month = $this->toDate($referenceDate, 'm');
         $parameters = [$periodicity, 'month' => $month, 'year' => $year];
 
         if (!$document) {
@@ -271,7 +272,7 @@ trait ChecklistTrait
     {
         $this->createLog('POST', [
             'checklistStatus' => ($data['status'] === 3) ? 'disapprove' : 'approve',
-            'referenceDate' => $this->toReferenceDate($request->get('referenceDate'), 'm/Y')
+            'referenceDate' => $this->toDate($request->get('referenceDate'), 'm/Y')
         ]);
 
         (new DocumentChecklistRepository())->findBy(
@@ -302,8 +303,8 @@ trait ChecklistTrait
             $entityGroup, $entityId, $documentId, $referenceDate
         )->first();
 
-        $year = $this->toReferenceDate($referenceDate, 'Y');
-        $month = $this->toReferenceDate($referenceDate, 'm');
+        $year = $this->toDate($referenceDate, 'Y');
+        $month = $this->toDate($referenceDate, 'm');
 
         $this->createLog('GET', ['downloadFile' => $document->fileName]);
         return response()->download(
