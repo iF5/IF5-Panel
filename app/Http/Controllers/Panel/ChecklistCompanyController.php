@@ -105,7 +105,7 @@ class ChecklistCompanyController extends Controller
     protected function getDocuments($year, $month, $periodicity)
     {
         if ($year && $month) {
-            return $this->documentChecklistRepository->findDocumentByChecklist(
+            return $this->documentChecklistRepository->findByDocument(
                 sprintf('%d-%d-01', $year, $month), $periodicity, $this->getEntityGroup()
             );
         }

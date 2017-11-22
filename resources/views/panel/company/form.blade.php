@@ -171,6 +171,13 @@
                             </div>
                             <!-- End Documents -->
 
+                            <div class="form-group col-xs-3">
+                                <label for="startAt">Come&ccedil;ar analisar apartir de* :</label>
+                                <input id="startAt" name="startAt"
+                                       value="{{ $company->startAt or old('startAt') }}"
+                                       class="form-control dateMask v-void">
+                            </div>
+
                             <div class="clearfix"></div>
                             <div class="control-group" style="margin: 30px 0px 0px 12px;">
                                 <button type="submit" class="btn btn-success" id="btn-company-form">Salvar</button>

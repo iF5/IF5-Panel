@@ -154,12 +154,9 @@ trait ChecklistTrait
      */
     public function showPdf($documentId, $referenceDate, $periodicity)
     {
-        $document = (new DocumentChecklistRepository())->findBy(
-            $this->getEntityGroup(),
-            $this->getEntityId(),
-            $documentId,
-            $referenceDate
-        )->first();
+        $document = (new DocumentChecklistRepository())->findFirstBy(
+            $this->getEntityGroup(), $this->getEntityId(), $documentId, $referenceDate
+        );
 
         $year = $this->toReferenceDate($referenceDate, 'Y');
         $month = $this->toReferenceDate($referenceDate, 'm');
@@ -234,7 +231,6 @@ trait ChecklistTrait
                 $file, $fileName, sprintf('O arquivo %s foi enviado com sucesso', $file->getClientOriginalName())
             );
     }
-
 
 
     /**
