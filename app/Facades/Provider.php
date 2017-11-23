@@ -18,12 +18,29 @@ class Provider extends Facade
     const LABEL = 'provider';
 
     /**
+     * @return object | null
+     */
+    public static function getCurrent()
+    {
+        return (\Session::has(self::LABEL)) ? \Session::get(self::LABEL) : null;
+    }
+
+    /**
      * @return int
      */
     public static function getCurrentId()
     {
-        $id = (\Session::has(self::LABEL)) ? \Session::get(self::LABEL)->id : \Auth::user()->providerId;
-        return (int)$id;
+        return (self::getCurrent()) ? (int)self::getCurrent()->id : (int)\Auth::user()->providerId;
+    }
+
+    /**
+     * @param string $argument
+     * @return null | string
+     */
+    public static function getCurrentAs($argument)
+    {
+        $current = self::getCurrent();
+        return ($current && isset($current->$argument)) ? $current->$argument : null;
     }
 
     /**

@@ -53,11 +53,11 @@ class EmployeeRepository extends Employee
      */
     public function findById($id)
     {
-        try {
-            return (object)Employee::find($id)->original;
-        } catch (\Exception $e) {
-            throw new ModelNotFoundException;
-        }
+     //   try {
+            return (object)$this->find($id)->original;
+        //} catch (\Exception $e) {
+          //  throw new ModelNotFoundException;
+        //}
     }
 
     /**
@@ -110,8 +110,20 @@ class EmployeeRepository extends Employee
     public function findCompanyByEmployee($employeeId)
     {
         try {
-
             return \DB::table('employees_has_companies')->where('employeeId', '=', $employeeId)->get();
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function findDocuments($id)
+    {
+        try {
+            return json_decode($this->find($id)->documents, true);
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }

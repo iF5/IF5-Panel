@@ -143,7 +143,7 @@ trait ChecklistTrait
                 $periodicity,
                 'month' => $month,
                 'year' => $year
-            ], 'Documento')
+            ])
         ]);
     }
 

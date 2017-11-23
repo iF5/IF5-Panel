@@ -4,18 +4,18 @@ namespace App\Facades;
 
 use \Illuminate\Support\Facades\Facade;
 
-class Company extends Facade
+class Employee extends Facade
 {
 
     /**
      * @const int
      */
-    const ID = 1;
+    const ID = 3;
 
     /**
      * @const string
      */
-    const LABEL = 'company';
+    const LABEL = 'employee';
 
     /**
      * @return object | null
@@ -30,7 +30,7 @@ class Company extends Facade
      */
     public static function getCurrentId()
     {
-        return (self::getCurrent()) ? (int)self::getCurrent()->id : (int)\Auth::user()->companyId;
+        return (self::getCurrent()) ? (int)self::getCurrent()->id : 0;
     }
 
     /**
@@ -44,11 +44,11 @@ class Company extends Facade
     }
 
     /**
-     * @param $company
+     * @param $employee
      */
-    public static function persist($company)
+    public static function persist($employee)
     {
-        \Session::put(self::LABEL, $company);
+        \Session::put(self::LABEL, $employee);
     }
 
 }

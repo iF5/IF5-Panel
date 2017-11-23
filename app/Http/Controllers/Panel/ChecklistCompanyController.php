@@ -60,7 +60,7 @@ class ChecklistCompanyController extends Controller
      */
     protected function logTitle()
     {
-        return 'Checklist clientes';
+        return 'Checklist de clientes';
     }
 
     /**
@@ -123,9 +123,11 @@ class ChecklistCompanyController extends Controller
      */
     protected function getBreadcrumb($parameters = [], $location = null)
     {
+        $company = Company::getCurrent();
         return $this->breadcrumbService->push([
             'Clientes' => route('company.index'),
-            'Checklist' => route('checklist.company.index', $parameters),
+            $company->fantasyName => route('company.show', [$company->id]),
+            'Checklist de documentos' => route('checklist.company.index', $parameters),
             $location => null
         ])->get();
     }

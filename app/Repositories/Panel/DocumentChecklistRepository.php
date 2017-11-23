@@ -90,14 +90,18 @@ class DocumentChecklistRepository extends DocumentChecklist
      */
     public function findFirstBy($entityGroup, $entityId, $documentId, $referenceDate)
     {
-        return $this->join('documents', function ($join) {
-            return $join->on('documents.id', '=', 'document_checklists.documentId');
-        })->where([
-            ['document_checklists.entityGroup', '=', $entityGroup],
-            ['document_checklists.entityId', '=', $entityId],
-            ['document_checklists.documentId', '=', $documentId],
-            ['document_checklists.referenceDate', '=', $referenceDate]
-        ])->first();
+        try {
+            return $this->join('documents', function ($join) {
+                return $join->on('documents.id', '=', 'document_checklists.documentId');
+            })->where([
+                ['document_checklists.entityGroup', '=', $entityGroup],
+                ['document_checklists.entityId', '=', $entityId],
+                ['document_checklists.documentId', '=', $documentId],
+                ['document_checklists.referenceDate', '=', $referenceDate]
+            ])->first();
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
     }
 
 }
