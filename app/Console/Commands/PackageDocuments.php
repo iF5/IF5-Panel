@@ -73,107 +73,178 @@ class PackageDocuments extends Command
 
     protected function getAllProviders()
     {
-        $providers = $this->providerRepository->findAll();
-        foreach($providers as $provider){
-            $this->providers[$provider->id] = $provider;
+        try {
+            $providers = $this->providerRepository->findAll();
+            foreach ($providers as $provider) {
+                $this->providers[$provider->id] = $provider;
+            }
+        }catch(Exception $e){
+            echo $e->getMessage(), " --- in line: ", $e->getLine();
         }
     }
 
     protected function getAllEmployees()
     {
-        $employees = $this->employeeRepository->findAll();
-        foreach($employees as $employee){
-            $this->employees[$employee->id] = $employee;
+        try {
+            $employees = $this->employeeRepository->findAll();
+            foreach ($employees as $employee) {
+                $this->employees[$employee->id] = $employee;
+            }
+        }catch(Exception $e){
+            echo $e->getMessage(), " --- in line: ", $e->getLine();
         }
     }
 
     protected function getAllDocuments()
     {
-        $documents = $this->documentRepository->all();
-        foreach($documents as $document){
-            $this->documents[$document->id] = $document;
+        try {
+            $documents = $this->documentRepository->all();
+            foreach ($documents as $document) {
+                $this->documents[$document->id] = $document;
+            }
+        }catch(Exception $e){
+            echo $e->getMessage(), " --- in line: ", $e->getLine();
         }
     }
 
     protected function readDocumentStorage($dir = false, $iter=0)
     {
-        ini_set('memory_limit', '1024M');
-        $dirBkp = "";
-        if(!$dir) {
-            $dir = storage_path() . "/upload/documents/";
-        }
-
-        $dirBkp = storage_path() . "/upload/bkp/";
-        if(!file_exists($dirBkp)){
-            if(mkdir($dirBkp, 0777)){
-                echo "CRIOU DIR ", $dirBkp, "\n";
-            } else {
-                echo "NAO CRIOU DIR ", $dirBkp, "\n";
+        try {
+            ini_set('memory_limit', '1024M');
+            $dirBkp = "";
+            if (!$dir) {
+                $dir = storage_path() . "/upload/documents/";
             }
-        }
 
-        if ($handle = opendir($dir)) {
-            echo "Directory handle: $handle\n";
-            echo "Entries:\n";
-
-            while (false !== ($entry = readdir($handle))) {
-                if ($entry == "." || $entry == "..") continue;
-
-                $path = $dir . $entry . "/";
-
-                switch($iter){
-                    case 0:
-                        $this->providerPath = $this->providerPath($dirBkp, $entry);
-                        break;
-                    case 1:
-                        $this->employeePath = $this->employeePath($this->providerPath, $entry);
-                        break;
-                    case 2:
-                        $this->documentPath = $this->documentPath($this->employeePath, $entry);
-                        break;
-                    case 3:
-                        $this->yearPath = $this->yearPath($this->documentPath, $entry);
-                        break;
-                    case 4:
-                        $this->monthPath = $this->monthPath($this->yearPath, $entry);
-                        break;
-                }
-
-                if(is_dir($path)) {
-                    echo "Eh diretorio: $path\n";
-                    $iter++;
-                    $this->readDocumentStorage($path, $iter);
+            $dirBkp = storage_path() . "/upload/bkp/";
+            if (!file_exists($dirBkp)) {
+                if (mkdir($dirBkp, 0777)) {
+                    //echo "CRIOU DIR ", $dirBkp, "\n";
                 } else {
-                    echo "Nao eh diretorio: $path\n";
-                    dd("--AQUI--");
+                    //echo "NAO CRIOU DIR ", $dirBkp, "\n";
                 }
+            } else {
+                //echo "DIRETORIO BKP: ", $dirBkp, "\n";
             }
-            closedir($handle);
+
+            if ($handle = opendir($dir)) {
+                echo "Directory handle: $handle\n";
+                //echo "Entries:\n";
+
+                while (false !== ($entry = readdir($handle))) {
+                    if ($entry == "." || $entry == "..") continue;
+                    $path = $dir . $entry . "/";
+
+                    echo "DIR: ", $dir, "\nENTRY: ", $entry, "\n";
+                    echo "PATH: ", $path, "\n";
+                    echo "ITER SWITCH: ", $iter, "\n";
+
+                    switch ($iter) {
+                        case 0:
+                            $this->providerPath = $this->providerPath($dirBkp, $entry);
+                            break;
+                        case 1:
+                            $this->employeePath = $this->employeePath($this->providerPath, $entry);
+                            break;
+                        case 2:
+                            $this->documentPath = $this->documentPath($this->employeePath, $entry);
+                            break;
+                        case 3:
+                            $this->yearPath = $this->yearPath($this->documentPath, $entry);
+                            break;
+                        case 4:
+                            $this->monthPath = $this->monthPath($this->yearPath, $entry);
+                            break;
+                    }
+
+                    if (is_dir($path)) {
+
+                        echo "Eh diretorio: $path\n";
+                        echo "ITER: ", $iter, "\n";
+
+                        $iter++;
+                        $this->readDocumentStorage($path, $iter);
+                    } else {
+                        /*$this->monthPath = $this->removeAccentuation($this->monthPath);
+
+                        if (!file_exists($this->monthPath)) {
+                            if (mkdir($this->monthPath, 0777, true)) {
+                                //echo "CRIOU O DIR ", $this->monthPath, "\n";
+                            } else {
+                                //echo "NAO CRIOU O DIR ", $this->monthPath, "\n";
+                            }
+                        }
+
+                        $filePath = substr($path, 0, strlen($path) - 1);
+
+                        if (file_exists($this->monthPath)) {
+                            $cmd = "cp " . $filePath . " " . $this->monthPath;
+                            echo $cmd, "\n";
+                            exec($cmd);
+                        }*/
+                    }
+                }
+                closedir($handle);
+            }
+        }catch(Exception $e){
+            echo $e->getMessage(), " --- in line: ", $e->getLine();
+        }
+    }
+
+    function removeAccentuation($string){
+        try {
+            return preg_replace(array("/(á|à|ã|â|ä)/", "/(Á|À|Ã|Â|Ä)/", "/(é|è|ê|ë)/", "/(É|È|Ê|Ë)/", "/(í|ì|î|ï)/", "/(Í|Ì|Î|Ï)/", "/(ó|ò|õ|ô|ö)/", "/(Ó|Ò|Õ|Ô|Ö)/", "/(ú|ù|û|ü)/", "/(Ú|Ù|Û|Ü)/", "/(ñ)/", "/(Ñ)/", "/[\s]/"),
+                array("a", "A", "e", "E", "i", "I", "o", "O", "u", "U", "n", "N", "_"), $string);
+        }catch(Exception $e){
+            echo $e->getMessage(), " --- in line: ", $e->getLine();
         }
     }
 
     protected function providerPath($dir, $subDir)
     {
-        return $dir . $this->providers[$subDir]->name . "/";
+        try {
+            if(!array_key_exists ( $subDir , $this->providers)) return false;
+            return $dir . $this->providers[$subDir]->name . "/";
+        }catch(Exception $e){
+            echo $e->getMessage(), " --- in line: ", $e->getLine();
+        }
     }
 
     protected function employeePath($dir, $subDir)
     {
-        return $dir . $this->employees[$subDir]->name . "/";
+        try {
+            if(!array_key_exists ( $subDir , $this->employees)) return false;
+            return $dir . $this->employees[$subDir]->name . "/";
+        }catch(Exception $e){
+            echo $e->getMessage(), " --- in line: ", $e->getLine();
+        }
     }
 
     protected function documentPath($dir, $subDir)
     {
-        return $dir . $this->documents[$subDir]->name . "/";
+        try {
+            if(!array_key_exists ( $subDir , $this->documents)) return false;
+            return $dir . $this->documents[$subDir]->name . "/";
+        }catch(Exception $e){
+            echo $e->getMessage(), " --- in line: ", $e->getLine();
+        }
     }
 
     protected function yearPath($dir, $subDir)
     {
-        return $dir . $subDir  . "/";
+        try {
+            return $dir . $subDir . "/";
+        }catch(Exception $e){
+            echo $e->getMessage(), " --- in line: ", $e->getLine();
+        }
     }
 
     protected function monthPath($dir, $subDir)
     {
-        return $dir . $subDir  . "/";
+        try {
+            return $dir . $subDir . "/";
+        }catch(Exception $e){
+            echo $e->getMessage(), " --- in line: ", $e->getLine();
+        }
     }
 }
