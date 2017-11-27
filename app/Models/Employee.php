@@ -33,6 +33,7 @@ class Employee extends Model
         'providerId',
         'status',
         'documents',
+        'startAt',
         'createdAt',
         'updatedAt'
     ];

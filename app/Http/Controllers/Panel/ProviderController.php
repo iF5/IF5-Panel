@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\BreadcrumbService;
 use App\Http\Traits\AuthTrait;
+use App\Facades\Company;
+use App\Facades\Provider;
 
 class ProviderController extends Controller
 {
@@ -63,12 +65,20 @@ class ProviderController extends Controller
     }
 
     /**
+     * @return string
+     */
+    protected function logTitle()
+    {
+        return 'Prestadores de servi&ccedil;os';
+    }
+
+    /**
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
     public function identify($id)
     {
-        \Session::put('company', $this->companyRepository->findById($id));
+        Company::persist($this->companyRepository->findById($id));
         return redirect()->route('provider.index');
     }
 
@@ -77,15 +87,7 @@ class ProviderController extends Controller
      */
     protected function getCompanyId()
     {
-        return (\Session::has('company')) ? \Session::get('company')->id : \Auth::user()->companyId;
-    }
-
-    /**
-     * @return string
-     */
-    protected function logTitle()
-    {
-        return 'Prestadores de servi&ccedil;os';
+        return Company::getCurrentId();
     }
 
     /**
@@ -177,7 +179,7 @@ class ProviderController extends Controller
 
         return view('panel.provider.form', [
             'provider' => $this->providerRepository,
-            'documents' => $this->documentRepository->findAllByEntity(2),
+            'documents' => $this->documentRepository->findAllByEntity(Provider::ID),
             'selectedDocuments' => [],
             'states' => $this->states,
             'method' => 'POST',
@@ -230,7 +232,7 @@ class ProviderController extends Controller
 
         return view('panel.provider.show', [
             'provider' => $provider,
-            'documents' => $this->documentRepository->findAllByEntity(2),
+            'documents' => $this->documentRepository->findAllByEntity(Provider::ID),
             'selectedDocuments' => json_decode($provider->documents, true),
             'states' => $this->states,
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
@@ -306,17 +308,19 @@ class ProviderController extends Controller
      */
     protected function getBreadcrumb($location = null)
     {
-        if (\Session::has('company')) {
-            $company = \Session::get('company');
+        $company = Company::getCurrent();
+        $data = [];
+        if ($company) {
             $data = [
                 'Clientes' => route('company.index'),
                 $company->fantasyName => route('company.show', $company->id)
             ];
         }
 
-        $data['Prestadores de servi&ccedil;os'] = route('provider.index');
-        $data[$location] = null;
-        return $this->breadcrumbService->push($data)->get();
+        return $this->breadcrumbService->push(array_merge($data, [
+            'Prestadores de servi&ccedil;os' => route('provider.index'),
+            $location => null
+        ]))->get();
     }
 
 }

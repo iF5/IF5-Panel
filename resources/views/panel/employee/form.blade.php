@@ -108,7 +108,7 @@
                                 <label for="jobRole">Função * : </label>
                                 <input type="text" id="jobRole" name="jobRole"
                                        value="{{ $employee->jobRole or old('jobRole') }}" class="form-control v-void"
-                                       >
+                                >
                             </div>
                             <div class="form-group col-xs-4">
                                 <label for="salaryCap">Piso salarial *
@@ -125,7 +125,7 @@
                             </div>
 
                             <div class="form-group col-xs-4">
-                                <label for="endingDate">Data da rescisão  : </label>
+                                <label for="endingDate">Data da rescisão : </label>
                                 <input type="text" id="endingDate" name="endingDate"
                                        value="{{ $employee->endingDate or old('endingDate') }}"
                                        class="form-control dateMask">
@@ -154,6 +154,14 @@
                                     @endforeach
                                 </select>
                             </div>
+
+                            <div class="form-group col-xs-3">
+                                <label for="startAt">Come&ccedil;ar analisar apartir de* :</label>
+                                <input id="startAt" name="startAt"
+                                       value="{{ $company->startAt or old('startAt') }}"
+                                       class="form-control dateMask v-void">
+                            </div>
+
                             <div class="form-group col-xs-4">
                                 <label>Tem filhos menores * : </label>
                                 <div>
@@ -168,17 +176,6 @@
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-4">
-                                <label for="companies">Empresas alocadas * : </label>
-                                <select id="companies" name="companies[]" size="{{ count($companies) }}"
-                                        class="form-control" multiple>
-                                    @foreach($companies as $company)
-                                        <option value="{{ $company->id }}"
-                                                @if($company->selected) selected @endif>{{ $company->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
                             <!-- Documents -->
                             <div class="form-group col-xs-12" style="margin-top: 15px;">
                                 <div class="col-md-12">
@@ -186,9 +183,9 @@
                                         <div class="panel-heading">
                                             <h3 class="panel-title">
                                                 <label class="checkbox-inline">
-                                                    <input type="checkbox" id="select-all" value=""/>
+                                                    <input type="checkbox" class="checkbox-on-all" value=""/>
                                                     &nbsp;&nbsp;Selecione os
-                                                    documentos necessários para o cliente
+                                                    documentos necess&aacute;rios para o funcion&aacute;rio
                                                 </label>
                                             </h3>
                                         </div>
@@ -198,7 +195,7 @@
                                                     <tr>
                                                         <td style="width: 5%; text-align: center;">
                                                             <input type="checkbox" value="{{$document->id}}"
-                                                                   name="documents[]"
+                                                                   class="checkbox-on-item" name="documents[]"
                                                                    @if(in_array($document->id, $selectedDocuments)) checked @endif>
                                                         </td>
                                                         <td>{{$document->name}}</td>
@@ -211,6 +208,37 @@
                             </div>
                             <!-- End Documents -->
 
+                            <!-- Companies -->
+                            <div class="form-group col-xs-12" style="margin-top: 15px;">
+                                <div class="col-md-12">
+                                    <div class="panel panel-primary row">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" class="checkbox-on-all" value=""/>
+                                                    &nbsp;&nbsp;Selecione as empresas onde o funcion&aacute;rio est&aacute;
+                                                    alocado
+                                                </label>
+                                            </h3>
+                                        </div>
+                                        <div style="width:100%; height:300px; overflow:auto;">
+                                            <table class="table table-bordered table-striped">
+                                                @foreach($companies as $company)
+                                                    <tr>
+                                                        <td style="width: 5%; text-align: center;">
+                                                            <input type="checkbox" value="{{$company->id}}"
+                                                                   class="checkbox-on-item" name="companies[]"
+                                                                   @if($company->selected) checked @endif>
+                                                        </td>
+                                                        <td>{{$company->name}}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Companies -->
                         </div>
 
                         <div class="row">

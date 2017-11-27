@@ -37,6 +37,7 @@ class CreateEmployeesTable extends Migration
             $table->integer('providerId');
             $table->boolean('status')->default(false);
             $table->mediumText('documents')->nullable();
+            $table->date('startAt')->nullable();
             $table->dateTime('createdAt');
             $table->dateTime('updatedAt');
             $table->unique(['cpf', 'providerId']);

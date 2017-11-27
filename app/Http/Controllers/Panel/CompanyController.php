@@ -9,6 +9,7 @@ use App\Repositories\Panel\CompanyRepository;
 use App\Services\BreadcrumbService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Facades\Company;
 
 class CompanyController extends Controller
 {
@@ -106,7 +107,6 @@ class CompanyController extends Controller
         return $data;
     }
 
-
     /**
      * Show the form for creating a new resource.
      *
@@ -116,7 +116,7 @@ class CompanyController extends Controller
     {
         return view('panel.company.form', [
             'company' => $this->companyRepository,
-            'documents' => $this->documentRepository->findAllByEntity(1),
+            'documents' => $this->documentRepository->findAllByEntity(Company::ID),
             'selectedDocuments' => [],
             'states' => $this->states,
             'route' => 'company.store',
@@ -162,7 +162,7 @@ class CompanyController extends Controller
 
         return view('panel.company.show', [
             'company' => $company,
-            'documents' => $this->documentRepository->findAllByEntity(1),
+            'documents' => $this->documentRepository->findAllByEntity(Company::ID),
             'selectedDocuments' => json_decode($company->documents, true),
             'states' => $this->states,
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')

@@ -78,4 +78,12 @@ trait AuthTrait
         return \Auth::user()->companyId;
     }
 
+    /**
+     * @return int
+     */
+    protected function getProviderId()
+    {
+        return \Auth::user()->providerId;
+    }
+
 }

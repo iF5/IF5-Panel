@@ -9,7 +9,8 @@ use App\Repositories\Panel\DocumentChecklistRepository;
 use App\Repositories\Panel\DocumentRepository;
 use App\Services\BreadcrumbService;
 use App\Facades\Employee;
-use Illuminate\Http\Request;
+use App\Facades\Company;
+use App\Facades\Provider;
 
 class ChecklistEmployeeController extends Controller
 {
@@ -118,12 +119,23 @@ class ChecklistEmployeeController extends Controller
      */
     protected function getBreadcrumb($parameters = [], $location = null)
     {
-        return $this->breadcrumbService->push([
-            'Clientes' => route('company.index'),
-            'Prestadores de serviços' => route('provider.index'),
-            'Checklist' => route('checklist.company.index', $parameters),
-            $location => null
-        ])->get();
+        $company = Company::getCurrent();
+        $provider = Provider::getCurrent();
+        $data = [];
+        if ($company && $provider) {
+            $data = [
+                'Clientes' => route('company.index'),
+                $company->fantasyName => route('company.show', $company->id),
+                'Prestadores de servi&ccedil;os' => route('provider.index'),
+                $provider->fantasyName => route('provider.show', $provider->id)
+            ];
+        }
+
+        return $this->breadcrumbService->push(array_merge($data, [
+            'Funcion&aacute;rios' => route('employee.index'),
+            'Checklist de documentos' => route('checklist.company.index', $parameters),
+            $location = null
+        ]))->get();
     }
 
 }

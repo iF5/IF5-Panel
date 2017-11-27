@@ -358,7 +358,7 @@ $(function () {
      * On selected all checkbox
      */
     $('.checkbox-on-all').on('click', function () {
-        $('.checkbox-on-item').prop('checked', this.checked);
+        $('.table-checkbox-on-item').children('input').prop('checked', this.checked);
     });
 
     /**

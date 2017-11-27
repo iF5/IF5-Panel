@@ -30,6 +30,7 @@ class Company extends Model
         'cellPhone',
         'email',
         'documents',
+        'startAt',
         'createdAt',
         'updatedAt'
     ];

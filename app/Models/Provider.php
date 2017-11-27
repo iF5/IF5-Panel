@@ -30,6 +30,7 @@ class Provider extends Model
         'cellPhone',
         'email',
         'documents',
+        'startAt',
         'createdAt',
         'updatedAt'
     ];

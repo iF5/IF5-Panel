@@ -11,6 +11,7 @@ use App\Repositories\Panel\RelationshipRepository;
 use App\Services\BreadcrumbService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Facades\Employee;
 
 class EmployeeController extends Controller
 {
@@ -175,7 +176,7 @@ class EmployeeController extends Controller
         return view('panel.employee.form', [
             'employee' => $this->employeeRepository,
             'companies' => $this->getCompanies(),
-            'documents' => $this->documentRepository->findAllByEntity(3),
+            'documents' => $this->documentRepository->findAllByEntity(Employee::ID),
             'selectedDocuments' => [],
             'states' => $this->states,
             'route' => 'employee.store',
@@ -224,7 +225,7 @@ class EmployeeController extends Controller
         return view('panel.employee.show', [
             'employee' => $employee,
             'companies' => $companies,
-            'documents' => $this->documentRepository->findAllByEntity(3),
+            'documents' => $this->documentRepository->findAllByEntity(Employee::ID),
             'selectedDocuments' => json_decode($employee->documents, true),
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);

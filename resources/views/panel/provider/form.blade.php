@@ -154,9 +154,9 @@
                                     <div class="panel-heading">
                                         <h3 class="panel-title">
                                             <label class="checkbox-inline">
-                                                <input type="checkbox" id="select-all" value=""/>
+                                                <input type="checkbox" class="checkbox-on-all" value=""/>
                                                 &nbsp;&nbsp;Selecione os
-                                                documentos necessários para o cliente
+                                                documentos necess&aacute;rios para o prestrador de servi&ccedil;os
                                             </label>
                                         </h3>
                                     </div>
@@ -166,7 +166,7 @@
                                                 <tr>
                                                     <td style="width: 5%; text-align: center;">
                                                         <input type="checkbox" value="{{$document->id}}"
-                                                               name="documents[]"
+                                                               class="checkbox-on-item" name="documents[]"
                                                                @if(in_array($document->id, $selectedDocuments)) checked @endif>
                                                     </td>
                                                     <td>{{$document->name}}</td>
@@ -178,6 +178,13 @@
                             </div>
                         </div>
                         <!-- End Documents -->
+
+                        <div class="form-group col-xs-3">
+                            <label for="startAt">Come&ccedil;ar analisar apartir de* :</label>
+                            <input id="startAt" name="startAt"
+                                   value="{{ $company->startAt or old('startAt') }}"
+                                   class="form-control dateMask v-void">
+                        </div>
 
                         <div class="clearfix"></div>
                         <div class="control-group" style="margin: 30px 0px 0px 12px;">
