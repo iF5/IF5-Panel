@@ -18,6 +18,14 @@ trait DocumentTrait
     private $documentRepository;
 
     /**
+     * @var array
+     */
+    private $status = [
+        1 => 'Ativo',
+        0 => 'Inativo'
+    ];
+
+    /**
      * @param null $action
      * @return null
      */
@@ -67,6 +75,7 @@ trait DocumentTrait
             'keyword' => $keyword,
             'route' => $this->getRoute(),
             'periodicities' => $this->getPeriodicities(),
+            'status' => $this->status,
             'documents' => $documents,
             'breadcrumbs' => $this->getBreadcrumb()
         ]);
@@ -99,10 +108,13 @@ trait DocumentTrait
     {
         $document = $this->documentRepository;
         $document->periodicity = 1;
+        $document->isActive = 1;
+        
         return view('panel.document.form', [
             'document' => $document,
             'documentTypes' => $this->documentTypeRepository->all(),
             'periodicities' => $this->getPeriodicities(),
+            'status' => $this->status,
             'route' => $this->getRoute('store'),
             'method' => 'POST',
             'parameters' => [],
@@ -147,6 +159,7 @@ trait DocumentTrait
             'document' => $document,
             'documentType' => $this->documentTypeRepository->find($document->documentTypeId),
             'periodicities' => $this->getPeriodicities(),
+            'status' => $this->status,
             'route' => $this->getRoute(),
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
@@ -164,6 +177,7 @@ trait DocumentTrait
             'document' => $this->documentRepository->findOrFail($id),
             'documentTypes' => $this->documentTypeRepository->all(),
             'periodicities' => $this->getPeriodicities(),
+            'status' => $this->status,
             'route' => $this->getRoute('update'),
             'method' => 'PUT',
             'parameters' => [$id],

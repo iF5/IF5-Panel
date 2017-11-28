@@ -25,6 +25,7 @@ class Document extends Model
         'validity',
         'documentTypeId',
         'entityGroup',
+        'isActive',
         'createdAt',
         'updatedAt'
     ];

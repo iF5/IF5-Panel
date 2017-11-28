@@ -41,9 +41,12 @@ class CreateDocumentsTable extends Migration
             $table->integer('validity')->unsigned();
             $table->integer('documentTypeId')->unsigned();
             $table->integer('entityGroup')->unsigned()->comment = '1 = company, 2 = provider, 3 = employee';
+            $table->boolean('isActive')->default(true);
             $table->dateTime('createdAt');
             $table->dateTime('updatedAt');
         });
+
+        //ALTER TABLE documents ADD COLUMN isActive tinyint(1) DEFAULT 1 AFTER entityGroup;
     }
 
     /**

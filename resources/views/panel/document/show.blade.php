@@ -21,6 +21,8 @@
                 <li class="list-group-item"><strong>Tipo de documento: </strong> {{ $documentType->name }}</li>
                 <li class="list-group-item">
                     <strong>Periodicidade: </strong> {{ $periodicities[$document->periodicity] }}</li>
+                <li class="list-group-item">
+                    <strong>Status: </strong> {{ $status[$document->isActive] }}</li>
                 <li class="list-group-item"><strong>Cadastrado em
                         : </strong> {{ \Carbon\Carbon::parse($document->createdAt)->format('d/m/Y H:i:s') }}
                 </li>

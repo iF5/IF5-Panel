@@ -39,6 +39,8 @@ class CreateProvidersTable extends Migration
             $table->dateTime('updatedAt');
             $table->unique(['name', 'cnpj']);
         });
+
+        //ALTER TABLE providers ADD COLUMN startAt date AFTER documents;
     }
 
     /**

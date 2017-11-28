@@ -64,6 +64,17 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="form-group col-sm-5">
+                                <br />
+                                @foreach($status as $key => $value)
+                                    <label class="radio-inline">
+                                        <input type="radio" name="isActive" value="{{ $key }}"
+                                               @if($document->isActive === $key) checked @endif>{{ $value }}
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="control-group" style="margin: 20px 0px 0px 12px;">
                                 <button type="submit" class="btn btn-success" id="btn-user-form">Salvar</button>
                             </div>
