@@ -73,6 +73,7 @@ class DocumentChecklistRepository extends DocumentChecklist
             })->where([
                 ['documents.periodicity', '=', $periodicity],
                 ['documents.entityGroup', '=', $entityGroup],
+                ['documents.isActive', '=', 1],
                 ['document_checklists.referenceDate', '=', $referenceDate]
             ])->get();
 

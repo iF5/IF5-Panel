@@ -50,13 +50,15 @@ class DocumentRepository extends Document
 
     /**
      * @param int $entityGroup
+     * @param int $isActive
      * @return mixed
      */
-    public function findAllByEntity($entityGroup)
+    public function findAllByEntity($entityGroup, $isActive = 1)
     {
         try {
             return $this->where([
-                ['entityGroup', '=', $entityGroup]
+                ['entityGroup', '=', $entityGroup],
+                ['isActive', '=', $isActive]
             ])->get();
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
@@ -67,14 +69,16 @@ class DocumentRepository extends Document
      * @param int $periodicity
      * @param int $entityGroup
      * @param array $documents
+     * @param int $isActive
      * @return mixed
      */
-    public function findByChecklist($periodicity, $entityGroup, array $documents = [])
+    public function findByChecklist($periodicity, $entityGroup, array $documents = [], $isActive = 1)
     {
         try {
             return $this->where([
                 ['periodicity', '=', $periodicity],
-                ['entityGroup', '=', $entityGroup]
+                ['entityGroup', '=', $entityGroup],
+                ['isActive', '=', $isActive]
             ])->whereIn('id', $documents)->get();
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
