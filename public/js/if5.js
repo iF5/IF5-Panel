@@ -193,8 +193,23 @@ function If5Form() {
     };
 }
 
-function If5Employee(){
-    
+function If5Employee() {
+
+    this.start = function () {
+
+        $('.hasChildren').on('click', function () {
+            if (parseInt(this.value)) {
+                $('#numberChildren').show();
+            } else {
+                $('#numberChildren').hide();
+            }
+        });
+
+        $('#numberChildren').on('blur', function () {
+           alert(this.value);
+        });
+    }
+
 }
 
 
@@ -206,6 +221,10 @@ $(function () {
     var validate = new Validate();
     var if5Modal = new If5Modal();
     var if5Form = new If5Form();
+
+    var if5Employee = new If5Employee();
+
+    if5Employee.start();
 
     /**
      * Form validation

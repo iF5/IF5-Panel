@@ -30,6 +30,7 @@ class Employee extends Model
         'workingHours',
         'workRegime',
         'hasChildren',
+        'numberChildren',
         'providerId',
         'status',
         'documents',
