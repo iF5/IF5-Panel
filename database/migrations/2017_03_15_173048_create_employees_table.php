@@ -34,6 +34,7 @@ class CreateEmployeesTable extends Migration
             $table->string('workingHours');
             $table->string('workRegime');
             $table->boolean('hasChildren')->default(false);
+            $table->integer('numberChildren')->default(0);
             $table->integer('providerId');
             $table->boolean('status')->default(false);
             $table->mediumText('documents')->nullable();
