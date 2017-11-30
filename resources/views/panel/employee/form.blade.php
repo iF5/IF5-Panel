@@ -151,48 +151,60 @@
                                 </select>
                             </div>
 
-                            <div class="form-group col-xs-4">
+                            <div class="form-group col-xs-6">
                                 <label>Tem filhos menores * : </label>
                                 <div class="form-inline">
                                     <div class="radio-inline">
-                                        <label><input type="radio" name="hasChildren" value="0" class="hasChildren"
+                                        <label><input type="radio" id="hasChildrenOff" name="hasChildren" value="0"
+                                                      class="hasChildren"
                                                       @if(!(int)$employee->hasChildren) checked @endif >N&atilde;o</label>
                                     </div>
                                     <div class="radio-inline">
-                                        <label><input type="radio" name="hasChildren" value="1" class="hasChildren"
+                                        <label><input type="radio" id="hasChildrenOn" name="hasChildren" value="1"
+                                                      class="hasChildren"
                                                       @if((int)$employee->hasChildren) checked @endif>Sim</label>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" id="numberChildren" name="numberChildren"
-                                               style="width: 50%; display: @if((int)$employee->hasChildren) block @else none @endif;"
-                                               value="{{ $employee->numberChildren }}"
-                                               class="form-control" placeholder="Quantos?"/>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Children -->
-                            <div class="form-group col-xs-12" style="margin-top: 15px;">
+                            <div class="form-group col-xs-12" id="divChlidrenAll"
+                                 style="margin-top: 15px; display: {{ (int)$employee->hasChildren ? 'block' : 'block' }};">
                                 <div class="col-md-12">
                                     <div class="panel panel-primary row">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">Informe os filhos</h3>
                                         </div>
                                         <div style="width:100%; height:300px; overflow:auto;">
-                                            <table class="table table-bordered">
+                                            <table class="table table-bordered" id="tableChlidrenAll">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width: 60%;">Nome completo *</th>
+                                                    <th>Idade *</th>
+                                                    <th>
+                                                        <a href=""
+                                                           class="btn btn-success btn-sm" title="Editar">
+                                                            <span class="glyphicon glyphicon-plus"></span> Adicionar</a>
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
                                                 <tr>
                                                     <td>
-                                                        <label>Nome completo * :</label>
                                                         <input type="text" value="" name="chlidren[]"
                                                                class="form-control v-void"/>
                                                     </td>
                                                     <td>
-                                                        <label>Idade * :</label>
                                                         <input type="text" value="" name="chlidren[]"
-                                                               class="form-control dateMask v-void"
-                                                               style="width: 30%;"/>
+                                                               class="form-control dateMask v-void" size="3"/>
+                                                    </td>
+                                                    <td align="right">
+                                                        <a href=""
+                                                           class="btn btn-danger btn-xs" title="Editar"><span
+                                                                    class="glyphicon glyphicon-remove"></span></a>
                                                     </td>
                                                 </tr>
+                                                </tbody>
                                             </table>
                                         </div>
                                     </div>
@@ -245,7 +257,7 @@
                                                 </label>
                                             </h3>
                                         </div>
-                                        <div style="width:100%; height:300px; overflow:auto;">
+                                        <div style="width:100%; height:200px; overflow:auto;">
                                             <table class="table table-bordered table-striped">
                                                 @foreach($companies as $company)
                                                     <tr>

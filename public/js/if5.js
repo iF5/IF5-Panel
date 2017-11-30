@@ -198,16 +198,46 @@ function If5Employee() {
     this.start = function () {
 
         $('.hasChildren').on('click', function () {
-            if (parseInt(this.value)) {
-                $('#numberChildren').show();
-            } else {
-                $('#numberChildren').hide();
-            }
+            toggleChildren(this.value);
         });
 
         $('#numberChildren').on('blur', function () {
-           alert(this.value);
+            var value = parseInt(this.value);
+            if (!value) {
+
+                toggleChildren(value);
+                $('#hasChildrenOff').prop('checked', true);
+                $('#divChlidrenAll').hide();
+                this.value = '';
+
+            } else {
+                $('#divChlidrenAll').show();
+                var html = '';
+
+                for (var i = 0; i < value; i++) {
+                    html += '<tr> \
+                    <td> \
+                    <label>Nome completo * :</label> \
+                <input type="text" value="" name="chlidren[]" \
+            class="form-control v-void"/> \
+                    </td> \
+                    <td> \
+                    <label>Idade * :</label> \
+                <input type="text" value="" name="chlidren[]" \
+            class="form-control dateMask v-void" \
+                style="width: 30%;"/> \
+                    </td> \
+                    </tr> \
+                ';
+                }
+                $('#tableChlidrenAll').html(html);
+            }
         });
+    };
+
+    function toggleChildren(value) {
+        var display = (parseInt(value)) ? 'block' : 'none';
+        $('#numberChildren').css({display: display});
     }
 
 }
