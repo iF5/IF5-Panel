@@ -16,7 +16,7 @@ class CreateEmployeesHasChildrenTable extends Migration
         Schema::create('employees_has_children', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->string('name');
-            $table->date('birthday');
+            $table->date('dateOfBirth');
             $table->integer('employeeId')->unsigned();
         });
     }

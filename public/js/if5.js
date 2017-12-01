@@ -131,14 +131,23 @@ function If5Form() {
         'v-rg': 'RG'
     };
 
+    var fields = 'input,select,textarea';
+
+    /**
+     * Reset fields border color
+     */
+    function fieldReset() {
+        $(fields).on('focus', function () {
+            $(this).css('border', '');
+        });
+    }
+
     /**
      * On validate all form by class apply
      *
      * @param vObject
      */
     this.onValidate = function (vObject) {
-
-        var fields = 'input,select,textarea';
         /**
          * Submit the form event
          */
@@ -165,13 +174,8 @@ function If5Form() {
                 e.preventDefault();
             }
         });
-
-        /**
-         * Reset fields border color
-         */
-        $(fields).on('focus', function () {
-            $(this).css('border', '');
-        });
+        //
+        fieldReset();
     };
 
     /**
@@ -191,54 +195,88 @@ function If5Form() {
             $(form).append(input);
         }
     };
+
+    /**
+     * Masks reload
+     */
+    this.masks = function () {
+        $('#cnpj').mask('99.999.999/9999-99');
+        $('#cpf').mask('999.999.999-99');
+        $('#phone').mask('99 9999-9999');
+        $('#phone').mask('99 9999-9999');
+        $('#cellPhone').mask('99 99999-9999');
+        $('#cep').mask('99999-999');
+        //$('#rg').mask('99.999.999-9');
+        $('.dateMask').mask('99/99/9999');
+        $('.moneyMask').maskMoney({showSymbol: false, symbol: 'R$', decimal: ',', thousands: '.'});
+        $('#pis').mask('999.99999.99-9');
+        $('#referenceDateSearch').mask('99/9999');
+        fieldReset();
+    };
 }
 
 function If5Employee() {
 
-    this.start = function () {
+    this.children = function () {
 
-        $('.hasChildren').on('click', function () {
-            toggleChildren(this.value);
-        });
+        var tbody = $('#tableChlidren > tbody');
 
-        $('#numberChildren').on('blur', function () {
-            var value = parseInt(this.value);
-            if (!value) {
+        /**
+         * @returns {string}
+         */
+        function makeRow() {
+            var index = Math.floor((Math.random() + Math.random()) * 100);
+            return '<tr>\
+                <td> \
+                    <input type="text" id="chName' + index + '" name="chlidren[name][]" class="form-control v-void"/> \
+                </td> \
+                <td> \
+                    <input type="text" id="chDateOfBirth' + index + '" name="chlidren[dateOfBirth][]" \
+                    class="form-control dateMask v-void" size="3"/> \
+                </td> \
+                <td align="right"> \
+                    <a href="" class="btn btn-danger btn-xs chlidren-remove" title="Excluir"> \
+                    <span class="glyphicon glyphicon-remove"></span></a> \
+                </td> \
+                </tr>';
+        }
 
-                toggleChildren(value);
-                $('#hasChildrenOff').prop('checked', true);
-                $('#divChlidrenAll').hide();
-                this.value = '';
-
-            } else {
-                $('#divChlidrenAll').show();
-                var html = '';
-
-                for (var i = 0; i < value; i++) {
-                    html += '<tr> \
-                    <td> \
-                    <label>Nome completo * :</label> \
-                <input type="text" value="" name="chlidren[]" \
-            class="form-control v-void"/> \
-                    </td> \
-                    <td> \
-                    <label>Idade * :</label> \
-                <input type="text" value="" name="chlidren[]" \
-            class="form-control dateMask v-void" \
-                style="width: 30%;"/> \
-                    </td> \
-                    </tr> \
-                ';
+        /**
+         *
+         */
+        $('.has-children').on('click', function () {
+            if ((parseInt(this.value))) {
+                $('#warningNotChildren').hide();
+                $('#divChlidren').slideDown(300);
+                if (tbody.children('tr').size() < 1) {
+                    tbody.html(makeRow());
                 }
-                $('#tableChlidrenAll').html(html);
+                new If5Form().masks();
+            } else {
+                $('#divChlidren').slideUp(300);
+                if (tbody.children('tr').size() >= 1) {
+                    $('#warningNotChildren').fadeIn(500);
+                }
             }
         });
-    };
 
-    function toggleChildren(value) {
-        var display = (parseInt(value)) ? 'block' : 'none';
-        $('#numberChildren').css({display: display});
-    }
+        /**
+         *
+         */
+        $('.children-add').on('click', function (e) {
+            e.preventDefault();
+            tbody.prepend(makeRow());
+            new If5Form().masks();
+        });
+
+        /**
+         *
+         */
+        $(document).on('click', '.chlidren-remove', function (e) {
+            e.preventDefault();
+            $(this).closest('tr').remove();
+        });
+    };
 
 }
 
@@ -251,15 +289,22 @@ $(function () {
     var validate = new Validate();
     var if5Modal = new If5Modal();
     var if5Form = new If5Form();
-
     var if5Employee = new If5Employee();
 
-    if5Employee.start();
+    /**
+     * Form masks
+     */
+    if5Form.masks();
 
     /**
      * Form validation
      */
     if5Form.onValidate(validate);
+
+    /**
+     * Form children
+     */
+    if5Employee.children();
 
     /**
      * On delete
@@ -414,19 +459,5 @@ $(function () {
         $(this).closest('div').siblings('div').find(':checkbox').prop('checked', this.checked);
     });
 
-    /**
-     * Masks
-     */
-    $('#cnpj').mask('99.999.999/9999-99');
-    $('#cpf').mask('999.999.999-99');
-    $('#phone').mask('99 9999-9999');
-    $('#phone').mask('99 9999-9999');
-    $('#cellPhone').mask('99 99999-9999');
-    $('#cep').mask('99999-999');
-    //$('#rg').mask('99.999.999-9');
-    $('.dateMask').mask('99/99/9999');
-    $('.moneyMask').maskMoney({showSymbol: false, symbol: 'R$', decimal: ',', thousands: '.'});
-    $('#pis').mask('999.99999.99-9');
-    $('#referenceDateSearch').mask('99/9999');
-
 });
+
