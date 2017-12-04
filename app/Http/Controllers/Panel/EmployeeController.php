@@ -312,6 +312,14 @@ class EmployeeController extends Controller
         }
     }
 
+
+    public function layoff()
+    {
+        return view('panel.employee.layoff', [
+            'data' => []
+        ]);
+    }
+
     /**
      * @param string $location
      * @return array

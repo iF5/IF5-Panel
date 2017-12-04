@@ -52,7 +52,7 @@
                                                     de documentos</a>
                                             </li>
                                             <li>
-                                                <a href="#">Demiss&atilde;o/Afastamento</a>
+                                                <a href="{{ route('employee.layoff') }}">Demiss&atilde;o/Afastamento</a>
                                             </li>
                                         @endif
                                     </ul>
