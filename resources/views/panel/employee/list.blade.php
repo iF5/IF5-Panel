@@ -51,6 +51,9 @@
                                                 <a href="{{ route('checklist.employee.identify', [$employee->id]) }}">Checklist
                                                     de documentos</a>
                                             </li>
+                                            <li>
+                                                <a href="#">Demiss&atilde;o/Afastamento</a>
+                                            </li>
                                         @endif
                                     </ul>
                                 </div>

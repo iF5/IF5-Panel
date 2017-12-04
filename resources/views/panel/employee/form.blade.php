@@ -168,7 +168,7 @@
                                 </div>
 
                                 <div class="form-group col-xs-12" id="warningNotChildren" style="display: none;">
-                                    <div class="alert alert-warning">
+                                    <div class="alert alert-danger">
                                         <strong>Aten&ccedil;&atilde;o!</strong>
                                         Para salvar o formul&aacute;rio &eacute; preciso excluir os campos reservados
                                         para o(s) filho(s) do funcion&aacute;rio.
