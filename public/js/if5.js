@@ -288,18 +288,18 @@ $(function () {
 
     var validate = new Validate();
     var if5Modal = new If5Modal();
-    var if5Form = new If5Form();
+    //var if5Form = new If5Form();
     var if5Employee = new If5Employee();
 
     /**
      * Form masks
      */
-    if5Form.masks();
+    //if5Form.masks();
 
     /**
      * Form validation
      */
-    if5Form.onValidate(validate);
+    //if5Form.onValidate(validate);
 
     /**
      * Form children

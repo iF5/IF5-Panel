@@ -8,17 +8,18 @@ class Period extends Facade
 {
 
     /**
-     * @param null|string $datetime
+     * @param null|string $value
      * @param string $format
      * @return null|string
      */
-    public static function format($datetime = null, $format = 'Y-m-d H:i:s')
+    public static function format($value = null, $format = 'Y-m-d H:i:s')
     {
-        if (!$datetime) {
+        if (!$value) {
             return null;
         }
 
-        return (new \DateTime($datetime))->format($format);
+        $value = str_replace(['/'], ['-'], $value);
+        return date($format, strtotime($value));
     }
 
     /**

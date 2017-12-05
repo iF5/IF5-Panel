@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Facades\Period;
 use App\Http\Traits\AuthTrait;
 use App\Http\Traits\LogTrait;
 use App\Repositories\Panel\DocumentRepository;
@@ -131,14 +132,37 @@ class EmployeeController extends Controller
         $data['salaryCap'] = str_replace(['.', ','], ['', '.'], $data['salaryCap']);
         //$data['salaryCap'] = number_format($data['salaryCap'], 2, ',', '');
         $data['status'] = $this->isAdmin();
-        $data['documents'] = json_encode($data['documents']);
+        $data['documents'] = isset($data['documents']) ? json_encode($data['documents']) : null;
         $data['updatedAt'] = $now;
 
         if (strtoupper($request->getMethod()) === 'POST') {
             $data['createdAt'] = $now;
         }
 
+        $this->childrenStore($data);
+
         return $data;
+    }
+
+    protected function childrenStore($data)
+    {
+        if (!(int)$data['hasChildren']) {
+            return [];
+        }
+
+        $total = count($data['chlidren']);
+        $children = [];
+        for ($i = 0; $i <= $total; $i++) {
+            $row = $data['chlidren'];
+            if (!empty($row['name'][$i]) && !empty($row['dateOfBirth'][$i])) {
+                $children[] = [
+                    'name' => $row['name'][$i],
+                    'dateOfBirth' => Period::format($row['dateOfBirth'][$i], 'Y-m-d')
+                ];
+            }
+        }
+
+        dd($children);
     }
 
     /**
