@@ -35,14 +35,12 @@ class CreateEmployeesTable extends Migration
 
             //Filhos
             $table->boolean('hasChildren')->default(false);
-            $table->integer('numberChildren')->default(0);
 
             //Demissao/Afastamento
             $table->boolean('layOff')->default(0)->comment = '0: Em atividade, 1: Afastado, 2: Demitido';
             $table->date('removalDate')->nullable();
             $table->integer('daysRemoval')->default(0);
             $table->date('dismissalDate')->nullable();
-
 
             $table->mediumText('documents')->nullable();
             $table->integer('providerId')->unsigned();

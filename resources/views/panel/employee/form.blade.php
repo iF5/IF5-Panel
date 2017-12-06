@@ -175,7 +175,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group col-xs-12" id="chlidrenDiv"
+                                <div class="form-group col-xs-12" id="childrenDiv"
                                      style="display: {{ (int)$employee->hasChildren ? 'block' : 'none' }};">
                                     <div class="col-md-12">
                                         <div class="panel panel-primary row">
@@ -183,7 +183,7 @@
                                                 <h3 class="panel-title">Informe os dados do(s) filho(s) do funcion&aacute;rio</h3>
                                             </div>
                                             <div style="width:100%; height:300px; overflow:auto;">
-                                                <table class="table table-bordered" id="chlidrenTable">
+                                                <table class="table table-bordered" id="childrenTable">
                                                     <thead>
                                                     <tr>
                                                         <th style="width: 60%;">Nome completo *</th>

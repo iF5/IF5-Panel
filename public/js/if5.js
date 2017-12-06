@@ -219,7 +219,7 @@ function If5Employee() {
 
     this.children = function () {
 
-        var tbody = $('#chlidrenTable > tbody');
+        var tbody = $('#childrenTable > tbody');
 
         /**
          * @returns {string}
@@ -228,10 +228,10 @@ function If5Employee() {
             var index = Math.floor((Math.random() + Math.random()) * 100);
             return '<tr>\
                 <td> \
-                    <input type="text" id="name' + index + '" name="chlidren[name][]" class="form-control v-void"/> \
+                    <input type="text" id="name' + index + '" name="children[name][]" class="form-control v-void"/> \
                 </td> \
                 <td> \
-                    <input type="text" id="birthDate' + index + '" name="chlidren[birthDate][]" \
+                    <input type="text" id="birthDate' + index + '" name="children[birthDate][]" \
                     class="form-control dateMask v-void" size="3"/> \
                 </td> \
                 <td align="right"> \
@@ -247,13 +247,13 @@ function If5Employee() {
         $('.has-children').on('click', function () {
             if ((parseInt(this.value))) {
                 $('#childrenWarningNot').hide();
-                $('#chlidrenDiv').slideDown(300);
+                $('#childrenDiv').slideDown(300);
                 if (tbody.children('tr').size() < 1) {
                     tbody.html(makeRow());
                 }
                 new If5Form().masks();
             } else {
-                $('#chlidrenDiv').slideUp(300);
+                $('#childrenDiv').slideUp(300);
                 if (tbody.children('tr').size() >= 1) {
                     $('#childrenWarningNot').fadeIn(500);
                 }

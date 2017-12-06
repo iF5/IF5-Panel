@@ -6,6 +6,7 @@ use App\Facades\Period;
 use App\Http\Traits\AuthTrait;
 use App\Http\Traits\LogTrait;
 use App\Repositories\Panel\DocumentRepository;
+use App\Repositories\Panel\EmployeeChildrenRepository;
 use App\Repositories\Panel\EmployeeRepository;
 use App\Repositories\Panel\ProviderRepository;
 use App\Repositories\Panel\RelationshipRepository;
@@ -35,6 +36,11 @@ class EmployeeController extends Controller
     private $documentRepository;
 
     /**
+     * @var EmployeeChildrenRepository
+     */
+    private $employeeChildrenRepository;
+
+    /**
      * @var RelationshipRepository
      */
     private $relationshipRepository;
@@ -54,6 +60,7 @@ class EmployeeController extends Controller
      * @param EmployeeRepository $employeeRepository
      * @param ProviderRepository $providerRepository
      * @param DocumentRepository $documentRepository
+     * @param EmployeeChildrenRepository $employeeChildrenRepository
      * @param RelationshipRepository $relationshipRepository
      * @param BreadcrumbService $breadcrumbService
      */
@@ -61,6 +68,7 @@ class EmployeeController extends Controller
         EmployeeRepository $employeeRepository,
         ProviderRepository $providerRepository,
         DocumentRepository $documentRepository,
+        EmployeeChildrenRepository $employeeChildrenRepository,
         RelationshipRepository $relationshipRepository,
         BreadcrumbService $breadcrumbService
     )
@@ -68,6 +76,7 @@ class EmployeeController extends Controller
         $this->employeeRepository = $employeeRepository;
         $this->providerRepository = $providerRepository;
         $this->documentRepository = $documentRepository;
+        $this->employeeChildrenRepository = $employeeChildrenRepository;
         $this->relationshipRepository = $relationshipRepository;
         $this->breadcrumbService = $breadcrumbService;
         $this->states = \Config::get('states');
@@ -139,32 +148,7 @@ class EmployeeController extends Controller
             $data['createdAt'] = $now;
         }
 
-        $this->childrenStore($data);
-
         return $data;
-    }
-
-    protected function childrenStore($data)
-    {
-        if (!(int)$data['hasChildren']) {
-            return 0;
-        }
-
-        $total = count($data['chlidren']);
-        $children = [];
-        for ($i = 0; $i <= $total; $i++) {
-            $row = $data['chlidren'];
-            if (!empty($row['name'][$i]) && !empty($row['birthDate'][$i])) {
-                $children[] = [
-                    'name' => $row['name'][$i],
-                    'birthDate' => Period::format($row['birthDate'][$i], 'Y-m-d')
-                ];
-            }
-        }
-        //Excluir com base no prestador
-        //Incluir os novos
-        //
-        dd($children);
     }
 
     /**
@@ -213,6 +197,42 @@ class EmployeeController extends Controller
     }
 
     /**
+     * @param array $data
+     * @param int $employeeId
+     * @return mixed
+     */
+    protected function childrenStore($data, $employeeId)
+    {
+        if (!(int)$data['hasChildren']) {
+            return false;
+        }
+
+        $today = (new \DateTime())->format('Y-m-d');
+        $total = count($data['children']['name']);
+        $children = [];
+        for ($i = 0; $i < $total; $i++) {
+            $name = $data['children']['name'][$i];
+            $birthDate = Period::format($data['children']['birthDate'][$i], 'Y-m-d');
+            $age = ($today - $birthDate);
+            if (
+                !empty($name) &&
+                !empty($birthDate) &&
+                (($age >= 0) && ($age < 18))
+            ) {
+                $children[] = [
+                    'name' => $name,
+                    'birthDate' => $birthDate,
+                    'employeeId' => $employeeId,
+                    'createdAt' => (new \DateTime())->format('Y-m-d H:i:s')
+                ];
+            }
+        }
+
+        $this->employeeChildrenRepository->createByEmployee($employeeId, $children);
+        return true;
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
@@ -220,22 +240,22 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $this->formRequest($request);
-
-        $this->validate(
+        /*$this->validate(
             $request, $this->employeeRepository->rules(), $this->employeeRepository->messages()
-        );
+        );*/
 
         $data = $this->formRequest($request);
-        $employee = $this->employeeRepository->create($data);
-        $this->createRelationshipByCompany($employee->id, $data['companies']);
-        $this->createLog('POST', $data);
+        //$employee = $this->employeeRepository->create($data);
+        //$this->createRelationshipByCompany($employee->id, $data['companies']);
+        //$this->createLog('POST', $data);
+
+        $this->childrenStore($data, 3);
 
         return redirect()->route('employee.create')->with([
             'success' => true,
             'message' => 'Funcion&aacute;rio cadastrado com sucesso!',
             'route' => 'employee.show',
-            'id' => $employee->id
+            //'id' => $employee->id
         ]);
     }
 
