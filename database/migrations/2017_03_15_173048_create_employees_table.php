@@ -28,16 +28,25 @@ class CreateEmployeesTable extends Migration
             $table->string('state');
             $table->string('jobRole');
             $table->decimal('salaryCap', 10, 2);
-            $table->string('hiringDate');
-            $table->string('endingDate')->nullable();
+            $table->date('hiringDate');
             $table->string('pis');
             $table->string('workingHours');
             $table->string('workRegime');
+
+            //Filhos
             $table->boolean('hasChildren')->default(false);
             $table->integer('numberChildren')->default(0);
-            $table->integer('providerId');
-            $table->boolean('status')->default(false);
+
+            //Demissao/Afastamento
+            $table->boolean('layOff')->default(0)->comment = '0: Em atividade, 1: Afastado, 2: Demitido';
+            $table->date('removalDate')->nullable();
+            $table->integer('daysRemoval')->default(0);
+            $table->date('dismissalDate')->nullable();
+
+
             $table->mediumText('documents')->nullable();
+            $table->integer('providerId')->unsigned();
+            $table->boolean('status')->default(false);
             $table->date('startAt')->nullable();
             $table->dateTime('createdAt');
             $table->dateTime('updatedAt');

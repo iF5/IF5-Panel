@@ -167,7 +167,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group col-xs-12" id="warningNotChildren" style="display: none;">
+                                <div class="form-group col-xs-12" id="childrenWarningNot" style="display: none;">
                                     <div class="alert alert-danger">
                                         <strong>Aten&ccedil;&atilde;o!</strong>
                                         Para salvar o formul&aacute;rio &eacute; preciso excluir os campos reservados
@@ -175,7 +175,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group col-xs-12" id="divChlidren"
+                                <div class="form-group col-xs-12" id="chlidrenDiv"
                                      style="display: {{ (int)$employee->hasChildren ? 'block' : 'none' }};">
                                     <div class="col-md-12">
                                         <div class="panel panel-primary row">
@@ -183,7 +183,7 @@
                                                 <h3 class="panel-title">Informe os dados do(s) filho(s) do funcion&aacute;rio</h3>
                                             </div>
                                             <div style="width:100%; height:300px; overflow:auto;">
-                                                <table class="table table-bordered" id="tableChlidren">
+                                                <table class="table table-bordered" id="chlidrenTable">
                                                     <thead>
                                                     <tr>
                                                         <th style="width: 60%;">Nome completo *</th>

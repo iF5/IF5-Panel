@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEmployeesHasChildrenTable extends Migration
+class CreateEmployeesChildrenTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateEmployeesHasChildrenTable extends Migration
      */
     public function up()
     {
-        Schema::create('employees_has_children', function (Blueprint $table) {
+        Schema::create('employees_children', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->string('name');
-            $table->date('dateOfBirth');
+            $table->date('birthDate');
             $table->integer('employeeId')->unsigned();
+            $table->dateTime('createdAt');
         });
     }
 
@@ -28,6 +29,6 @@ class CreateEmployeesHasChildrenTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employees_has_children');
+        Schema::dropIfExists('employees_children');
     }
 }

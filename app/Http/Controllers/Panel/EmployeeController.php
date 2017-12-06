@@ -147,21 +147,23 @@ class EmployeeController extends Controller
     protected function childrenStore($data)
     {
         if (!(int)$data['hasChildren']) {
-            return [];
+            return 0;
         }
 
         $total = count($data['chlidren']);
         $children = [];
         for ($i = 0; $i <= $total; $i++) {
             $row = $data['chlidren'];
-            if (!empty($row['name'][$i]) && !empty($row['dateOfBirth'][$i])) {
+            if (!empty($row['name'][$i]) && !empty($row['birthDate'][$i])) {
                 $children[] = [
                     'name' => $row['name'][$i],
-                    'dateOfBirth' => Period::format($row['dateOfBirth'][$i], 'Y-m-d')
+                    'birthDate' => Period::format($row['birthDate'][$i], 'Y-m-d')
                 ];
             }
         }
-
+        //Excluir com base no prestador
+        //Incluir os novos
+        //
         dd($children);
     }
 
@@ -218,6 +220,8 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
+        $data = $this->formRequest($request);
+
         $this->validate(
             $request, $this->employeeRepository->rules(), $this->employeeRepository->messages()
         );
