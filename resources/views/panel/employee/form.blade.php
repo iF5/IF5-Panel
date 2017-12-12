@@ -153,7 +153,7 @@
 
                                 <!-- Children -->
                                 <div class="form-group col-xs-6">
-                                    <label>Tem filhos menores? * : </label>
+                                    <label>Tem filho(s) menor(es) de 18 anos? * : </label>
                                     <div class="form-inline">
                                         <div class="radio-inline">
                                             <label><input type="radio" name="hasChildren" value="0" class="has-children"

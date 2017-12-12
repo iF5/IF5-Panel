@@ -207,23 +207,19 @@ class EmployeeController extends Controller
             return false;
         }
 
-        $today = (new \DateTime())->format('Y-m-d');
+        $today = new \DateTime();
         $total = count($data['children']['name']);
         $children = [];
         for ($i = 0; $i < $total; $i++) {
             $name = $data['children']['name'][$i];
             $birthDate = Period::format($data['children']['birthDate'][$i], 'Y-m-d');
-            $age = ($today - $birthDate);
-            if (
-                !empty($name) &&
-                !empty($birthDate) &&
-                (($age >= 0) && ($age < 18))
-            ) {
+            $age = ($today->format('Y-m-d') - $birthDate);
+            if ($name && $birthDate && (($age >= 0) && ($age < 18))) {
                 $children[] = [
                     'name' => $name,
                     'birthDate' => $birthDate,
                     'employeeId' => $employeeId,
-                    'createdAt' => (new \DateTime())->format('Y-m-d H:i:s')
+                    'createdAt' => $today->format('Y-m-d H:i:s')
                 ];
             }
         }
@@ -240,22 +236,21 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        /*$this->validate(
+        $this->validate(
             $request, $this->employeeRepository->rules(), $this->employeeRepository->messages()
-        );*/
+        );
 
         $data = $this->formRequest($request);
-        //$employee = $this->employeeRepository->create($data);
-        //$this->createRelationshipByCompany($employee->id, $data['companies']);
-        //$this->createLog('POST', $data);
-
-        $this->childrenStore($data, 3);
+        $employee = $this->employeeRepository->create($data);
+        $this->childrenStore($data, $employee->id);
+        $this->createRelationshipByCompany($employee->id, $data['companies']);
+        $this->createLog('POST', $data);
 
         return redirect()->route('employee.create')->with([
             'success' => true,
             'message' => 'Funcion&aacute;rio cadastrado com sucesso!',
             'route' => 'employee.show',
-            //'id' => $employee->id
+            'id' => $employee->id
         ]);
     }
 
