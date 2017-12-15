@@ -356,10 +356,17 @@ class EmployeeController extends Controller
     }
 
 
-    public function layoff()
+    public function layoff($employeeId, $layoffType)
     {
+
+        $layoffType = ((int)$layoffType !== 2) ? 1 : 2;
+        $label = [1 => 'demissão', 2 => 'afastamento'];
+
         return view('panel.employee.layoff', [
-            'data' => []
+            'employeeId' => $employeeId,
+            'employeeName' => 'Fulano de tal',
+            'layoffType' => $layoffType,
+            'label' => $label[$layoffType]
         ]);
     }
 
