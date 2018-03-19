@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Queue;
 
+use App\Facades\Employee;
 use App\Services\CsvService;
 use Illuminate\Console\Command;
 
@@ -36,6 +37,7 @@ class RegisterEmployee extends Command
         parent::__construct();
 
         $this->csvService = $csvService;
+
     }
 
     /**
@@ -46,9 +48,16 @@ class RegisterEmployee extends Command
     public function handle()
     {
 
-        $data = $this->csvService->setFilePath(storage_path() .'/upload/queue/register/employees/test.csv')->get();
+        $data = $this->csvService->setFilePath(Employee::getFilePathRegisterBatch() . '/test.csv')->get();
 
         dd($data);
+        /**
+         * 1 - Vai na fila pega os dados para processar
+         * 2 - Pega o caminho do csv e faz o parse
+         * 3 - Salva na tabela de funcionários
+         * 4 - Recupera os ids salvos e salva todos os documentos na tabela de documentos
+         * 5 - Atualiza a fila de processamento
+         */
 
     }
 }

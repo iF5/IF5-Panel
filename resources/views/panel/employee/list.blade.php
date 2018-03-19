@@ -22,7 +22,9 @@
             <div class="col-md-6">
                 <a class="btn btn-success" href="{{ route('employee.create') }}"> Cadastrar novo Funcion&aacute;rio
                     +</a>
+                <!--
                 <a class="btn btn-warning" href=""> Enviar Funcion&aacute;rios em lote</a>
+                -->
             </div>
 
             <div class="col-md-12" style="margin-top: 20px;">

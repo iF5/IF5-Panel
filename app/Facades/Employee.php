@@ -51,4 +51,12 @@ class Employee extends Facade
         \Session::put(self::LABEL, $employee);
     }
 
+    /**
+     * @return string
+     */
+    public static function getFilePathRegisterBatch()
+    {
+        return sprintf('%s/upload/queue/register/employees', storage_path());
+    }
+
 }
