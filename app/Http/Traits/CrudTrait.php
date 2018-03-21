@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Models\Crud;
+namespace App\Http\Traits;
 
-trait Create
+trait CrudTrait
 {
-
     /**
      * @param array $data
      * @return object
@@ -65,7 +64,7 @@ trait Create
      */
     protected function errorOrFail($message)
     {
-        return (object) [
+        return (object)[
             'error' => true,
             'message' => $message
         ];
@@ -87,7 +86,7 @@ trait Create
             foreach ($data as $key => $values) {
                 $all[] = \DB::table($table)->insertGetId($values);
             }
-            return (object) ['error' => false, 'all' => $all];
+            return (object)['error' => false, 'all' => $all];
         } catch (\Exception $e) {
             return $this->errorOrFail($e->getMessage());
         }
@@ -113,5 +112,4 @@ trait Create
             return $this->errorOrFail($e->getMessage());
         }
     }
-
 }

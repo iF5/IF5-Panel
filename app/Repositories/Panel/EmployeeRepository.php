@@ -2,14 +2,14 @@
 
 namespace App\Repositories\Panel;
 
-use App\Models\Crud\Create;
+use App\Http\Traits\CrudTrait;
 use App\Models\Employee;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class EmployeeRepository extends Employee
 {
 
-    use Create;
+    use CrudTrait;
 
     protected $totalPerPage = 20;
 
@@ -160,7 +160,6 @@ class EmployeeRepository extends Employee
         }
 
         $this->insertBatch('employees_has_documents', $data);
-        dd('LALALA');
     }
 
 }
