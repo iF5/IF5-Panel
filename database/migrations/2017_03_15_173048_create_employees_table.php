@@ -19,7 +19,7 @@ class CreateEmployeesTable extends Migration
             $table->string('cpf');
             $table->string('rg');
             $table->string('ctps');
-            $table->string('birthDate');
+            $table->date('birthDate');
             $table->string('cep');
             $table->string('street');
             $table->string('number');

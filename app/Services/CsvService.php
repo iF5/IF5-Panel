@@ -10,9 +10,24 @@ class CsvService
     private $filePath;
 
     /**
+     * @var int
+     */
+    private $length = null;
+
+    /**
      * @var string
      */
-    private $separator = ';';
+    private $delimiter = ';';
+
+    /**
+     * @var string
+     */
+    private $enclosure = null;
+
+    /**
+     * @var string
+     */
+    private $escape = null;
 
     /**
      * @return string
@@ -33,20 +48,74 @@ class CsvService
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getSeparator()
+    public function getLength()
     {
-        return $this->separator;
+        return $this->length;
     }
 
     /**
-     * @param string $separator
+     * @param int $length
      * @return $this
      */
-    public function setSeparator($separator)
+    public function setLength($length)
     {
-        $this->separator = $separator;
+        $this->length = $length;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDelimiter()
+    {
+        return $this->delimiter;
+    }
+
+    /**
+     * @param string $delimiter
+     * @return $this
+     */
+    public function setDelimiter($delimiter)
+    {
+        $this->delimiter = $delimiter;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEnclosure()
+    {
+        return $this->enclosure;
+    }
+
+    /**
+     * @param string $enclosure
+     * @return $this
+     */
+    public function setEnclosure($enclosure)
+    {
+        $this->enclosure = $enclosure;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEscape()
+    {
+        return $this->escape;
+    }
+
+    /**
+     * @param string $escape
+     * @return $this
+     */
+    public function setEscape($escape)
+    {
+        $this->escape = $escape;
         return $this;
     }
 
@@ -58,7 +127,7 @@ class CsvService
      */
     private function response($error = false, $message, array $data = [])
     {
-        return [
+        return (object)[
             'error' => $error,
             'message' => $message,
             'data' => $data
@@ -72,9 +141,9 @@ class CsvService
     {
         $fp = fopen($this->filePath, 'r');
         $rows = [];
-        while (($line = fgetcsv($fp)) !== false) {
+        while (($line = fgetcsv($fp, $this->length, $this->delimiter)) !== false) {
             if (count($line[0]) > 0) {
-                $rows[] = $line[0];
+                $rows[] = $line;
             }
         }
         fclose($fp);
@@ -97,14 +166,13 @@ class CsvService
                 return $this->response(true, 'No records found');
             }
 
-            $fields = array_values(explode($this->separator, $rows[0]));
+            $columns = array_first($rows);
             $data = [];
             for ($i = 1; $i < $total; $i++) {
-                $row = explode($this->separator, $rows[$i]);
-                $data[] = array_combine($fields, array_values($row));
+                $data[] = array_combine(array_values($columns), array_values($rows[$i]));
             }
-
             return $this->response(false, 'Csv reading done successfully', $data);
+
         } catch (\Exception $e) {
             return $this->response(true, 'Error in csv formatting');
         }

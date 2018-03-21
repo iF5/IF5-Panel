@@ -25,23 +25,28 @@ class Employee extends Model
         'jobRole',
         'salaryCap',
         'hiringDate',
-        'endingDate',
         'pis',
         'workingHours',
         'workRegime',
         'hasChildren',
-        'numberChildren',
         'layOff',
         'removalDate',
         'daysRemoval',
         'dismissalDate',
-        'documents',
         'providerId',
         'status',
         'startAt',
         'createdAt',
         'updatedAt'
     ];
+
+    /**
+     * @return array
+     */
+    public function getFillable()
+    {
+        return $this->fillable;
+    }
 
     /**
      * Rules of the validation
@@ -114,6 +119,7 @@ class Employee extends Model
             'Noturno'
         ];
     }
+
 
     /**
      * @return array

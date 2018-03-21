@@ -57,8 +57,8 @@
                                 <div class="form-group col-xs-4">
                                     <label for="birthDate">Data de nascimento * : </label>
                                     <input type="text" id="birthDate" name="birthDate"
-                                           value="{{ $employee->birthDate or old('birthDate') }}"
-                                           class="form-control dateMask v-void">
+                                           value="{{ ($method === 'PUT') ? \Carbon\Carbon::parse($employee->birthDate)->format('d/m/Y') : old('birthDate') }}"
+                                           class="form-control v-void">
                                 </div>
                                 <div class="form-group col-xs-4">
                                     <label for="cep">CEP* :</label>
@@ -122,7 +122,7 @@
                                 <div class="form-group col-xs-4">
                                     <label for="hiringDate">Data contratação * : </label>
                                     <input type="text" id="hiringDate" name="hiringDate"
-                                           value="{{ $employee->hiringDate or old('hiringDate') }}"
+                                           value="{{ ($method === 'PUT') ? \Carbon\Carbon::parse($employee->hiringDate)->format('d/m/Y') : old('hiringDate') }}"
                                            class="form-control dateMask v-void">
                                 </div>
 

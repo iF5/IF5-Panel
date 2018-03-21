@@ -2,11 +2,14 @@
 
 namespace App\Repositories\Panel;
 
+use App\Models\Crud\Create;
 use App\Models\Employee;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class EmployeeRepository extends Employee
 {
+
+    use Create;
 
     protected $totalPerPage = 20;
 
@@ -53,10 +56,10 @@ class EmployeeRepository extends Employee
      */
     public function findById($id)
     {
-     //   try {
-            return (object)$this->find($id)->original;
+        //   try {
+        return (object)$this->find($id)->original;
         //} catch (\Exception $e) {
-          //  throw new ModelNotFoundException;
+        //  throw new ModelNotFoundException;
         //}
     }
 
@@ -127,6 +130,37 @@ class EmployeeRepository extends Employee
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
+    }
+
+    /**
+     * @param array $data
+     * @return bool|string
+     */
+    public function saveInBatch($data)
+    {
+        return $this->insertBatchGetId($this->table, $data);
+    }
+
+    /**
+     * @param array $employees
+     * @param array $documents
+     */
+    public function attachDocumentsInBatch(array $employees = [], array $documents = [])
+    {
+        $data = [];
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+        foreach ($employees as $key => $value) {
+            array_walk($documents, function ($item) use (&$data, &$value, &$now) {
+                $data[] = [
+                    'employeeId' => $value,
+                    'documentId' => $item,
+                    'createdAt' => $now
+                ];
+            });
+        }
+
+        $this->insertBatch('employees_has_documents', $data);
+        dd('LALALA');
     }
 
 }
