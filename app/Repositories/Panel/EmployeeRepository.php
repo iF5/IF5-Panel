@@ -120,16 +120,30 @@ class EmployeeRepository extends Employee
     }
 
     /**
-     * @param int $id
+     * @param int $employeeId
      * @return mixed
      */
-    public function findDocuments($id)
+    public function findDocumentsByEmployee($employeeId)
     {
         try {
-            return json_decode($this->find($id)->documents, true);
+            return \DB::table('employees_has_documents')->where('employeeId', '=', $employeeId)->get();
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
+    }
+
+    /**
+     * @param int $employeeId
+     * @return array
+     */
+    public function findDocuments($employeeId)
+    {
+        $rows = $this->findDocumentsByEmployee($employeeId);
+        $documents = [];
+        foreach ($rows as $row) {
+            $documents[] = $row->documentId;
+        }
+        return $documents;
     }
 
     /**
@@ -145,7 +159,7 @@ class EmployeeRepository extends Employee
      * @param array $employees
      * @param array $documents
      */
-    public function attachDocumentsInBatch(array $employees = [], array $documents = [])
+    public function attachDocuments(array $employees = [], array $documents = [])
     {
         $data = [];
         $now = (new \DateTime())->format('Y-m-d H:i:s');

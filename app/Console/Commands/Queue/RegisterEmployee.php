@@ -90,7 +90,13 @@ class RegisterEmployee extends Command
         foreach ($registers as $register) {
             $csv = $this->getCsvData($register);
             $employees = $this->employeeRepository->saveInBatch($csv->data);
-            $this->employeeRepository->attachDocumentsInBatch($employees->all, $documents);
+            $this->employeeRepository->attachDocuments($employees->all, $documents);
+            $this->registerEmployeeRepository->updateById($register->id, [
+                'status' => 1,
+                'message' => 'Funcionarios cadastrados com sucesso',
+                'debugMessage' => $csv->message,
+                'affectedItems' => json_encode($employees->all)
+            ]);
         }
 
         /**
@@ -98,7 +104,7 @@ class RegisterEmployee extends Command
          * 2 - Pega o caminho do csv e faz o parse OK
          * 3 - Salva na tabela de funcionários OK
          * 4 - Recupera os ids salvos e salva todos os documentos na tabela de documentos OK
-         * 5 - Atualiza a fila de processamento
+         * 5 - Atualiza a fila de processamento OK
          *
          * | id | fileName                                     | originalFileName | status | message | debugMessage | providerId | createdAt           |
          * +----+----------------------------------------------+------------------+--------+---------+--------------+------------+---------------------+
@@ -133,8 +139,8 @@ class RegisterEmployee extends Command
 
         if (!$csv->error) {
             $fill = array_fill_keys($this->employeeRepository->getFillable(), '');
-            $now = (new \DateTime())->format('Y-m-d H:i:s');
             $fill['providerId'] = $register->providerId;
+            $now = (new \DateTime())->format('Y-m-d H:i:s');
             $fill['createdAt'] = $now;
             $fill['updatedAt'] = $now;
             foreach ($csv->data as $key => &$value) {

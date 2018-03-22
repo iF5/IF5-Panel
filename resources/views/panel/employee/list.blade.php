@@ -20,11 +20,8 @@
             </div>
 
             <div class="col-md-6">
-                <a class="btn btn-success" href="{{ route('employee.create') }}"> Cadastrar novo Funcion&aacute;rio
-                    +</a>
-                <!--
-                <a class="btn btn-warning" href=""> Enviar Funcion&aacute;rios em lote</a>
-                -->
+                <a class="btn btn-success" href="{{ route('employee.create') }}">Cadastrar novo</a>
+                <a class="btn btn-primary" href="{{ route('employee.register.index') }}">Cadastrar em lote</a>
             </div>
 
             <div class="col-md-12" style="margin-top: 20px;">

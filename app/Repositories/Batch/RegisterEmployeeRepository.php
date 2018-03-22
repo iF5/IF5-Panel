@@ -21,10 +21,17 @@ class RegisterEmployeeRepository
         ])->get();
     }
 
-    
+
     public function save($data)
     {
         $this->insertBatch($this->table, $data);
+    }
+
+    public function updateById($id, array $data = [])
+    {
+        $this->updateTo($this->table, $data, [
+            ['id', '=', $id]
+        ]);
     }
 
 }

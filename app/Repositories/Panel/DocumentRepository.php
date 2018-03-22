@@ -85,18 +85,4 @@ class DocumentRepository extends Document
         }
     }
 
-    public function findIdByEmployee($employeeId)
-    {
-        try {
-            return \DB::table('employees_has_documents')
-                ->select('documentId')
-                ->where([
-                    ['employeeId', '=', $employeeId]
-                ])->get()->toArray();
-        } catch (\Exception $e) {
-            throw new ModelNotFoundException;
-        }
-    }
-
-
 }

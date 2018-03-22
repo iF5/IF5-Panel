@@ -8,4 +8,8 @@ Route::get('employee/layoff/{employeeId}/{layoffType}', 'Panel\EmployeeControlle
     ->middleware('can:isProvider')
     ->name('employee.layoff');
 
+Route::get('employee/register/batch', 'Panel\EmployeeController@registerIndex')
+    ->middleware('can:isProvider')
+    ->name('employee.register.index');
+
 Route::resource('employee', 'Panel\EmployeeController', ['middleware' => ['can:isProvider']]);

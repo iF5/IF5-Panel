@@ -60,14 +60,16 @@ trait CrudTrait
 
     /**
      * @param string $message
-     * @return array
+     * @param bool $error
+     * @param array $args
+     * @return object
      */
-    protected function errorOrFail($message)
+    protected function response($message, $error = false, array $args = [])
     {
-        return (object)[
-            'error' => true,
+        return (object)array_merge($args, [
+            'error' => $error,
             'message' => $message
-        ];
+        ]);
     }
 
     /**
@@ -79,37 +81,54 @@ trait CrudTrait
     {
         try {
             if (!count($data)) {
-                return $this->errorOrFail('Data not found');
+                return $this->response('Data not found', true);
             }
 
             $all = [];
             foreach ($data as $key => $values) {
                 $all[] = \DB::table($table)->insertGetId($values);
             }
-            return (object)['error' => false, 'all' => $all];
+
+            return $this->response('Success', false, ['all' => $all]);
         } catch (\Exception $e) {
-            return $this->errorOrFail($e->getMessage());
+            return $this->response($e->getMessage(), true);
         }
     }
-
 
     /**
      * @param string $table
      * @param array $data
-     * @return bool|string
+     * @return object
      */
     protected function insertBatch($table, array $data = [])
     {
         try {
             if (!count($data)) {
-                return $this->errorOrFail('Data not found');
+                return $this->response('Data not found', true);
             }
 
             \DB::table($table)->insert($data);
-            return (object)['error' => false];
-
+            return $this->response('Success');
         } catch (\Exception $e) {
-            return $this->errorOrFail($e->getMessage());
+            return $this->response($e->getMessage(), true);
         }
     }
+
+    public function updateTo($table, array $fields = [], array $where = [])
+    {
+        try {
+            $stmt = \DB::table($table);
+            if (count($where) > 0) {
+                $stmt->where($where);
+            }
+            $stmt->update($fields);
+        } catch (\PDOException $e) {
+            return (object)[
+                'error' => true,
+                'info' => $e->errorInfo
+            ];
+        }
+        return (object)['error' => false];
+    }
+
 }

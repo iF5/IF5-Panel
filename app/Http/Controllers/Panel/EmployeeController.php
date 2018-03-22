@@ -288,8 +288,7 @@ class EmployeeController extends Controller
             'employee' => $employee,
             'companies' => $this->getCompanies($id),
             'documents' => $this->documentRepository->findAllByEntity(3),
-            //'selectedDocuments' => json_decode($employee->documents, true),
-            'selectedDocuments' => [],
+            'selectedDocuments' => $this->employeeRepository->findDocuments($id),
             'states' => $this->states,
             'route' => 'employee.update',
             'method' => 'PUT',
@@ -396,4 +395,15 @@ class EmployeeController extends Controller
 
         return $this->breadcrumbService->push($data)->get();
     }
+
+    /**
+     * Register
+     */
+    public function registerIndex()
+    {
+        return view('panel.employee.register', [
+            'breadcrumbs' => $this->getBreadcrumb(),
+        ]);
+    }
+
 }
