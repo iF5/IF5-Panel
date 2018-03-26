@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Facades\Money;
 use App\Facades\Period;
 use App\Http\Traits\AuthTrait;
 use App\Http\Traits\LogTrait;
@@ -14,6 +15,7 @@ use App\Services\BreadcrumbService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Facades\Employee;
+use App\Services\UploadService;
 
 class EmployeeController extends Controller
 {
@@ -56,21 +58,19 @@ class EmployeeController extends Controller
     private $states;
 
     /**
-     * EmployeeController constructor.
-     * @param EmployeeRepository $employeeRepository
-     * @param ProviderRepository $providerRepository
-     * @param DocumentRepository $documentRepository
-     * @param EmployeeChildrenRepository $employeeChildrenRepository
-     * @param RelationshipRepository $relationshipRepository
-     * @param BreadcrumbService $breadcrumbService
+     * @var UploadService
      */
+    private $uploadService;
+
+
     public function __construct(
         EmployeeRepository $employeeRepository,
         ProviderRepository $providerRepository,
         DocumentRepository $documentRepository,
         EmployeeChildrenRepository $employeeChildrenRepository,
         RelationshipRepository $relationshipRepository,
-        BreadcrumbService $breadcrumbService
+        BreadcrumbService $breadcrumbService,
+        UploadService $uploadService
     )
     {
         $this->employeeRepository = $employeeRepository;
@@ -79,6 +79,7 @@ class EmployeeController extends Controller
         $this->employeeChildrenRepository = $employeeChildrenRepository;
         $this->relationshipRepository = $relationshipRepository;
         $this->breadcrumbService = $breadcrumbService;
+        $this->uploadService = $uploadService;
         $this->states = \Config::get('states');
 
     }
@@ -131,17 +132,15 @@ class EmployeeController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return array
      */
-    protected function formRequest(\Illuminate\Http\Request $request)
+    protected function formRequest(Request $request)
     {
         $data = $request->all();
         $now = (new \DateTime())->format('Y-m-d H:i:s');
-        $data['salaryCap'] = str_replace(['.', ','], ['', '.'], $data['salaryCap']);
-        //$data['salaryCap'] = number_format($data['salaryCap'], 2, ',', '');
+        $data['salaryCap'] = Money::toDecimal($data['salaryCap']);
         $data['status'] = $this->isAdmin();
-        $data['documents'] = isset($data['documents']) ? json_encode($data['documents']) : null;
         $data['updatedAt'] = $now;
 
         if (strtoupper($request->getMethod()) === 'POST') {
@@ -269,7 +268,7 @@ class EmployeeController extends Controller
             'employee' => $employee,
             'companies' => $companies,
             'documents' => $this->documentRepository->findAllByEntity(Employee::ID),
-            'selectedDocuments' => json_decode($employee->documents, true),
+            'selectedDocuments' => $this->employeeRepository->findDocuments($id),
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
     }
@@ -323,6 +322,7 @@ class EmployeeController extends Controller
         ]);
     }
 
+
     /**
      * Remove the specified resource from storage.
      *
@@ -355,10 +355,13 @@ class EmployeeController extends Controller
         }
     }
 
-
+    /**
+     * @param $employeeId
+     * @param $layoffType
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function layoff($employeeId, $layoffType)
     {
-
         $layoffType = ((int)$layoffType !== 2) ? 1 : 2;
         $label = [1 => 'demissão', 2 => 'afastamento'];
 
@@ -399,11 +402,56 @@ class EmployeeController extends Controller
     /**
      * Register
      */
-    public function registerIndex()
+    public function registerBatchIndex()
     {
+        $registers = $this->relationshipRepository->findAll('register_batch_employees', [
+            'providerId' => $this->getProviderId()
+        ]);
+
         return view('panel.employee.register', [
             'breadcrumbs' => $this->getBreadcrumb(),
+            'registers' => $registers->data
         ]);
     }
+
+    public function registerBatchUpload(Request $request)
+    {
+        $file = $request->file('file');
+        $fileName = sprintf('%s.csv', sha1(uniqid(rand(), true)));
+        $extension = ['csv'];
+        $upload = $this->uploadService
+            ->setDir(sprintf('%s/', Employee::getFilePathRegisterBatch()))
+            ->setAllowedExtensions(
+                $extension, sprintf('S&oacute; &eacute; permitido arquivo: %s', implode($extension))
+            )->move(
+                $file, $fileName, sprintf('O arquivo %s foi enviado com sucesso', $file->getClientOriginalName())
+            );
+
+        if (!$upload->error) {
+            $now = (new \DateTime())->format('Y-m-d H:i:s');
+            $this->relationshipRepository->create('register_batch_employees', [
+                'name' => $request->get('name'),
+                'delimiter' => $request->get('delimiter'),
+                'fileName' => $fileName,
+                'originalFileName' => $file->getClientOriginalName(),
+                'message' => 'Aguardando ser processado',
+                'providerId' => $this->getProviderId(),
+                'createdAt' => $now,
+                'updatedAt' => $now
+            ]);
+        }
+
+        $this->createLog('POST', (array)$upload);
+        return response()->json($upload);
+    }
+
+    public function registerBatchRun()
+    {
+        $a = $this->relationshipRepository->read('register_batch_employees', [
+            'providerId' => $this->getProviderId()
+        ]);
+        dd($a);
+    }
+
 
 }

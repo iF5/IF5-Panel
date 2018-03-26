@@ -176,4 +176,23 @@ class EmployeeRepository extends Employee
         $this->insertBatch('employees_has_documents', $data);
     }
 
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function register(array $data = [])
+    {
+        $indexes = [];
+        foreach ($data as $row) {
+            if (!isset($row['id']) || (int)$row['id'] <= 0) {
+                $indexes[] = $this->create($row);
+            } else {
+                $this->findOrFail($row['id'])->update($data);
+                $indexes[] = $row['id'];
+            }
+        }
+
+        return $indexes;
+    }
+
 }

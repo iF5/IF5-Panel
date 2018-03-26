@@ -13,9 +13,9 @@ Dropzone.autoDiscover = false;
 function If5Upload(options) {
 
     var _options = {
-        formElement: options.formElement || null,
-        messageElement: options.messageElement || null,
-        submitElement: options.submitElement || null,
+        formElement: options.formElement || '#dz-modal-upload',
+        messageElement: options.messageElement || '#dz-modal-message',
+        submitElement: options.submitElement || '#dz-modal-submit',
         url: options.url || '/upload',
         autoProcessQueue: options.autoProcessQueue || false,
         uploadMultiple: options.uploadMultiple || false,
@@ -326,12 +326,7 @@ $(function () {
      * On upload profile image
      */
     $('.modal-image').on('click', function () {
-        new If5Upload({
-            formElement: '#dz-modal-upload',
-            submitElement: '#dz-modal-submit',
-            messageElement: '#dz-modal-message',
-            url: this.rel
-        });
+        new If5Upload({url: this.rel});
     });
 
     /**
@@ -339,12 +334,7 @@ $(function () {
      */
     $('.modal-report-upload').on('click', function (e) {
         e.preventDefault();
-        new If5Upload({
-            formElement: '#dz-modal-upload',
-            submitElement: '#dz-modal-submit',
-            messageElement: '#dz-modal-message',
-            url: this.href
-        });
+        new If5Upload({url: this.href});
     });
 
     /**
@@ -354,21 +344,18 @@ $(function () {
         e.preventDefault();
         var month = '#month' + this.rel;
         var validity = '#validity' + this.rel;
-        var data = {};
-        data[month] = {value: $(month).val(), type: 'VOID'};
-        data[validity] = {value: $(validity).val(), type: 'NUMBER'};
-        var response = validate.assert(data);
+        var assert = validate.assert({
+            month: {value: $(month).val(), type: 'VOID'},
+            validity: {value: $(validity).val(), type: 'NUMBER'}
+        });
 
-        if (!response.isSuccess) {
+        if (!assert.isSuccess) {
             //if5Modal.alert();
             return false;
         }
 
         $('#upload').modal('show');
         new If5Upload({
-            formElement: '#dz-modal-upload',
-            submitElement: '#dz-modal-submit',
-            messageElement: '#dz-modal-message',
             url: this.href,
             data: {
                 periodicity: $('#periodicity').val(),
@@ -457,6 +444,30 @@ $(function () {
      */
     $('.checkbox-on-all').on('click', function () {
         $(this).closest('div').siblings('div').find(':checkbox').prop('checked', this.checked);
+    });
+
+
+    $('#modal-register-employee-upload').on('click', function (e) {
+        e.preventDefault();
+        var name = $('#name').val();
+        var delimiter = $('#delimiter').val();
+        var assert = validate.assert({
+            '#name': {value: name, type: 'VOID'},
+            '#delimiter': {value: delimiter, type: 'VOID'}
+        });
+
+        if (!assert.isSuccess) {
+            return false;
+        }
+
+        $('#upload').modal('show');
+        new If5Upload({
+            url: this.href,
+            data: {
+                name: name,
+                delimiter: delimiter
+            }
+        });
     });
 
 });

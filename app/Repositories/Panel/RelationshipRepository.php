@@ -6,49 +6,75 @@ class RelationshipRepository
 {
 
     /**
-     * Create associations
-     *
-     * @param string $table
-     * @param array $fields
+     * @param string $message
+     * @param bool $error
+     * @param array $data
      * @return object
-     *
      */
-    public function create($table, array $fields = [])
+    protected function forward($message, $error = false, array $data = [])
     {
-        try {
-            \DB::table($table)->insert($fields);
-        } catch (\PDOException $e) {
-            return (object)[
-                'error' => true,
-                'info' => $e->errorInfo
-            ];
-        }
-        return (object)['error' => false];
+        return (object)[
+            'error' => $error,
+            'message' => $message,
+            'data' => $data
+        ];
     }
 
     /**
-     * Update associations
-     *
      * @param string $table
-     * @param array $fields
      * @param array $where
      * @return object
      */
-    public function update($table, array $fields = [], array $where = [])
+    public function findAll($table, array $where = [])
     {
         try {
             $stmt = \DB::table($table);
             if (count($where) > 0) {
                 $stmt->where($where);
             }
-            $stmt->update($fields);
+            return $this->forward('Success', false, $stmt->get());
         } catch (\PDOException $e) {
-            return (object)[
-                'error' => true,
-                'info' => $e->errorInfo
-            ];
+            return $this->forward($e->errorInfo, true);
         }
-        return (object)['error' => false];
+    }
+
+    /**
+     * Create associations
+     *
+     * @param string $table
+     * @param array $fields
+     * @return object
+     */
+    public function create($table, array $columns = [])
+    {
+        try {
+            \DB::table($table)->insert($columns);
+            return $this->forward('Success', false);
+        } catch (\PDOException $e) {
+            return $this->forward($e->errorInfo, true);
+        }
+    }
+
+    /**
+     * Update associations
+     *
+     * @param string $table
+     * @param array $columns
+     * @param array $where
+     * @return object
+     */
+    public function update($table, array $columns = [], array $where = [])
+    {
+        try {
+            $stmt = \DB::table($table);
+            if (count($where) > 0) {
+                $stmt->where($where);
+            }
+            $stmt->update($columns);
+            return $this->forward('Success', false);
+        } catch (\PDOException $e) {
+            return $this->forward($e->errorInfo, true);
+        }
     }
 
     /**
@@ -66,13 +92,10 @@ class RelationshipRepository
                 $stmt->where($where);
             }
             $stmt->delete();
+            return $this->forward('Success', false);
         } catch (\PDOException $e) {
-            return (object)[
-                'error' => true,
-                'info' => $e->errorInfo
-            ];
+            return $this->forward($e->errorInfo, true);
         }
-        return (object)['error' => false];
     }
 
 }

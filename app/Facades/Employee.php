@@ -56,7 +56,7 @@ class Employee extends Facade
      */
     public static function getFilePathRegisterBatch()
     {
-        return sprintf('%s/upload/queue/register/employees', storage_path());
+        return sprintf('%s/upload/register/employees/', storage_path());
     }
 
 }
