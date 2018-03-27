@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Facades\Employee;
 use App\Services\UploadService;
+use App\Services\CsvService;
 
 class EmployeeController extends Controller
 {
@@ -62,6 +63,8 @@ class EmployeeController extends Controller
      */
     private $uploadService;
 
+    private $csvService;
+
 
     public function __construct(
         EmployeeRepository $employeeRepository,
@@ -70,7 +73,8 @@ class EmployeeController extends Controller
         EmployeeChildrenRepository $employeeChildrenRepository,
         RelationshipRepository $relationshipRepository,
         BreadcrumbService $breadcrumbService,
-        UploadService $uploadService
+        UploadService $uploadService,
+        CsvService $csvService
     )
     {
         $this->employeeRepository = $employeeRepository;
@@ -80,6 +84,7 @@ class EmployeeController extends Controller
         $this->relationshipRepository = $relationshipRepository;
         $this->breadcrumbService = $breadcrumbService;
         $this->uploadService = $uploadService;
+        $this->csvService = $csvService;
         $this->states = \Config::get('states');
 
     }
@@ -401,6 +406,8 @@ class EmployeeController extends Controller
 
     /**
      * Register
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function registerBatchIndex()
     {
@@ -409,18 +416,24 @@ class EmployeeController extends Controller
         ]);
 
         return view('panel.employee.register', [
-            'breadcrumbs' => $this->getBreadcrumb(),
+            'breadcrumbs' => $this->getBreadcrumb('Lote'),
             'registers' => $registers->data
         ]);
     }
 
+    /**
+     * Register upload
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function registerBatchUpload(Request $request)
     {
         $file = $request->file('file');
         $fileName = sprintf('%s.csv', sha1(uniqid(rand(), true)));
         $extension = ['csv'];
         $upload = $this->uploadService
-            ->setDir(sprintf('%s/', Employee::getFilePathRegisterBatch()))
+            ->setDir(Employee::getFilePathRegisterBatch())
             ->setAllowedExtensions(
                 $extension, sprintf('S&oacute; &eacute; permitido arquivo: %s', implode($extension))
             )->move(
@@ -445,12 +458,89 @@ class EmployeeController extends Controller
         return response()->json($upload);
     }
 
-    public function registerBatchRun()
+    /**
+     * Register run
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse|void
+     */
+    public function registerBatchRun($id)
     {
-        $a = $this->relationshipRepository->read('register_batch_employees', [
-            'providerId' => $this->getProviderId()
+        $register = $this->relationshipRepository->first('register_batch_employees', [
+            ['id', $id],
+            ['providerId', $this->getProviderId()],
+            ['status', 0]
         ]);
-        dd($a);
+
+        if (!$register) {
+            return;
+        }
+
+        $csv = $this->getCsvData($register->data);
+        $employees = $this->employeeRepository->register($csv->data);
+        $this->employeeRepository->attachDocuments($employees, $this->documentRepository->idList(Employee::ID));
+        $this->relationshipRepository->update('register_batch_employees', [
+            'status' => 1,
+            'message' => 'Funcion&aacute;rios cadastrados com sucesso',
+            'debugMessage' => $csv->message,
+            'affectedItems' => json_encode($employees)
+        ], [['id', $id]]);
+
+        $this->createLog('POST', $employees);
+        return response()->json(['error' => false, 'message' => 'Success']);
+
+    }
+
+
+    /**
+     * Csv
+     *
+     * @param mixed $register
+     * @return object
+     */
+    protected function getCsvData($register)
+    {
+        $csv = $this->csvService
+            ->setDelimiter($register->delimiter)
+            ->setFilePath(Employee::getFilePathRegisterBatch($register->fileName))
+            ->get();
+
+        if (!$csv->error) {
+            $fill = array_fill_keys($this->employeeRepository->getFillable(), '');
+            $fill['providerId'] = $register->providerId;
+            $now = (new \DateTime())->format('Y-m-d H:i:s');
+            $fill['createdAt'] = $now;
+            $fill['updatedAt'] = $now;
+            $fill['status'] = true;
+            foreach ($csv->data as $key => &$value) {
+                $value = array_merge($fill, array_intersect_key($value, $fill));
+                $value['birthDate'] = Period::format($value['birthDate'], 'Y-m-d');
+                $value['salaryCap'] = Money::toDecimal($value['salaryCap']);
+                $value['hiringDate'] = Period::format($value['hiringDate'], 'Y-m-d');
+            }
+        }
+
+        return $csv;
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function registerBatchDestroy($id)
+    {
+        $register = $this->relationshipRepository->first('register_batch_employees', [['id', $id]]);
+        if (!$register->error) {
+            $data = ['id' => $id];
+            unlink(Employee::getFilePathRegisterBatch($register->data->fileName));
+            $this->relationshipRepository->destroy('register_batch_employees', $data);
+            $this->createLog('DELETE', $data);
+        }
+
+        return redirect()->route('employee.register.index');
     }
 
 

@@ -11,7 +11,7 @@ class RelationshipRepository
      * @param array $data
      * @return object
      */
-    protected function forward($message, $error = false, array $data = [])
+    protected function forward($message, $error = false, $data = [])
     {
         return (object)[
             'error' => $error,
@@ -25,14 +25,42 @@ class RelationshipRepository
      * @param array $where
      * @return object
      */
+    private function fetch($table, array $where = [])
+    {
+        $stmt = \DB::table($table);
+        if (count($where) > 0) {
+            $stmt->where($where);
+        }
+        return $stmt;
+    }
+
+    /**
+     * @param string $table
+     * @param array $where
+     * @return object
+     */
     public function findAll($table, array $where = [])
     {
         try {
-            $stmt = \DB::table($table);
-            if (count($where) > 0) {
-                $stmt->where($where);
-            }
-            return $this->forward('Success', false, $stmt->get());
+            return $this->forward(
+                'Success', false, $this->fetch($table, $where)->get()
+            );
+        } catch (\PDOException $e) {
+            return $this->forward($e->errorInfo, true);
+        }
+    }
+
+    /**
+     * @param string $table
+     * @param array $where
+     * @return object
+     */
+    public function first($table, array $where = [])
+    {
+        try {
+            return $this->forward(
+                'Success', false, $this->fetch($table, $where)->first()
+            );
         } catch (\PDOException $e) {
             return $this->forward($e->errorInfo, true);
         }
@@ -42,7 +70,7 @@ class RelationshipRepository
      * Create associations
      *
      * @param string $table
-     * @param array $fields
+     * @param array $columns
      * @return object
      */
     public function create($table, array $columns = [])

@@ -65,6 +65,21 @@ class DocumentRepository extends Document
         }
     }
 
+
+    /**
+     * @param int $entityGroup
+     * @return array
+     */
+    public function idList($entityGroup)
+    {
+        $list = [];
+        $documents = $this->findAllByEntity($entityGroup);
+        foreach ($documents as $document) {
+            $list[] = $document->id;
+        }
+        return $list;
+    }
+
     /**
      * @param int $periodicity
      * @param int $entityGroup

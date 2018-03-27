@@ -33,6 +33,7 @@
                                    class="btn btn-success">
                                     Cadastrar lote
                                 </a>
+                                <a href="{{ asset('csv/resourcesModelo_Lote_Funcionarios.csv') }}" download>Baixar</a>
                             </div>
                         </div>
                     </form>
@@ -41,33 +42,34 @@
                 <div class="col-md-12" style="margin-top: 20px;">
                     <table id="provider-table" class="table table-bordred table-striped">
                         <thead>
-                        <th></th>
                         <th>Nome</th>
                         <th>Delimitador do CSV</th>
                         <th>Nome do arquivo</th>
                         <th>Status</th>
                         <th>Cadastrado em</th>
+                        <th></th>
                         </thead>
                         <tbody>
                         @forelse($registers as $register)
                             <tr>
-                                <td>
-                                    <div class="btn-group">
-                                        <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-                                            <span class='glyphicon glyphicon-cog'></span> <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <li>
-                                                <a href="">Rodar</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
                                 <td>{{ $register->name }}</td>
                                 <td><strong>{{ $register->delimiter }}</strong></td>
                                 <td>{{ $register->originalFileName }}</td>
                                 <td>{{ $register->message }}</td>
                                 <td>{{ Period::format($register->createdAt, 'd/m/Y H:i')  }}</td>
+                                <td>
+                                    @if(!$register->status)
+                                        <a href="{{ route('employee.register.run', $register->id) }}"
+                                           class="btn btn-dark btn-xs register-batch-run"><span
+                                                    class="glyphicon glyphicon-send" title="Processar"></span></a>
+                                        <a href="#"
+                                           class="btn btn-danger btn-xs modal-delete" title="Excluir"
+                                           data-toggle="modal"
+                                           data-target="#delete"
+                                           rel="{{ route('employee.register.destroy', $register->id) }}"><span
+                                                    class="glyphicon glyphicon-trash"></span></a>
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>

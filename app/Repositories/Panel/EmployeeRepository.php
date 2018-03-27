@@ -185,7 +185,8 @@ class EmployeeRepository extends Employee
         $indexes = [];
         foreach ($data as $row) {
             if (!isset($row['id']) || (int)$row['id'] <= 0) {
-                $indexes[] = $this->create($row);
+                $employee = $this->create($row);
+                $indexes[] = $employee->id;
             } else {
                 $this->findOrFail($row['id'])->update($data);
                 $indexes[] = $row['id'];

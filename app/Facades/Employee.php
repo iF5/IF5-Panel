@@ -50,13 +50,14 @@ class Employee extends Facade
     {
         \Session::put(self::LABEL, $employee);
     }
-
+    
     /**
+     * @param string $filename
      * @return string
      */
-    public static function getFilePathRegisterBatch()
+    public static function getFilePathRegisterBatch($filename = null)
     {
-        return sprintf('%s/upload/register/employees/', storage_path());
+        return sprintf('%s/upload/register/employees/%s', storage_path(), $filename);
     }
 
 }

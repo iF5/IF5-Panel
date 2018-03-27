@@ -470,5 +470,21 @@ $(function () {
         });
     });
 
+    $('.register-batch-run').on('click', function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: this.href,
+            type: 'GET',
+            beforeSend: function(){
+                waitingDialog.show('Por favor aguarde....');
+            },
+            complete: function(){
+                window.location.reload();
+            }
+        });
+    });
+
+    //waitingDialog.show('Por favor aguarde....');
+
 });
 
