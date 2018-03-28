@@ -23,27 +23,39 @@ class RelationshipRepository
     /**
      * @param string $table
      * @param array $where
-     * @return object
+     * @param string $orderBy
+     * @param bool $limit
      */
-    private function fetch($table, array $where = [])
+    private function fetch($table, array $where = [], $orderBy = 'ASC', $limit = false)
     {
         $stmt = \DB::table($table);
         if (count($where) > 0) {
             $stmt->where($where);
         }
+
+        if ($orderBy) {
+            $stmt->orderBy('id', $orderBy);
+        }
+
+        if ($limit) {
+            $stmt->take($limit);
+        }
+
         return $stmt;
     }
 
     /**
      * @param string $table
      * @param array $where
+     * @param string $orderBy
+     * @param bool $limit
      * @return object
      */
-    public function findAll($table, array $where = [])
+    public function findAll($table, array $where = [], $orderBy = 'ASC', $limit = false)
     {
         try {
             return $this->forward(
-                'Success', false, $this->fetch($table, $where)->get()
+                'Success', false, $this->fetch($table, $where, $orderBy, $limit)->get()
             );
         } catch (\PDOException $e) {
             return $this->forward($e->errorInfo, true);
@@ -59,7 +71,7 @@ class RelationshipRepository
     {
         try {
             return $this->forward(
-                'Success', false, $this->fetch($table, $where)->first()
+                'Success', false, $this->fetch($table, $where, false, false)->first()
             );
         } catch (\PDOException $e) {
             return $this->forward($e->errorInfo, true);

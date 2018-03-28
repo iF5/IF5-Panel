@@ -147,6 +147,9 @@ class EmployeeController extends Controller
         $data['salaryCap'] = Money::toDecimal($data['salaryCap']);
         $data['status'] = $this->isAdmin();
         $data['updatedAt'] = $now;
+        $data['hiringDate'] = Period::format($data['hiringDate'], 'Y-m-d');
+        $data['birthDate'] = Period::format($data['birthDate'], 'Y-m-d');
+        $data['startAt'] = Period::format($data['startAt'], 'Y-m-d');
 
         if (strtoupper($request->getMethod()) === 'POST') {
             $data['createdAt'] = $now;
@@ -413,11 +416,12 @@ class EmployeeController extends Controller
     {
         $registers = $this->relationshipRepository->findAll('register_batch_employees', [
             'providerId' => $this->getProviderId()
-        ]);
+        ], 'DESC');
 
         return view('panel.employee.register', [
-            'breadcrumbs' => $this->getBreadcrumb('Lote'),
-            'registers' => $registers->data
+            'breadcrumbs' => $this->getBreadcrumb('Cadastrar em lote'),
+            'registers' => $registers->data,
+            'statusClass' => ['text-warning', 'text-success', 'text-danger']
         ]);
     }
 
@@ -473,22 +477,21 @@ class EmployeeController extends Controller
         ]);
 
         if (!$register) {
-            return;
+            return response()->json(['error' => true, 'message' => 'Register not found']);
         }
 
         $csv = $this->getCsvData($register->data);
         $employees = $this->employeeRepository->register($csv->data);
         $this->employeeRepository->attachDocuments($employees, $this->documentRepository->idList(Employee::ID));
         $this->relationshipRepository->update('register_batch_employees', [
-            'status' => 1,
-            'message' => 'Funcion&aacute;rios cadastrados com sucesso',
+            'status' => ($csv->error) ? 2 : 1,
+            'message' => ($csv->error) ? 'N&atilde;o foi poss&iacute;vel processar o csv' : 'Funcion&aacute;rios cadastrados com sucesso',
             'debugMessage' => $csv->message,
             'affectedItems' => json_encode($employees)
         ], [['id', $id]]);
 
         $this->createLog('POST', $employees);
         return response()->json(['error' => false, 'message' => 'Success']);
-
     }
 
 
@@ -516,7 +519,9 @@ class EmployeeController extends Controller
                 $value = array_merge($fill, array_intersect_key($value, $fill));
                 $value['birthDate'] = Period::format($value['birthDate'], 'Y-m-d');
                 $value['salaryCap'] = Money::toDecimal($value['salaryCap']);
-                $value['hiringDate'] = Period::format($value['hiringDate'], 'Y-m-d');
+                $hiringDate = Period::format($value['hiringDate'], 'Y-m-d');
+                $value['hiringDate'] = $hiringDate;
+                $value['startAt'] = $hiringDate;
             }
         }
 
