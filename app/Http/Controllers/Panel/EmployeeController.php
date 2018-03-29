@@ -421,7 +421,8 @@ class EmployeeController extends Controller
         return view('panel.employee.register', [
             'breadcrumbs' => $this->getBreadcrumb('Cadastrar em lote'),
             'registers' => $registers->data,
-            'statusClass' => ['text-warning', 'text-success', 'text-danger']
+            'statusClass' => ['text-warning', 'text-success', 'text-danger'],
+            'delimiters' => [';' => 'Ponto e v&iacute;rgula', ',' => 'V&iacute;rgula']
         ]);
     }
 

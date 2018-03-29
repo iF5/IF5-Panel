@@ -2,14 +2,11 @@
 
 namespace App\Repositories\Panel;
 
-use App\Http\Traits\CrudTrait;
 use App\Models\Employee;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class EmployeeRepository extends Employee
 {
-
-    use CrudTrait;
 
     protected $totalPerPage = 20;
 
@@ -22,7 +19,7 @@ class EmployeeRepository extends Employee
     public function findLike($providerId, $field, $keyword)
     {
         try {
-            return Employee::where([
+            return $this->where([
                 ['providerId', '=', $providerId],
                 [$field, 'like', "%{$keyword}%"]
             ])->paginate($this->totalPerPage);
@@ -40,7 +37,7 @@ class EmployeeRepository extends Employee
     public function findOrderBy($providerId, $field = 'id', $type = 'desc')
     {
         try {
-            return Employee::where([
+            return $this->where([
                 ['providerId', '=', $providerId]
             ])
                 ->orderBy($field, $type)
@@ -69,10 +66,9 @@ class EmployeeRepository extends Employee
     public function findByPendency()
     {
         try {
-            return Employee::join('providers', function ($join) {
+            return $this->join('providers', function ($join) {
                 return $join->on('providers.id', '=', 'employees.providerId');
-            })
-                ->select(
+            })->select(
                     'employees.id AS id',
                     'employees.name AS name',
                     'providers.id AS companyId',
@@ -147,15 +143,6 @@ class EmployeeRepository extends Employee
     }
 
     /**
-     * @param array $data
-     * @return bool|string
-     */
-    public function saveInBatch($data)
-    {
-        return $this->insertBatchGetId($this->table, $data);
-    }
-
-    /**
      * @param array $employees
      * @param array $documents
      */
@@ -173,7 +160,7 @@ class EmployeeRepository extends Employee
             });
         }
 
-        $this->insertBatch('employees_has_documents', $data);
+        \DB::table('employees_has_documents')->insert($data);
     }
 
     /**
