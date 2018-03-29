@@ -69,11 +69,11 @@ class EmployeeRepository extends Employee
             return $this->join('providers', function ($join) {
                 return $join->on('providers.id', '=', 'employees.providerId');
             })->select(
-                    'employees.id AS id',
-                    'employees.name AS name',
-                    'providers.id AS companyId',
-                    'providers.name AS companyName'
-                )
+                'employees.id AS id',
+                'employees.name AS name',
+                'providers.id AS companyId',
+                'providers.name AS companyName'
+            )
                 ->where('employees.status', '=', 0)
                 ->paginate($this->totalPerPage);
         } catch (\Exception $e) {
@@ -160,7 +160,30 @@ class EmployeeRepository extends Employee
             });
         }
 
-        \DB::table('employees_has_documents')->insert($data);
+        if (count($data)) {
+            \DB::table('employees_has_documents')->insert($data);
+        }
+    }
+
+    /**
+     * @param array $employees
+     * @param array $companies
+     */
+    public function attachCompanies(array $employees = [], array $companies = [])
+    {
+        $data = [];
+        foreach ($employees as $key => $value) {
+            array_walk($companies, function ($item) use (&$data, &$value) {
+                $data[] = [
+                    'employeeId' => $value,
+                    'companyId' => $item
+                ];
+            });
+        }
+
+        if (count($data)) {
+            \DB::table('employees_has_companies')->insert($data);
+        }
     }
 
     /**

@@ -407,6 +407,8 @@ class EmployeeController extends Controller
         return $this->breadcrumbService->push($data)->get();
     }
 
+    #IN BATCH
+
     /**
      * Register
      *
@@ -471,9 +473,10 @@ class EmployeeController extends Controller
      */
     public function registerBatchRun($id)
     {
+        $providerId = $this->getProviderId();
         $register = $this->relationshipRepository->first('register_batch_employees', [
             ['id', $id],
-            ['providerId', $this->getProviderId()],
+            ['providerId', $providerId],
             ['status', 0]
         ]);
 
@@ -484,6 +487,10 @@ class EmployeeController extends Controller
         $csv = $this->getCsvData($register->data);
         $employees = $this->employeeRepository->register($csv->data);
         $this->employeeRepository->attachDocuments($employees, $this->documentRepository->idList(Employee::ID));
+        $this->employeeRepository->attachCompanies(
+            $employees, $this->providerRepository->listCompaniesByProvider($providerId)
+        );
+
         $this->relationshipRepository->update('register_batch_employees', [
             'status' => ($csv->error) ? 2 : 1,
             'message' => ($csv->error) ? 'N&atilde;o foi poss&iacute;vel processar o csv' : 'Funcion&aacute;rios cadastrados com sucesso',

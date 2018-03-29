@@ -65,7 +65,6 @@ class DocumentRepository extends Document
         }
     }
 
-
     /**
      * @param int $entityGroup
      * @return array

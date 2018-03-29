@@ -19,7 +19,8 @@ class ProviderRepository extends Provider
     public function findLike($companyId, $field, $keyword)
     {
         try {
-            return Provider::join('companies_has_providers', function ($join) {
+            
+            return $this->join('companies_has_providers', function ($join) {
                 return $join->on('providerId', '=', 'id');
             })->where([
                 ['companyId', '=', $companyId],
@@ -39,7 +40,7 @@ class ProviderRepository extends Provider
     public function findOrderBy($companyId, $field = 'id', $type = 'desc')
     {
         try {
-            return Provider::join('companies_has_providers', function ($join) {
+            return $this->join('companies_has_providers', function ($join) {
                 return $join->on('providerId', '=', 'providers.id');
             })
                 ->where('companies_has_providers.companyId', '=', $companyId)
@@ -57,7 +58,7 @@ class ProviderRepository extends Provider
     public function findByCnpj($cnpj)
     {
         try {
-            return Provider::where('cnpj', '=', $cnpj)->first();
+            return $this->where('cnpj', '=', $cnpj)->first();
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
@@ -72,7 +73,7 @@ class ProviderRepository extends Provider
     public function getName($id, $field = 'name')
     {
         try {
-            return Provider::where('id', '=', $id)->pluck($field)->first();
+            return $this->where('id', '=', $id)->pluck($field)->first();
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
@@ -85,7 +86,7 @@ class ProviderRepository extends Provider
     public function findById($id)
     {
         try {
-            return (object)Provider::find($id)->original;
+            return (object)$this->find($id)->original;
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
@@ -97,7 +98,7 @@ class ProviderRepository extends Provider
     public function findByPendency()
     {
         try {
-            return Provider::join('companies_has_providers', function ($join) {
+            return $this->join('companies_has_providers', function ($join) {
                 return $join->on('companies_has_providers.providerId', '=', 'providers.id');
             })
                 ->join('companies', function ($join) {
@@ -123,7 +124,7 @@ class ProviderRepository extends Provider
     public function findByCompany($id, $companyId)
     {
         try {
-            return Provider::join('companies_has_providers', function ($join) {
+            return $this->join('companies_has_providers', function ($join) {
                 return $join->on('companies_has_providers.providerId', '=', 'providers.id');
             })
                 ->where([
@@ -146,6 +147,23 @@ class ProviderRepository extends Provider
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
+    }
+
+    /**
+     * @param int $providerId
+     * @return array
+     */
+    public function listCompaniesByProvider($providerId)
+    {
+        $list = [];
+        $companies = \DB::table('companies_has_providers')->where([
+            ['providerId', '=', $providerId]
+        ])->get();
+
+        foreach ($companies as $company) {
+            $list[] = $company->companyId;
+        }
+        return $list;
     }
 
 }
