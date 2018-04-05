@@ -50,7 +50,7 @@ class NotificationController
         return [
             'link' => route('pendency.index', ['source' => 'provider']),
             'label' => 'Pend&ecirc;ncias de prestadores de servi&ccedil;os',
-            'total' => $this->notificationRepository->countByStatus('companies_has_providers')
+            'total' => $this->notificationRepository->countByStatus('providers_has_companies')
         ];
     }
 

@@ -256,7 +256,7 @@
                                                         <td style="width: 5%; text-align: center;">
                                                             <input type="checkbox" value="{{$company->id}}"
                                                                    name="companies[]"
-                                                                   @if($company->selected) checked @endif>
+                                                                   @if(in_array($company->id, $selectedCompanies)) checked @endif>
                                                         </td>
                                                         <td>{{$company->name}}</td>
                                                     </tr>

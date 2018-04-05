@@ -82,21 +82,13 @@ class EmployeeRepository extends Employee
     }
 
     /**
-     * @param int $providerId
+     * @param int $employeeId
      * @return mixed
      */
-    public function findCompanyByProvider($providerId)
+    public function findCompaniesByEmployee($employeeId)
     {
         try {
-            return \DB::table('companies')
-                ->select(
-                    'companies.id',
-                    'companies.name'
-                )->join('companies_has_providers', function ($join) {
-                    $join->on('companies_has_providers.companyId', '=', 'companies.id');
-                })->where('companies_has_providers.providerId', '=', $providerId)
-                ->get();
-
+            return \DB::table('employees_has_companies')->where('employeeId', '=', $employeeId)->get();
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
@@ -104,15 +96,16 @@ class EmployeeRepository extends Employee
 
     /**
      * @param int $employeeId
-     * @return mixed
+     * @return array
      */
-    public function findCompanyByEmployee($employeeId)
+    public function listIdCompanies($employeeId)
     {
-        try {
-            return \DB::table('employees_has_companies')->where('employeeId', '=', $employeeId)->get();
-        } catch (\Exception $e) {
-            throw new ModelNotFoundException;
+        $rows = $this->findCompaniesByEmployee($employeeId);
+        $list = [];
+        foreach ($rows as $row) {
+            $list[] = $row->companyId;
         }
+        return $list;
     }
 
     /**
@@ -132,14 +125,14 @@ class EmployeeRepository extends Employee
      * @param int $employeeId
      * @return array
      */
-    public function findDocuments($employeeId)
+    public function listIdDocuments($employeeId)
     {
         $rows = $this->findDocumentsByEmployee($employeeId);
-        $documents = [];
+        $list = [];
         foreach ($rows as $row) {
-            $documents[] = $row->documentId;
+            $list[] = $row->documentId;
         }
-        return $documents;
+        return $list;
     }
 
     /**
@@ -150,7 +143,9 @@ class EmployeeRepository extends Employee
     {
         $data = [];
         $now = (new \DateTime())->format('Y-m-d H:i:s');
+
         foreach ($employees as $key => $value) {
+            $this->detachDocuments($value);
             array_walk($documents, function ($item) use (&$data, &$value, &$now) {
                 $data[] = [
                     'employeeId' => $value,
@@ -166,6 +161,14 @@ class EmployeeRepository extends Employee
     }
 
     /**
+     * @param int $employeeId
+     */
+    public function detachDocuments($employeeId)
+    {
+        \DB::table('employees_has_documents')->where('employeeId', $employeeId)->delete();
+    }
+
+    /**
      * @param array $employees
      * @param array $companies
      */
@@ -173,7 +176,9 @@ class EmployeeRepository extends Employee
     {
         $data = [];
         $now = (new \DateTime())->format('Y-m-d H:i:s');
+
         foreach ($employees as $key => $value) {
+            $this->detachCompanies($value);
             array_walk($companies, function ($item) use (&$data, &$value, &$now) {
                 $data[] = [
                     'employeeId' => $value,
@@ -186,6 +191,14 @@ class EmployeeRepository extends Employee
         if (count($data)) {
             \DB::table('employees_has_companies')->insert($data);
         }
+    }
+
+    /**
+     * @param int $employeeId
+     */
+    public function detachCompanies($employeeId)
+    {
+        \DB::table('employees_has_companies')->where('employeeId', $employeeId)->delete();
     }
 
     /**

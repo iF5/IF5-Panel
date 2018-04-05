@@ -100,7 +100,10 @@ class CompanyRepository extends Company
     {
         $data = [];
         $now = (new \DateTime())->format('Y-m-d H:i:s');
+        $stmt = \DB::table('companies_has_documents');
+
         foreach ($companies as $key => $value) {
+            $stmt->where('companyId', $value)->delete();
             array_walk($documents, function ($item) use (&$data, &$value, &$now) {
                 $data[] = [
                     'companyId' => $value,
@@ -111,7 +114,7 @@ class CompanyRepository extends Company
         }
 
         if (count($data)) {
-            \DB::table('companies_has_documents')->insert($data);
+            $stmt->insert($data);
         }
     }
 

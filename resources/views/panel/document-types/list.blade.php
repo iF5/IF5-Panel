@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <a class="btn btn-success" href="{{ route('document-types.create') }}"> Cadastrar novo tipo de documento +</a>
+                    <a class="btn btn-success" href="{{ route('document-types.create') }}">Cadastrar novo</a>
                 </div>
 
                 <div class="col-md-12" style="margin-top: 20px;">

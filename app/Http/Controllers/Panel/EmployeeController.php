@@ -63,8 +63,10 @@ class EmployeeController extends Controller
      */
     private $uploadService;
 
+    /**
+     * @var CsvService
+     */
     private $csvService;
-
 
     public function __construct(
         EmployeeRepository $employeeRepository,
@@ -86,7 +88,6 @@ class EmployeeController extends Controller
         $this->uploadService = $uploadService;
         $this->csvService = $csvService;
         $this->states = \Config::get('states');
-
     }
 
     /**
@@ -115,6 +116,22 @@ class EmployeeController extends Controller
         return (in_array(\Auth::user()->role, ['admin', 'company']))
             ? \Session::get('provider')->id
             : \Auth::user()->providerId;
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getDocuments()
+    {
+        return $this->documentRepository->findAllByEntity(Employee::ID);
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getCompanies()
+    {
+        return $this->providerRepository->findCompaniesByProvider($this->getProviderId());
     }
 
     /**
@@ -150,6 +167,8 @@ class EmployeeController extends Controller
         $data['hiringDate'] = Period::format($data['hiringDate'], 'Y-m-d');
         $data['birthDate'] = Period::format($data['birthDate'], 'Y-m-d');
         $data['startAt'] = Period::format($data['startAt'], 'Y-m-d');
+        $data['documents'] = isset($data['documents']) ? $data['documents'] : [];
+        $data['companies'] = isset($data['companies']) ? $data['companies'] : [];
 
         if (strtoupper($request->getMethod()) === 'POST') {
             $data['createdAt'] = $now;
@@ -158,27 +177,6 @@ class EmployeeController extends Controller
         return $data;
     }
 
-    /**
-     * @param int $employeeId
-     * @return mixed
-     */
-    private function getCompanies($employeeId = null)
-    {
-        $companies = $this->employeeRepository->findCompanyByProvider($this->getProviderId());
-        $employeesArray = [];
-
-        if ($employeeId) {
-            $employees = $this->employeeRepository->findCompanyByEmployee($employeeId);
-            foreach ($employees as &$employee) {
-                $employeesArray[] = $employee->companyId;
-            }
-        }
-
-        foreach ($companies as &$company) {
-            $company->selected = (in_array($company->id, $employeesArray)) ? true : false;
-        }
-        return $companies;
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -192,9 +190,10 @@ class EmployeeController extends Controller
 
         return view('panel.employee.form', [
             'employee' => $this->employeeRepository,
-            'companies' => $this->getCompanies(),
-            'documents' => $this->documentRepository->findAllByEntity(Employee::ID),
+            'documents' => $this->getDocuments(),
             'selectedDocuments' => [],
+            'companies' => $this->getCompanies(),
+            'selectedCompanies' => [],
             'states' => $this->states,
             'route' => 'employee.store',
             'method' => 'POST',
@@ -250,7 +249,8 @@ class EmployeeController extends Controller
         $data = $this->formRequest($request);
         $employee = $this->employeeRepository->create($data);
         $this->childrenStore($data, $employee->id);
-        $this->createRelationshipByCompany($employee->id, $data['companies']);
+        $this->employeeRepository->attachCompanies([$employee->id], $data['companies']);
+        $this->employeeRepository->attachDocuments([$employee->id], $data['documents']);
         $this->createLog('POST', $data);
 
         return redirect()->route('employee.create')->with([
@@ -270,12 +270,12 @@ class EmployeeController extends Controller
     public function show($id)
     {
         $employee = $this->employeeRepository->find($id);
-        $companies = $this->employeeRepository->findCompanyByProvider($this->getProviderId());
+        $companies = $this->providerRepository->findCompaniesByProvider($this->getProviderId());
 
         return view('panel.employee.show', [
             'employee' => $employee,
             'companies' => $companies,
-            'documents' => $this->documentRepository->findAllByEntity(Employee::ID),
+            'documents' => $this->documents,
             'selectedDocuments' => $this->employeeRepository->findDocuments($id),
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
@@ -293,9 +293,10 @@ class EmployeeController extends Controller
 
         return view('panel.employee.form', [
             'employee' => $employee,
-            'companies' => $this->getCompanies($id),
-            'documents' => $this->documentRepository->findAllByEntity(3),
-            'selectedDocuments' => $this->employeeRepository->findDocuments($id),
+            'documents' => $this->getDocuments(),
+            'selectedDocuments' => $this->employeeRepository->listIdDocuments($id),
+            'companies' => $this->getCompanies(),
+            'selectedCompanies' => $this->employeeRepository->listIdCompanies($id),
             'states' => $this->states,
             'route' => 'employee.update',
             'method' => 'PUT',
@@ -319,7 +320,8 @@ class EmployeeController extends Controller
 
         $data = $this->formRequest($request);
         $this->employeeRepository->findOrFail($id)->update($data);
-        $this->createRelationshipByCompany($id, $data['companies']);
+        $this->employeeRepository->attachCompanies([$id], $data['companies']);
+        $this->employeeRepository->attachDocuments([$id], $data['documents']);
         $this->createLog('PUT', $data);
 
         return redirect()->route('employee.edit', $id)->with([
@@ -340,27 +342,11 @@ class EmployeeController extends Controller
     public function destroy($id)
     {
         $this->employeeRepository->destroy($id);
-        $this->relationshipRepository->destroy('employees_has_companies', [
-            'employeeId' => $id
-        ]);
+        $this->employeeRepository->detachDocuments($id);
+        $this->employeeRepository->detachCompanies($id);
         $this->createLog('DELETE', ['id' => $id]);
 
         return redirect()->route('employee.index');
-    }
-
-    /**
-     * @param int $id
-     * @param array $companies
-     */
-    private function createRelationshipByCompany($id, $companies)
-    {
-        $this->relationshipRepository->destroy('employees_has_companies', ['employeeId' => $id]);
-        foreach ($companies as $key => $value) {
-            $this->relationshipRepository->create('employees_has_companies', [
-                'employeeId' => $id,
-                'companyId' => $value
-            ]);
-        }
     }
 
     /**
@@ -485,16 +471,23 @@ class EmployeeController extends Controller
         }
 
         $csv = $this->getCsvData($register->data);
+        if($csv->error) {
+            $this->relationshipRepository->update('register_batch_employees', [
+                'status' => 2,
+                'message' => 'N&atilde;o foi poss&iacute;vel processar o csv, por favor examine o mesmo e tente novamente.',
+                'debugMessage' => $csv->message
+            ], [['id', $id]]);
+            return response()->json(['error' => true, 'message' => 'Csv error']);
+        }
+
         $employees = $this->employeeRepository->register($csv->data);
         $this->employeeRepository->attachDocuments($employees, $this->documentRepository->idList(Employee::ID));
         $this->employeeRepository->attachCompanies(
-            $employees, $this->providerRepository->listCompaniesByProvider($providerId)
+            $employees, $this->providerRepository->listIdCompanies($providerId)
         );
-
         $this->relationshipRepository->update('register_batch_employees', [
-            'status' => ($csv->error) ? 2 : 1,
-            'message' => ($csv->error) ? 'N&atilde;o foi poss&iacute;vel processar o csv' : 'Funcion&aacute;rios cadastrados com sucesso',
-            'debugMessage' => $csv->message,
+            'status' => 1,
+            'message' => 'Funcion&aacute;rios cadastrados com sucesso',
             'affectedItems' => json_encode($employees)
         ], [['id', $id]]);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Facades\Period;
 use App\Http\Traits\LogTrait;
 use App\Repositories\Panel\CompanyRepository;
 use App\Repositories\Panel\DocumentRepository;
@@ -48,6 +49,11 @@ class ProviderController extends Controller
      */
     private $states;
 
+    /**
+     * @var mixed
+     */
+    private $documents;
+
     public function __construct(
         ProviderRepository $providerRepository,
         CompanyRepository $companyRepository,
@@ -62,6 +68,7 @@ class ProviderController extends Controller
         $this->relationshipRepository = $relationshipRepository;
         $this->breadcrumbService = $breadcrumbService;
         $this->states = \Config::get('states');
+        $this->documents = $this->documentRepository->findAllByEntity(Provider::ID);
     }
 
     /**
@@ -128,17 +135,11 @@ class ProviderController extends Controller
         }
 
         if ($request->isMethod('post') && $request->get('action') === 'associate') {
-            $data = [
-                'companyId' => $this->getCompanyId(),
-                'providerId' => $request->get('providerId'),
-                'status' => $this->isAdmin(),
-                'createdAt' => (new \DateTime())->format('Y-m-d H:i:s')
-            ];
-
-            $this->relationshipRepository->create('companies_has_providers', $data);
+            $this->providerRepository->attachCompanies(
+                $request->get('providerId'), $this->getCompanyId(), $this->isAdmin()
+            );
             $success = true;
             \Session::remove('cnpj');
-            $this->createLog('POST', $data);
         }
 
         $breadcrumbs = $this->getBreadcrumb('Cadastrar/Incluir');
@@ -154,7 +155,8 @@ class ProviderController extends Controller
         $data = $request->all();
         $now = (new \DateTime())->format('Y-m-d H:i:s');
         $data['companyId'] = $this->getCompanyId();
-        $data['documents'] = json_encode($data['documents']);
+        $data['documents'] = isset($data['documents']) ? $data['documents'] : [];
+        $data['startAt'] = Period::format($data['startAt'], 'Y-m-d');
         $data['updatedAt'] = $now;
 
         if (strtoupper($request->getMethod()) === 'POST') {
@@ -180,7 +182,7 @@ class ProviderController extends Controller
 
         return view('panel.provider.form', [
             'provider' => $this->providerRepository,
-            'documents' => $this->documentRepository->findAllByEntity(Provider::ID),
+            'documents' => $this->documents,
             'selectedDocuments' => [],
             'states' => $this->states,
             'method' => 'POST',
@@ -204,11 +206,8 @@ class ProviderController extends Controller
 
         $data = $this->formRequest($request);
         $provider = $this->providerRepository->create($data);
-        $this->relationshipRepository->create('companies_has_providers', [
-            'companyId' => $this->getCompanyId(),
-            'providerId' => $provider->id,
-            'status' => $this->isAdmin()
-        ]);
+        $this->providerRepository->attachCompanies($provider->id, $this->getCompanyId(), $this->isAdmin());
+        $this->providerRepository->attachDocuments([$provider->id], $data['documents']);
 
         $this->createLog('POST', $data);
         \Session::remove('cnpj');
@@ -233,8 +232,8 @@ class ProviderController extends Controller
 
         return view('panel.provider.show', [
             'provider' => $provider,
-            'documents' => $this->documentRepository->findAllByEntity(Provider::ID),
-            'selectedDocuments' => json_decode($provider->documents, true),
+            'documents' => $this->documents,
+            'selectedDocuments' => $this->providerRepository->findDocuments($id),
             'states' => $this->states,
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
@@ -253,8 +252,8 @@ class ProviderController extends Controller
 
         return view('panel.provider.form', [
             'provider' => $provider,
-            'documents' => $this->documentRepository->findAllByEntity(2),
-            'selectedDocuments' => json_decode($provider->documents, true),
+            'documents' => $this->documents,
+            'selectedDocuments' => $this->providerRepository->findDocuments($id),
             'states' => $this->states,
             'route' => 'provider.update',
             'method' => 'PUT',
@@ -278,6 +277,7 @@ class ProviderController extends Controller
 
         $data = $this->formRequest($request);
         $this->providerRepository->findOrFail($id)->update($data);
+        $this->providerRepository->attachDocuments([$id], $data['documents']);
         $this->createLog('PUT', $data);
 
         return redirect()->route('provider.edit', $id)->with([

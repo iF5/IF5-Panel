@@ -162,7 +162,7 @@ class CsvService
 
             $rows = $this->parse();
             $total = count($rows);
-            if ($total < 2) {//requires at least two lines, one of head and one of body
+            if ($total < 2 || count($rows[0]) < 2) {//requires at least two lines, one of head and one of body
                 return $this->response(true, 'No records found');
             }
 

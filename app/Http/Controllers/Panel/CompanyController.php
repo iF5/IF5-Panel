@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Panel;
 
+use App\Facades\Period;
 use App\Http\Traits\LogTrait;
 use App\Repositories\Panel\DocumentRepository;
 use App\Repositories\Panel\RelationshipRepository;
@@ -97,8 +98,9 @@ class CompanyController extends Controller
     {
         $data = $request->all();
         $now = (new \DateTime())->format('Y-m-d H:i:s');
-        $data['documents'] = json_encode($data['documents']);
         $data['updatedAt'] = $now;
+        $data['startAt'] = Period::format($data['startAt'], 'Y-m-d');
+        $data['documents'] = isset($data['documents']) ? $data['documents'] : [];
 
         if (strtoupper($request->getMethod()) === 'POST') {
             $data['createdAt'] = $now;
@@ -140,6 +142,7 @@ class CompanyController extends Controller
 
         $data = $this->formRequest($request);
         $company = $this->companyRepository->create($data);
+        $this->companyRepository->attachDocuments([$company->id], $data['documents']);
         $this->createLog('POST', $data);
 
         return redirect()->route('company.create')->with([
@@ -204,6 +207,7 @@ class CompanyController extends Controller
 
         $data = $this->formRequest($request);
         $this->companyRepository->findOrFail($id)->update($data);
+        $this->companyRepository->attachDocuments([$id], $data['documents']);
         $this->createLog('PUT', $data);
 
         return redirect()->route('company.edit', $id)->with([

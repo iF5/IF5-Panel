@@ -4,8 +4,11 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCompaniesHasProvidersTable extends Migration
+class CreateProvidersHasCompaniesTable extends Migration
 {
+
+    protected $table = 'providers_has_companies';
+
     /**
      * Run the migrations.
      *
@@ -13,12 +16,12 @@ class CreateCompaniesHasProvidersTable extends Migration
      */
     public function up()
     {
-        Schema::create('companies_has_providers', function (Blueprint $table) {
-            $table->integer('companyId')->unsigned();
+        Schema::create($this->table, function (Blueprint $table) {
             $table->integer('providerId')->unsigned();
+            $table->integer('companyId')->unsigned();
             $table->boolean('status')->default(false);
             $table->dateTime('createdAt');
-            $table->primary(['companyId', 'providerId'], 'pk_c_p_id');
+            $table->primary(['providerId', 'companyId'], 'pk_p_c_id');
         });
     }
 
@@ -29,6 +32,7 @@ class CreateCompaniesHasProvidersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('companies_has_providers');
+        Schema::dropIfExists($this->table);
     }
+
 }

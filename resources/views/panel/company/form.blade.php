@@ -174,7 +174,7 @@
                         <div class="form-group col-xs-3">
                             <label for="startAt">Come&ccedil;ar analisar apartir de* :</label>
                             <input id="startAt" name="startAt"
-                                   value="{{ $company->startAt or old('startAt') }}"
+                                   value="{{ ($method === 'PUT') ? Period::format($company->startAt, 'd/m/Y') : old('startAt') }}"
                                    class="form-control dateMask v-void">
                         </div>
 

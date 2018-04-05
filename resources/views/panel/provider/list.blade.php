@@ -20,8 +20,7 @@
             </div>
 
             <div class="col-md-6">
-                <a class="btn btn-success" href="{{ route('provider.associate') }}"> Cadastrar ou Incluir novo
-                    Prestador +</a>
+                <a class="btn btn-success" href="{{ route('provider.associate') }}">Cadastrar ou incluir novo</a>
             </div>
 
             <div class="col-md-12" style="margin-top: 20px;">

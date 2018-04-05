@@ -19,8 +19,8 @@ class ProviderRepository extends Provider
     public function findLike($companyId, $field, $keyword)
     {
         try {
-            
-            return $this->join('companies_has_providers', function ($join) {
+
+            return $this->join('providers_has_companies', function ($join) {
                 return $join->on('providerId', '=', 'id');
             })->where([
                 ['companyId', '=', $companyId],
@@ -40,10 +40,10 @@ class ProviderRepository extends Provider
     public function findOrderBy($companyId, $field = 'id', $type = 'desc')
     {
         try {
-            return $this->join('companies_has_providers', function ($join) {
+            return $this->join('providers_has_companies', function ($join) {
                 return $join->on('providerId', '=', 'providers.id');
             })
-                ->where('companies_has_providers.companyId', '=', $companyId)
+                ->where('providers_has_companies.companyId', '=', $companyId)
                 ->orderBy($field, $type)
                 ->paginate($this->totalPerPage);
         } catch (\Exception $e) {
@@ -98,18 +98,18 @@ class ProviderRepository extends Provider
     public function findByPendency()
     {
         try {
-            return $this->join('companies_has_providers', function ($join) {
-                return $join->on('companies_has_providers.providerId', '=', 'providers.id');
+            return $this->join('providers_has_companies', function ($join) {
+                return $join->on('providers_has_companies.providerId', '=', 'providers.id');
             })
                 ->join('companies', function ($join) {
-                    return $join->on('companies.id', '=', 'companies_has_providers.companyId');
+                    return $join->on('companies.id', '=', 'providers_has_companies.companyId');
                 })
                 ->select(
                     'providers.id AS id',
                     'providers.name AS name',
                     'companies.id AS companyId',
                     'companies.name AS companyName'
-                )->where('companies_has_providers.status', '=', 0)
+                )->where('providers_has_companies.status', '=', 0)
                 ->paginate($this->totalPerPage);
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
@@ -124,13 +124,33 @@ class ProviderRepository extends Provider
     public function findByCompany($id, $companyId)
     {
         try {
-            return $this->join('companies_has_providers', function ($join) {
-                return $join->on('companies_has_providers.providerId', '=', 'providers.id');
+            return $this->join('providers_has_companies', function ($join) {
+                return $join->on('providers_has_companies.providerId', '=', 'providers.id');
             })
                 ->where([
                     ['providers.id', '=', $id],
-                    ['companies_has_providers.companyId', '=', $companyId]
+                    ['providers_has_companies.companyId', '=', $companyId]
                 ])->first();
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+    /**
+     * @param int $providerId
+     * @return mixed
+     */
+    public function findCompaniesByProvider($providerId)
+    {
+        try {
+            return \DB::table('companies')
+                ->select(
+                    'companies.id',
+                    'companies.name'
+                )->join('providers_has_companies', function ($join) {
+                    $join->on('providers_has_companies.companyId', '=', 'companies.id');
+                })->where('providers_has_companies.providerId', '=', $providerId)
+                ->get();
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
@@ -140,21 +160,18 @@ class ProviderRepository extends Provider
      * @param int $providerId
      * @return array
      */
-    public function listCompaniesByProvider($providerId)
+    public function listIdCompanies($providerId)
     {
         $list = [];
-        $companies = \DB::table('companies_has_providers')->where([
-            ['providerId', '=', $providerId]
-        ])->get();
-
-        foreach ($companies as $company) {
-            $list[] = $company->companyId;
+        $rows = $this->findCompaniesByProvider($providerId);
+        foreach ($rows as $row) {
+            $list[] = $row->id;
         }
         return $list;
     }
 
     /**
-     * @param int $companyId
+     * @param int $providerId
      * @return mixed
      */
     public function findDocumentsByProvider($providerId)
@@ -188,7 +205,10 @@ class ProviderRepository extends Provider
     {
         $data = [];
         $now = (new \DateTime())->format('Y-m-d H:i:s');
+        $stmt = \DB::table('providers_has_documents');
+
         foreach ($providers as $key => $value) {
+            $stmt->where('providerId', $value)->delete();
             array_walk($documents, function ($item) use (&$data, &$value, &$now) {
                 $data[] = [
                     'providerId' => $value,
@@ -199,8 +219,25 @@ class ProviderRepository extends Provider
         }
 
         if (count($data)) {
-            \DB::table('providers_has_documents')->insert($data);
+            $stmt->insert($data);
         }
     }
-    
+
+    /**
+     * @param int $providerId
+     * @param int $companyId
+     * @param bool $isAdmin
+     */
+    public function attachCompanies($providerId, $companyId, $isAdmin = false)
+    {
+        $stmt = \DB::table('providers_has_companies');
+        $stmt->where('providerId', $providerId)->delete();
+        $stmt->insert([
+            'providerId' => $providerId,
+            'companyId' => $companyId,
+            'status' => $isAdmin,
+            'createdAt' => (new \DateTime())->format('Y-m-d H:i:s')
+        ]);
+    }
+
 }
