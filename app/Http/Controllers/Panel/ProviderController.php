@@ -131,7 +131,8 @@ class ProviderController extends Controller
             $data = [
                 'companyId' => $this->getCompanyId(),
                 'providerId' => $request->get('providerId'),
-                'status' => $this->isAdmin()
+                'status' => $this->isAdmin(),
+                'createdAt' => (new \DateTime())->format('Y-m-d H:i:s')
             ];
 
             $this->relationshipRepository->create('companies_has_providers', $data);

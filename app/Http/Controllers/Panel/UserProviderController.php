@@ -52,6 +52,14 @@ class UserProviderController extends Controller implements UserInterface
     }
 
     /**
+     * @return string
+     */
+    protected function logTitle()
+    {
+        return 'Usu&aacute;rio prestador de servi&ccedil;os';
+    }
+
+    /**
      * @return UserRepository
      */
     public function getUser()

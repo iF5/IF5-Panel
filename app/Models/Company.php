@@ -29,7 +29,6 @@ class Company extends Model
         'responsibleName',
         'cellPhone',
         'email',
-        'documents',
         'startAt',
         'createdAt',
         'updatedAt'

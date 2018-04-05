@@ -53,6 +53,14 @@ class PendencyController extends Controller
     }
 
     /**
+     * @return null
+     */
+    protected function logTitle()
+    {
+        return 'Aprova&ccedil;&atilde;o de pend&ecirc;ncias';
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @param $source
@@ -100,7 +108,7 @@ class PendencyController extends Controller
      */
     public function approve($companyId, $id, $source)
     {
-        $this->createLog('Aprova&ccedil;&atilde;o de pend&ecirc;ncias', 'PUT', ["{$source}Id" => $id]);
+        $this->createLog('PUT', ["{$source}Id" => $id]);
 
         if ($source === 'provider') {
             $this->relationshipRepository->update('companies_has_providers', ['status' => 1], [

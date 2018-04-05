@@ -16,6 +16,7 @@ class CreateEmployeesHasCompaniesTable extends Migration
         Schema::create('employees_has_companies', function (Blueprint $table) {
             $table->integer('employeeId')->unsigned();
             $table->integer('companyId')->unsigned();
+            $table->dateTime('createdAt');
             $table->primary(['employeeId', 'companyId'], 'pk_e_c_id');
         });
     }

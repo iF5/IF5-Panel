@@ -158,12 +158,10 @@ class CompanyController extends Controller
      */
     public function show($id)
     {
-        $company = $this->companyRepository->find($id);
-
         return view('panel.company.show', [
-            'company' => $company,
+            'company' => $this->companyRepository->find($id),
             'documents' => $this->documentRepository->findAllByEntity(Company::ID),
-            'selectedDocuments' => json_decode($company->documents, true),
+            'selectedDocuments' => $this->companyRepository->findDocuments($id),
             'states' => $this->states,
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
@@ -181,8 +179,8 @@ class CompanyController extends Controller
 
         return view('panel.company.form', [
             'company' => $company,
-            'documents' => $this->documentRepository->findAllByEntity(1),
-            'selectedDocuments' => json_decode($company->documents, true),
+            'documents' => $this->documentRepository->findAllByEntity(Company::ID),
+            'selectedDocuments' => $this->companyRepository->findDocuments($id),
             'states' => $this->states,
             'route' => 'company.update',
             'method' => 'PUT',

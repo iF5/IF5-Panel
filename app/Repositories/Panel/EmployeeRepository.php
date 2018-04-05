@@ -172,11 +172,13 @@ class EmployeeRepository extends Employee
     public function attachCompanies(array $employees = [], array $companies = [])
     {
         $data = [];
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
         foreach ($employees as $key => $value) {
-            array_walk($companies, function ($item) use (&$data, &$value) {
+            array_walk($companies, function ($item) use (&$data, &$value, &$now) {
                 $data[] = [
                     'employeeId' => $value,
-                    'companyId' => $item
+                    'companyId' => $item,
+                    'createdAt' => $now
                 ];
             });
         }

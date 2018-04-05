@@ -33,7 +33,6 @@ class CreateCompaniesTable extends Migration
             $table->string('responsibleName');
             $table->string('cellPhone')->nullable();
             $table->string('email');
-            $table->mediumText('documents')->nullable();
             $table->date('startAt')->nullable();
             $table->dateTime('createdAt');
             $table->dateTime('updatedAt');

@@ -41,6 +41,14 @@ class UserCompanyController extends Controller implements UserInterface
     }
 
     /**
+     * @return string
+     */
+    protected function logTitle()
+    {
+        return 'Usu&aacute;rio cliente';
+    }
+
+    /**
      * @return UserRepository
      */
     public function getUser()

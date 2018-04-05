@@ -66,15 +66,52 @@ class CompanyRepository extends Company
     }
 
     /**
-     * @param int $id
+     * @param int $companyId
      * @return mixed
      */
-    public function findDocuments($id)
+    public function findDocumentsByCompany($companyId)
     {
         try {
-            return json_decode($this->find($id)->documents, true);
+            return \DB::table('companies_has_documents')->where('companyId', '=', $companyId)->get();
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
+        }
+    }
+
+    /**
+     * @param int $companyId
+     * @return array
+     */
+    public function findDocuments($companyId)
+    {
+        $rows = $this->findDocumentsByCompany($companyId);
+        $documents = [];
+        foreach ($rows as $row) {
+            $documents[] = $row->documentId;
+        }
+        return $documents;
+    }
+
+    /**
+     * @param array $companies
+     * @param array $documents
+     */
+    public function attachDocuments(array $companies = [], array $documents = [])
+    {
+        $data = [];
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+        foreach ($companies as $key => $value) {
+            array_walk($documents, function ($item) use (&$data, &$value, &$now) {
+                $data[] = [
+                    'companyId' => $value,
+                    'documentId' => $item,
+                    'createdAt' => $now
+                ];
+            });
+        }
+
+        if (count($data)) {
+            \DB::table('companies_has_documents')->insert($data);
         }
     }
 

@@ -38,6 +38,14 @@ class ProfileController extends Controller
     }
 
     /**
+     * @return string
+     */
+    protected function logTitle()
+    {
+        return 'Perfil';
+    }
+
+    /**
      * @return mixed
      */
     protected function getId()
@@ -103,7 +111,7 @@ class ProfileController extends Controller
 
         $this->userRepository->findOrFail($id)->update($data);
 
-        $this->createLog('Perfil', 'PUT', $data);
+        $this->createLog('PUT', $data);
 
         return redirect()->route('profile.edit')->with([
             'success' => true,
@@ -149,7 +157,7 @@ class ProfileController extends Controller
 
         $this->userRepository->find($this->getId())->update(['image' => $name]);
 
-        $this->createLog('Imagem de perfil', 'PUT', ['image' => $name]);
+        $this->createLog('PUT', ['image' => $name]);
 
         return response()->json([
             'message' => "O arquivo <b>{$file->getClientOriginalName()}</b> foi enviado com sucesso!"

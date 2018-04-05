@@ -137,19 +137,6 @@ class ProviderRepository extends Provider
     }
 
     /**
-     * @param int $id
-     * @return mixed
-     */
-    public function findDocuments($id)
-    {
-        try {
-            return json_decode($this->find($id)->documents, true);
-        } catch (\Exception $e) {
-            throw new ModelNotFoundException;
-        }
-    }
-
-    /**
      * @param int $providerId
      * @return array
      */
@@ -166,4 +153,54 @@ class ProviderRepository extends Provider
         return $list;
     }
 
+    /**
+     * @param int $companyId
+     * @return mixed
+     */
+    public function findDocumentsByProvider($providerId)
+    {
+        try {
+            return \DB::table('providers_has_documents')->where('providerId', '=', $providerId)->get();
+        } catch (\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+    /**
+     * @param int $providerId
+     * @return array
+     */
+    public function findDocuments($providerId)
+    {
+        $rows = $this->findDocumentsByProvider($providerId);
+        $documents = [];
+        foreach ($rows as $row) {
+            $documents[] = $row->documentId;
+        }
+        return $documents;
+    }
+
+    /**
+     * @param array $providers
+     * @param array $documents
+     */
+    public function attachDocuments(array $providers = [], array $documents = [])
+    {
+        $data = [];
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+        foreach ($providers as $key => $value) {
+            array_walk($documents, function ($item) use (&$data, &$value, &$now) {
+                $data[] = [
+                    'providerId' => $value,
+                    'documentId' => $item,
+                    'createdAt' => $now
+                ];
+            });
+        }
+
+        if (count($data)) {
+            \DB::table('providers_has_documents')->insert($data);
+        }
+    }
+    
 }

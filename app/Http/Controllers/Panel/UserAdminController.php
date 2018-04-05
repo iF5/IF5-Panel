@@ -26,6 +26,14 @@ class UserAdminController extends Controller implements UserInterface
     }
 
     /**
+     * @return string
+     */
+    protected function logTitle()
+    {
+        return 'Usu&aacute;rio admin';
+    }
+
+    /**
      * @return UserRepository
      */
     public function getUser()

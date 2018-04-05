@@ -48,6 +48,14 @@ class ReportController extends Controller
     }
 
     /**
+     * @return string
+     */
+    protected function logTitle()
+    {
+        return 'Relat&oacute;rio';
+    }
+
+    /**
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -119,7 +127,7 @@ class ReportController extends Controller
         $data = $this->formRequest($request->all(), 'store');
         $this->reportRepository->create($data);
 
-        $this->createLog('Relat&oacute;rio', 'POST', $data);
+        $this->createLog('POST', $data);
 
         return redirect()->route('report.create')->with([
             'success' => true,
@@ -171,7 +179,7 @@ class ReportController extends Controller
         $data = $this->formRequest($request->all());
         $this->reportRepository->findOrFail($id)->update($data);
 
-        $this->createLog('Relat&oacute;rio', 'PUT', $data);
+        $this->createLog('PUT', $data);
 
         return redirect()->route('report.edit', $id)->with([
             'success' => true,
@@ -272,7 +280,7 @@ class ReportController extends Controller
             'sentAt' => (new \DateTime())->format('Y-m-d H:i:s')
         ];
         $this->reportRepository->findOrFail($id)->update($data);
-        $this->createLog('Relat&oacute;rio upload', 'PUT', $data);
+        $this->createLog('PUT', $data);
 
         return response()->json([
             'message' => "O arquivo <b>{$fileOriginalName}</b> foi enviado com sucesso!"
@@ -287,7 +295,7 @@ class ReportController extends Controller
     {
         $report = $this->reportRepository->findById($id);
         $path = $this->getDirPath($report->companyId, $report->referenceDate);
-        $this->createLog('Relat&oacute;rio download', 'GET', ['file' => $path . $report->fileName]);
+        $this->createLog('GET', ['file' => $path . $report->fileName]);
         return response()->download($path . $report->fileName);
     }
 

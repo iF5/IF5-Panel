@@ -51,9 +51,11 @@
                                                 <a href="{{ route('checklist.employee.identify', [$employee->id]) }}">Checklist
                                                     de documentos</a>
                                             </li>
+                                            <!--
                                             <li>
                                                 <a href="{{ route('employee.layoff', [1,1]) }}">Demiss&atilde;o/Afastamento</a>
                                             </li>
+                                            -->
                                         @endif
                                     </ul>
                                 </div>
@@ -62,7 +64,7 @@
                             @if($employee->status)
                                 <td>{{ $employee->cpf }}</td>
                                 <td>{{ $employee->jobRole }}</td>
-                                <td>{{ $employee->hiringDate }}</td>
+                                <td>{{ Period::format($employee->hiringDate, 'd/m/Y') }}</td>
                             @else
                                 <td colspan="3">
                                     Cadastro aguardando aprova&ccedil;&atilde;o
