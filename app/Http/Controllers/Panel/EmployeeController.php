@@ -496,7 +496,7 @@ class EmployeeController extends Controller
             return response()->json(['error' => true, 'message' => 'Csv error']);
         }
 
-        $employees = $this->employeeRepository->register($csv->data);
+        $employees = $this->employeeRepository->register($csv->data, $providerId);
         $this->employeeRepository->attachDocuments($employees, $this->documentRepository->idList(Employee::ID));
         $this->employeeRepository->attachCompanies(
             $employees, $this->providerRepository->listIdCompanies($providerId)

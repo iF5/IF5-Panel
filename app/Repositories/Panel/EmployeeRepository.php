@@ -222,14 +222,20 @@ class EmployeeRepository extends Employee
 
     /**
      * @param array $data
+     * @param int $providerId
      * @return array
      */
-    public function register(array $data = [])
+    public function register(array $data = [], $providerId = 0)
     {
         $indexes = [];
         foreach ($data as $row) {
             if (!isset($row['id']) || (int)$row['id'] <= 0) {
-                if (!$this->where('cpf', $row['cpf'])->count()) {
+                $exists = $this->where([
+                    ['cpf', '=', $row['cpf']],
+                    ['providerId', '=', $providerId]
+                ])->count();
+
+                if (!$exists) {
                     unset($row['id']);
                     $employee = $this->create($row);
                     $indexes[] = $employee->id;
