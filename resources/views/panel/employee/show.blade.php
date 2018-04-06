@@ -37,40 +37,52 @@
                 <li class="list-group-item"><strong>Jornada de trabalho : </strong> {{ $employee->workingHours }}</li>
                 <li class="list-group-item"><strong>Regime de trabalho : </strong> {{ $employee->workRegime }}</li>
                 <li class="list-group-item"><strong>Tem filhos menores
-                        : </strong> {{ ($employee->hasChildren)? 'Sim' : 'N&atilde;o' }}</li>
-                <li class="list-group-item"><strong>Empresas alocadas : </strong>
+                        : </strong> {{ ($employee->hasChildren)? 'Sim' : 'N&atilde;o' }}
+                </li>
+                <li class="list-group-item"><strong>Documentos selecionados : </strong><br />
+                    @foreach($documents as $document)
+                        @if(in_array($document->id, $selectedDocuments))
+                            &nbsp;&nbsp;-&nbsp;{{$document->name}}<br />
+                        @endif
+                    @endforeach
+                </li>
+                <li class="list-group-item"><strong>Empresas alocadas : </strong><br />
                     @foreach($companies as $company)
-                        @if($company->id) <br />&nbsp;&nbsp;{{ $company->name }} @endif
+                        @if(in_array($company->id, $selectedCompanies))
+                            &nbsp;&nbsp;-&nbsp;{{$company->name}}<br />
+                        @endif
                     @endforeach
                 </li>
                 <li class="list-group-item"><strong>Status
                         : </strong> {{ ($employee->status)? 'Ok' : 'Aguardando aprovação' }}</li>
                 <li class="list-group-item"><strong>Cadastrado em
-                        : </strong> {{ \Carbon\Carbon::parse($employee->createdAt)->format('d/m/Y H:i:s') }}</li>
+                        : </strong> {{ Period::format($employee->createdAt, 'd/m/Y H:i') }}</li>
                 <li class="list-group-item"><strong>&Uacute;ltima atualiza&ccedil;&atilde;o
-                        : </strong> {{ \Carbon\Carbon::parse($employee->updatedAt)->format('d/m/Y H:i:s') }}</li>
+                        : </strong> {{ Period::format($employee->updatedAt, 'd/m/Y H:i') }}</li>
 
                 <li class="list-group-item">
-                    @if(!$employee->status && \Auth::user()->role === 'admin')
-                        <a href="#"
-                           class="btn btn-success btn-md modal-update" title="Aprovar"
-                           data-toggle="modal"
-                           data-target="#update"
-                           rel="{{ route('pendency.approve', ['companyId' => 0, 'id' => $employee->id, 'source' => 'employee']) }}"
-                           rev="Tem certeza que deseja aprovar este registro?"><span
-                                    class="glyphicon glyphicon-thumbs-up"></span></a>
-                    @else
-                        <a href="{{ route('employee.edit', $employee->id) }}" title="Editar"
-                           class="btn btn-success btn-md"><span
-                                    class="glyphicon glyphicon-pencil"></span></a>
+                    @can('isAdminOrProvider')
+                        @if(!$employee->status && \Auth::user()->role === 'admin')
+                            <a href="#"
+                               class="btn btn-success btn-md modal-update" title="Aprovar"
+                               data-toggle="modal"
+                               data-target="#update"
+                               rel="{{ route('pendency.approve', ['companyId' => 0, 'id' => $employee->id, 'source' => 'employee']) }}"
+                               rev="Tem certeza que deseja aprovar este registro?"><span
+                                        class="glyphicon glyphicon-thumbs-up"></span></a>
+                        @else
+                            <a href="{{ route('employee.edit', $employee->id) }}" title="Editar"
+                               class="btn btn-success btn-md"><span
+                                        class="glyphicon glyphicon-pencil"></span></a>
 
-                        <a href="#"
-                           class="btn btn-danger btn-md modal-delete" title="Excluir"
-                           data-toggle="modal"
-                           data-target="#delete"
-                           rel="{{ route('employee.destroy', $employee->id) }}"><span
-                                    class="glyphicon glyphicon-trash"></span></a>
-                    @endif
+                            <a href="#"
+                               class="btn btn-danger btn-md modal-delete" title="Excluir"
+                               data-toggle="modal"
+                               data-target="#delete"
+                               rel="{{ route('employee.destroy', $employee->id) }}"><span
+                                        class="glyphicon glyphicon-trash"></span></a>
+                        @endif
+                    @endcan
                 </li>
             </ul>
         </div>

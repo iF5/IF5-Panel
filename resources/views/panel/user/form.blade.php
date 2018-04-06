@@ -22,7 +22,7 @@
                     <!-- form validate -->
                     @include('includes.form-validate')
 
-                    <form id="user-form" method="post" action="{{ route($route, $parameters) }}">
+                    <form id="user-form" class="v-form" method="post" action="{{ route($route, $parameters) }}">
 
                         {!! method_field($method) !!}
                         {!! csrf_field() !!}
@@ -31,28 +31,28 @@
                             <div class="form-group col-sm-5">
                                 <label for="name">Nome* :</label>
                                 <input type="text" id="name" name="name" value="{{ $user->name or old('name') }}"
-                                       class="form-control">
+                                       class="form-control v-void">
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-5">
                                 <label for="cpf">CPF* :</label>
                                 <input type="text" id="cpf" name="cpf" value="{{ $user->cpf or old('cpf') }}"
-                                       class="form-control">
+                                       class="form-control v-cpf">
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-5">
                                 <label for="jobRole">Cargo* :</label>
                                 <input type="text" id="jobRole" name="jobRole" value="{{ $user->jobRole or old('jobRole') }}"
-                                       class="form-control">
+                                       class="form-control v-void">
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-5">
                                 <label for="department">Setor* :</label>
                                 <input type="text" id="department" name="department" value="{{ $user->department or old('department') }}"
-                                       class="form-control">
+                                       class="form-control v-void">
                             </div>
                         </div>
                         <div class="row">
@@ -66,7 +66,7 @@
                             <div class="form-group col-sm-5">
                                 <label for="cellPhone">Celular* :</label>
                                 <input type="text" id="cellPhone" name="cellPhone" value="{{ $user->cellPhone or old('cellPhone') }}"
-                                       class="form-control">
+                                       class="form-control v-void">
                             </div>
                         </div>
                         <div class="row">
@@ -74,13 +74,13 @@
                                 <label for="email">E-mail* :</label>
                                 <input type="email" id="email" name="email"
                                        value="{{ $user->email or old('email') }}"
-                                       class="form-control">
+                                       class="form-control v-email">
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-5">
                                 <label for="password">Senha* :</label>
-                                <input type="password" id="password" name="password" class="form-control">
+                                <input type="password" id="password" name="password" class="form-control v-void">
                             </div>
                         </div>
                         <div class="row">

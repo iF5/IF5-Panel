@@ -47,7 +47,7 @@
                                     </div>
                                 </td>
                                 <td>{{ $document->name }}</td>
-                                <td>{{ \Carbon\Carbon::parse($document->createdAt)->format('d/m/Y H:i:s') }}</td>
+                                <td>{{ Period::format($document->createdAt, 'd/m/Y H:i:s') }}</td>
                                 <td>
                                     <a href="{{ route('document-types.edit', $document->id) }}"
                                        class="btn btn-success btn-xs" title="Editar"><span

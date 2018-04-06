@@ -15,9 +15,9 @@
                 </div>
 
                 <div class="col-md-12">
-                    <form class="form-inline" action="{{ route('log.index') }}" method="get">
+                    <form class="form-inline v-form" action="{{ route('log.index') }}" method="get">
                         <div class="form-group">
-                            <input type="text" class="form-control dateMask" name="date"
+                            <input type="text" class="form-control dateMask v-void" id="date" name="date"
                                    value="{{ $searchData['date'] }}" size="8">
                         </div>
                         <div class="form-group">

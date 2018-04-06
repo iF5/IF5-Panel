@@ -153,12 +153,13 @@ function If5Form() {
          */
         $('.v-form').on('submit', function (e) {
             var hasType = function (id) {
+                var type = false;
                 for (var i in vClasses) {
                     if ($('#' + id).hasClass(i)) {
-                        return vClasses[i];
+                        type = vClasses[i];
                     }
                 }
-                return false;
+                return type;
             };
 
             var options = {};
@@ -483,8 +484,6 @@ $(function () {
             }
         });
     });
-
-    //waitingDialog.show('Por favor aguarde....');
 
 });
 

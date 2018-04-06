@@ -23,7 +23,7 @@ class AuthServiceProvider extends ServiceProvider
         \Gate::define('onlyCompany', 'App\Policies\RolePolicy@onlyCompany');
         \Gate::define('isProvider', 'App\Policies\RolePolicy@isProvider');
         \Gate::define('onlyProvider', 'App\Policies\RolePolicy@onlyProvider');
-        \Gate::define('isAdminAndProvider', 'App\Policies\RolePolicy@isAdminAndProvider');
+        \Gate::define('isAdminOrProvider', 'App\Policies\RolePolicy@isAdminOrProvider');
     }
 
     /**

@@ -9,7 +9,7 @@ Route::get('/user/company/{id}/identify', 'Panel\UserCompanyController@identify'
 Route::resource('/user-company', 'Panel\UserCompanyController', ['middleware' => ['can:isCompany']]);
 
 Route::get('/user/provider/{id}/identify', 'Panel\UserProviderController@identify')
-    ->middleware('can:onlyAdmin')
+    ->middleware('can:isCompany')
     ->name('user-provider.identify');
 /*->where([
     ['companyId', '[0-9]+'],

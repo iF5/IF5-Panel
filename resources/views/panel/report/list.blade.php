@@ -15,7 +15,7 @@
             </div>
 
             <div class="col-md-4">
-                <form action="{{ route('report.index') }}" method="get">
+                <form class="v-form" action="{{ route('report.index') }}" method="get">
                     <div class="input-group">
                         @if($referenceDate)
                             <span class="input-group-addon">
@@ -24,7 +24,7 @@
                                 </a>
                             </span>
                         @endif
-                        <input class="form-control" type="text" id="referenceDateSearch" name="reference-date"
+                        <input class="form-control v-void" type="text" id="referenceDateSearch" name="reference-date"
                                placeholder="mm/aaaa"
                                value="{{ $referenceDate }}">
                             <span class="input-group-btn">
@@ -80,11 +80,11 @@
                             </td>
                             <td>{{ $report->name }}</td>
                             <td>{{ $report->referenceDate }}</td>
-                            <td>{{ \Carbon\Carbon::parse($report->createdAt)->format('d/m/Y H:i:s') }}</td>
+                            <td>{{ Period::format($report->createdAt, 'd/m/Y H:i') }}</td>
                             <td>
                                 @if($report->sentAt)
                                     {{ $report->fileOriginalName }} -
-                                    {{ \Carbon\Carbon::parse($report->sentAt)->format('d/m/Y H:i:s') }}
+                                    {{ Period::format($report->sentAt, 'd/m/Y H:i') }}
                                 @endif
                             </td>
                             <td>

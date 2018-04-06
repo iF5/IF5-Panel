@@ -8,7 +8,7 @@ Route::get('employee/layoff/{employeeId}/{layoffType}', 'Panel\EmployeeControlle
     ->middleware('can:isProvider')
     ->name('employee.layoff');
 
-Route::group(['middleware' => 'can:isProvider'], function () {
+Route::group(['middleware' => 'can:isAdminOrProvider'], function () {
     Route::get('employee/register/batch', 'Panel\EmployeeController@registerBatchIndex')->name('employee.register.index');
     Route::post('employee/register/batch/upload', 'Panel\EmployeeController@registerBatchUpload')->name('employee.register.upload');
     Route::get('employee/register/batch/run/{id}', 'Panel\EmployeeController@registerBatchRun')->name('employee.register.run');

@@ -30,7 +30,7 @@
                     </li>
                     <li class="list-group-item">
                         <strong>Gerado em : </strong>
-                        {{ \Carbon\Carbon::parse($log->createdAt)->format('d/m/Y H:i:s') }}
+                        {{ Period::format($log->createdAt, 'd/m/Y H:i') }}
                     </li>
                     <li class="list-group-item">
                         <strong>Dados enviado : </strong><br/><br/>

@@ -22,7 +22,7 @@
                     <!-- form validate -->
                     @include('includes.form-validate')
 
-                    <form id="report-form" method="post" action="{{ route($route, $parameters) }}">
+                    <form id="report-form" class="v-form" method="post" action="{{ route($route, $parameters) }}">
 
                         {!! method_field($method) !!}
                         {!! csrf_field() !!}
@@ -31,7 +31,7 @@
                             <div class="form-group col-sm-5">
                                 <label for="name">Nome* :</label>
                                 <input type="text" id="name" name="name" value="{{ $report->name or old('name') }}"
-                                       class="form-control" required>
+                                       class="form-control v-void">
                             </div>
                         </div>
                         <div class="row">
@@ -39,7 +39,7 @@
                                 <label for="referenceDateSearch">Data de refer&ecirc;ncia * :</label>
                                 <input type="text" id="referenceDateSearch" name="referenceDate"
                                        value="{{ $report->referenceDate or old('referenceDate') }}"
-                                       class="form-control" required placeholder="mm/aaaa">
+                                       class="form-control v-void" placeholder="mm/aaaa">
                             </div>
                         </div>
                         <div class="row">

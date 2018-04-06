@@ -111,11 +111,23 @@ class EmployeeController extends Controller
     /**
      * @return int
      */
+    protected function getCompanyId()
+    {
+        if (in_array(\Auth::user()->role, ['admin'])) {
+            return \Session::get('company')->id;
+        }
+        return \Auth::user()->companyId;
+    }
+
+    /**
+     * @return int
+     */
     protected function getProviderId()
     {
-        return (in_array(\Auth::user()->role, ['admin', 'company']))
-            ? \Session::get('provider')->id
-            : \Auth::user()->providerId;
+        if (in_array(\Auth::user()->role, ['admin', 'company'])) {
+            return \Session::get('provider')->id;
+        }
+        return \Auth::user()->providerId;
     }
 
     /**
@@ -142,9 +154,12 @@ class EmployeeController extends Controller
     public function index()
     {
         $keyword = \Request::input('keyword');
+        $companyId = $this->getCompanyId();
+        $providerId = $this->getProviderId();
+
         $employees = ($keyword)
-            ? $this->employeeRepository->findLike($this->getProviderId(), 'name', $keyword)
-            : $this->employeeRepository->findOrderBy($this->getProviderId());
+            ? $this->employeeRepository->findLike($companyId, $providerId, 'name', $keyword)
+            : $this->employeeRepository->findOrderBy($companyId, $providerId);
 
         return view('panel.employee.list', [
             'keyword' => $keyword,
@@ -274,9 +289,10 @@ class EmployeeController extends Controller
 
         return view('panel.employee.show', [
             'employee' => $employee,
-            'companies' => $companies,
-            'documents' => $this->documents,
-            'selectedDocuments' => $this->employeeRepository->findDocuments($id),
+            'documents' => $this->getDocuments(),
+            'selectedDocuments' => $this->employeeRepository->listIdDocuments($id),
+            'companies' => $this->getCompanies(),
+            'selectedCompanies' => $this->employeeRepository->listIdCompanies($id),
             'breadcrumbs' => $this->getBreadcrumb('Visualizar')
         ]);
     }
@@ -471,7 +487,7 @@ class EmployeeController extends Controller
         }
 
         $csv = $this->getCsvData($register->data);
-        if($csv->error) {
+        if ($csv->error) {
             $this->relationshipRepository->update('register_batch_employees', [
                 'status' => 2,
                 'message' => 'N&atilde;o foi poss&iacute;vel processar o csv, por favor examine o mesmo e tente novamente.',

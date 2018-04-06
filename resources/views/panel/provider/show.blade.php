@@ -59,9 +59,9 @@
                     <!-- End Documents -->
 
                     <li class="list-group-item"><strong>Cadastrado em
-                            : </strong> {{ \Carbon\Carbon::parse($provider->createdAt)->format('d/m/Y H:i:s') }}</li>
+                            : </strong> {{ Period::format($provider->createdAt, 'd/m/Y H:i') }}</li>
                     <li class="list-group-item"><strong>&Uacute;ltima atualiza&ccedil;&atilde;o
-                            : </strong> {{ \Carbon\Carbon::parse($provider->updatedAt)->format('d/m/Y H:i:s') }}</li>
+                            : </strong> {{ Period::format($provider->updatedAt, 'd/m/Y H:i') }}</li>
                     <li class="list-group-item">
                         @if(!$provider->status && \Auth::user()->role === 'admin')
                             <a href="#"

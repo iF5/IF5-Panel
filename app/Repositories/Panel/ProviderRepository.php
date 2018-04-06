@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Panel;
 
+use App\Facades\Period;
 use App\Models\Provider;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -231,13 +232,19 @@ class ProviderRepository extends Provider
     public function attachCompanies($providerId, $companyId, $isAdmin = false)
     {
         $stmt = \DB::table('providers_has_companies');
-        $stmt->where('providerId', $providerId)->delete();
-        $stmt->insert([
+        $exists = $stmt->where([
             'providerId' => $providerId,
-            'companyId' => $companyId,
-            'status' => $isAdmin,
-            'createdAt' => (new \DateTime())->format('Y-m-d H:i:s')
-        ]);
+            'companyId' => $companyId
+        ])->count();
+
+        if (!$exists) {
+            $stmt->insert([
+                'providerId' => $providerId,
+                'companyId' => $companyId,
+                'status' => $isAdmin,
+                'createdAt' => Period::now()
+            ]);
+        }
     }
 
 }

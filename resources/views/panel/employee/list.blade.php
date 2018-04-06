@@ -20,8 +20,10 @@
             </div>
 
             <div class="col-md-6">
-                <a class="btn btn-success" href="{{ route('employee.create') }}">Cadastrar um novo</a>
-                <a class="btn btn-primary" href="{{ route('employee.register.index') }}">Cadastrar em lote</a>
+                @can('isAdminOrProvider')
+                    <a class="btn btn-success" href="{{ route('employee.create') }}">Cadastrar um novo</a>
+                    <a class="btn btn-primary" href="{{ route('employee.register.index') }}">Cadastrar em lote</a>
+                @endcan
             </div>
 
             <div class="col-md-12" style="margin-top: 20px;">
@@ -47,10 +49,12 @@
                                             <a href="{{ route('employee.show', ['id' => $employee->id]) }}">Abrir</a>
                                         </li>
                                         @if($employee->status)
-                                            <li>
-                                                <a href="{{ route('checklist.employee.identify', [$employee->id]) }}">Checklist
-                                                    de documentos</a>
-                                            </li>
+                                            @can('isAdminOrProvider')
+                                                <li>
+                                                    <a href="{{ route('checklist.employee.identify', [$employee->id]) }}">Checklist
+                                                        de documentos</a>
+                                                </li>
+                                            @endcan
                                             <!--
                                             <li>
                                                 <a href="{{ route('employee.layoff', [1,1]) }}">Demiss&atilde;o/Afastamento</a>
@@ -71,15 +75,17 @@
                                 </td>
                             @endif
                             <td>
-                                <a href="{{ route('employee.edit', $employee->id) }}"
-                                   class="btn btn-success btn-xs"><span
-                                            class="glyphicon glyphicon-pencil" title="Editar"></span></a>
-                                <a href="#"
-                                   class="btn btn-danger btn-xs modal-delete" title="Excluir"
-                                   data-toggle="modal"
-                                   data-target="#delete"
-                                   rel="{{ route('employee.destroy', $employee->id) }}"><span
-                                            class="glyphicon glyphicon-trash"></span></a>
+                                @can('isAdminOrProvider')
+                                    <a href="{{ route('employee.edit', $employee->id) }}"
+                                       class="btn btn-success btn-xs"><span
+                                                class="glyphicon glyphicon-pencil" title="Editar"></span></a>
+                                    <a href="#"
+                                       class="btn btn-danger btn-xs modal-delete" title="Excluir"
+                                       data-toggle="modal"
+                                       data-target="#delete"
+                                       rel="{{ route('employee.destroy', $employee->id) }}"><span
+                                                class="glyphicon glyphicon-trash"></span></a>
+                                @endcan
                             </td>
                         </tr>
                     @empty

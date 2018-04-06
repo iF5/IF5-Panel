@@ -17,9 +17,9 @@
             <ul class="list-group">
                 <li class="list-group-item"><strong>Nome : </strong> {{ $documentType->name }}</li>
                 <li class="list-group-item"><strong>Cadastrado em
-                        : </strong> {{ \Carbon\Carbon::parse($documentType->createdAt)->format('d/m/Y H:i:s') }}</li>
+                        : </strong> {{ Period::format($documentType->createdAt, 'd/m/Y H:i') }}</li>
                 <li class="list-group-item"><strong>&Uacute;ltima atualiza&ccedil;&atilde;o
-                        : </strong> {{ \Carbon\Carbon::parse($documentType->updatedAt)->format('d/m/Y H:i:s') }}</li>
+                        : </strong> {{ Period::format($documentType->updatedAt, 'd/m/Y H:i') }}</li>
                 <li class="list-group-item">
                     <a href="{{ route('document-types.edit', $documentType->id) }}"
                        class="btn btn-success btn-md" title="Editar"><span

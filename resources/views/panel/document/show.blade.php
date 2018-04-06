@@ -24,10 +24,10 @@
                 <li class="list-group-item">
                     <strong>Status: </strong> {{ $status[$document->isActive] }}</li>
                 <li class="list-group-item"><strong>Cadastrado em
-                        : </strong> {{ \Carbon\Carbon::parse($document->createdAt)->format('d/m/Y H:i:s') }}
+                        : </strong> {{ Period::format($document->createdAt, 'd/m/Y H:i') }}
                 </li>
                 <li class="list-group-item"><strong>&Uacute;ltima atualiza&ccedil;&atilde;o
-                        : </strong> {{ \Carbon\Carbon::parse($document->updatedAt)->format('d/m/Y H:i:s') }}
+                        : </strong> {{ Period::format($document->updatedAt, 'd/m/Y H:i') }}
                 </li>
                 <li class="list-group-item">
                     <a href="{{ route($route . 'edit', $document->id) }}"

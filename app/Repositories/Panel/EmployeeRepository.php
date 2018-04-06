@@ -11,41 +11,60 @@ class EmployeeRepository extends Employee
     protected $totalPerPage = 20;
 
     /**
+     * @param int $companyId
      * @param int $providerId
-     * @param string $field
+     * @param string $column
      * @param string $keyword
      * @return mixed
      */
-    public function findLike($providerId, $field, $keyword)
+    public function findLike($companyId, $providerId, $column, $keyword)
+    {
+        return $this->findCustom($companyId, $providerId, [], [$column, 'like', "%{$keyword}%"]);
+    }
+
+    /**
+     * @param int $companyId
+     * @param int $providerId
+     * @param string $column
+     * @param string $to
+     * @return mixed
+     */
+    public function findOrderBy($companyId, $providerId, $column = 'id', $to = 'DESC')
+    {
+        return $this->findCustom($companyId, $providerId, [$column, $to]);
+    }
+
+    /**
+     * @param int $companyId
+     * @param int $providerId
+     * @param array $orderBy
+     * @param array $like
+     * @return mixed
+     */
+    private function findCustom($companyId, $providerId, array $orderBy = [], array $like = [])
     {
         try {
-            return $this->where([
-                ['providerId', '=', $providerId],
-                [$field, 'like', "%{$keyword}%"]
-            ])->paginate($this->totalPerPage);
+            $where = [
+                ['employees.providerId', $providerId],
+                ['employees_has_companies.companyId', $companyId]
+            ];
+            if (count($like)) {
+                $where[] = $like;
+            }
+
+            $stmt = $this->join('employees_has_companies', function ($join) {
+                return $join->on('employees_has_companies.employeeId', 'employees.id');
+            })->where($where);
+
+            if (count($orderBy)) {
+                $stmt->orderBy($orderBy[0], $orderBy[1]);
+            }
+            return $stmt->paginate($this->totalPerPage);
         } catch (\Exception $e) {
             throw new ModelNotFoundException;
         }
     }
 
-    /**
-     * @param int $providerId
-     * @param string $field
-     * @param string $type
-     * @return mixed
-     */
-    public function findOrderBy($providerId, $field = 'id', $type = 'desc')
-    {
-        try {
-            return $this->where([
-                ['providerId', '=', $providerId]
-            ])
-                ->orderBy($field, $type)
-                ->paginate($this->totalPerPage);
-        } catch (\Exception $e) {
-            throw new ModelNotFoundException;
-        }
-    }
 
     /**
      * @param int $id
@@ -210,9 +229,11 @@ class EmployeeRepository extends Employee
         $indexes = [];
         foreach ($data as $row) {
             if (!isset($row['id']) || (int)$row['id'] <= 0) {
-                unset($row['id']);
-                $employee = $this->firstOrCreate($row);
-                $indexes[] = $employee->id;
+                if (!$this->where('cpf', $row['cpf'])->count()) {
+                    unset($row['id']);
+                    $employee = $this->create($row);
+                    $indexes[] = $employee->id;
+                }
             } else {
                 $this->findOrFail($row['id'])->update($data);
                 $indexes[] = $row['id'];
