@@ -8,6 +8,15 @@ class Period extends Facade
 {
 
     /**
+     * @param string $format
+     * @return string
+     */
+    public static function now($format = 'Y-m-d H:i:s')
+    {
+        return (new \DateTime())->format($format);
+    }
+
+    /**
      * @param null|string $value
      * @param string $format
      * @return null|string
