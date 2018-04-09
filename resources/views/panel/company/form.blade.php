@@ -25,6 +25,7 @@
 
                         {!! method_field($method) !!}
                         {!! csrf_field() !!}
+                        <input type="hidden" id="url" value="{{ url('') }}" />
 
                         <div class="form-group col-xs-4">
                             <label for="name">Razão Social* :</label>
@@ -82,7 +83,7 @@
                         <div class="form-group col-xs-4">
                             <label for="cep">CEP* :</label>
                             <input type="text" id="cep" name="cep" value="{{ $company->cep or old('cep') }}"
-                                   class="form-control">
+                                   class="form-control v-void">
                         </div>
                         <div class="form-group col-xs-4">
                             <label for="street">Logradouro* :</label>
@@ -126,17 +127,17 @@
                                    class="form-control v-void">
                         </div>
                         <div class="form-group col-xs-4">
-                            <label for="cellPhone">Celular* :</label>
+                            <label for="cellPhone">Celular :</label>
                             <input type="cellPhone" id="cellPhone" name="cellPhone"
                                    value="{{ $company->cellPhone or old('cellPhone') }}"
-                                   class="form-control v-void">
+                                   class="form-control">
                         </div>
 
                         <div class="form-group col-xs-4">
                             <label for="email">E-mail* :</label>
                             <input id="email" name="email"
                                    value="{{ $company->email or old('email') }}"
-                                   class="form-control">
+                                   class="form-control v-email">
                         </div>
 
                         <!-- Documents -->

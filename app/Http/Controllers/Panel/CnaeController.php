@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Panel;
 
-use Illuminate\Http\Request;
 use App\Repositories\Panel\CnaeRepository;
 
 class CnaeController
@@ -13,25 +12,27 @@ class CnaeController
      */
     private $cnaeRepository;
 
-
-    public function __construct(
-        CnaeRepository $cnaeRepository
-    )
+    /**
+     * CnaeController constructor.
+     * @param CnaeRepository $cnaeRepository
+     */
+    public function __construct(CnaeRepository $cnaeRepository)
     {
         $this->cnaeRepository = $cnaeRepository;
     }
 
-    public function index(Request $request, $cnae)
+    /**
+     * @param $cnae
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index($cnae)
     {
-        $arr = $this->cnaeRepository->find($cnae);
-
-        foreach($arr as &$values){
+        $data = $this->cnaeRepository->find($cnae);
+        foreach ($data as &$values) {
             $values->name = html_entity_decode($values->name);
         }
 
-        return response()->json(
-            $arr
-        );
+        return response()->json($data);
     }
 
 }

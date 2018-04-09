@@ -24,6 +24,7 @@
                     <form class="v-form" method="post" action="{{ route($route, $parameters) }}">
                         {!! method_field($method) !!}
                         {!! csrf_field() !!}
+                        <input type="hidden" id="url" value="{{ url('') }}" />
 
                         <div class="form-group col-xs-4">
                             <label for="name">Razão Social* :</label>
@@ -144,7 +145,7 @@
                             <label for="email">E-mail * :</label>
                             <input type="text" id="email" name="email"
                                    value="{{ $provider->email or old('email') }}"
-                                   class="form-control v-void">
+                                   class="form-control v-email">
                         </div>
 
                         <!-- Documents -->

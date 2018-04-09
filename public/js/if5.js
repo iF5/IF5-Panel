@@ -395,40 +395,23 @@ $(function () {
      */
     $('input.typeahead').typeahead({
         source: function (query, process) {
-            return $.get("//" + hostName() + '/cnae/' + query, {query: query}, function (data) {
+            var url = $('#url').val() + '/cnae/' + query;
+            return $.get(url, {query: query}, function (data) {
                 return process(data);
             });
         }
     });
 
     /**
-     *
-     * @returns {*}
-     */
-    function hostName() {
-        var hostname = $(location).attr('hostname');
-        if (hostname == "localhost") {
-            return hostname + ":4545/public/";
-        }
-        return hostname;
-    }
-
-    /**
      * Api correios
      */
     $('#cep').on('blur', function () {
         var cep = this.value.replace('-', '');
-        $.ajax({
-            url: 'http://correiosapi.apphb.com/cep/' + cep,
-            dataType: 'jsonp',
-            crossDomain: true,
-            contentType: 'application/json',
-            success: function (data) {
-                $('#street').val(data.logradouro);
-                $('#district').val(data.bairro);
-                $('#city').val(data.cidade);
-                $('#state').val(data.estado);
-            }
+        $.getJSON('https://viacep.com.br/ws/' + cep + '/json/', function (data) {
+            $('#street').val(data.logradouro);
+            $('#district').val(data.bairro);
+            $('#city').val(data.localidade);
+            $('#state').val(data.uf);
         });
     });
 
@@ -476,10 +459,10 @@ $(function () {
         $.ajax({
             url: this.href,
             type: 'GET',
-            beforeSend: function(){
+            beforeSend: function () {
                 waitingDialog.show('Por favor aguarde....');
             },
-            complete: function(){
+            complete: function () {
                 window.location.reload();
             }
         });
