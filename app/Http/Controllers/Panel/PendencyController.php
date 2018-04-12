@@ -108,17 +108,16 @@ class PendencyController extends Controller
      */
     public function approve($companyId, $id, $source)
     {
-        $this->createLog('PUT', ["{$source}Id" => $id]);
-
         if ($source === 'provider') {
-            $this->relationshipRepository->update('companies_has_providers', ['status' => 1], [
+            $this->relationshipRepository->update('providers_has_companies', ['status' => 1], [
                 'companyId' => $companyId,
                 'providerId' => $id
             ]);
-            return redirect()->route('pendency.index', ['source' => $source]);
+        } else {
+            $this->employeeRepository->find($id)->update(['status' => 1]);
         }
 
-        $this->employeeRepository->find($id)->update(['status' => 1]);
+        $this->createLog('PUT', ["{$source}Id" => $id]);
         return redirect()->route('pendency.index', ['source' => $source]);
     }
 
