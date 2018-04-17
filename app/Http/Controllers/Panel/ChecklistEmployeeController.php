@@ -108,7 +108,7 @@ class ChecklistEmployeeController extends Controller
         }
 
         return $this->documentRepository->findByChecklist(
-            $periodicity, $this->getEntityGroup(), $this->employeeRepository->findDocuments($this->getEntityId())
+            $periodicity, $this->getEntityGroup(), $this->employeeRepository->listIdDocuments($this->getEntityId())
         );
     }
 

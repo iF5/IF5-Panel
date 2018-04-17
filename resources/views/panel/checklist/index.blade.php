@@ -14,7 +14,7 @@
             </div>
 
             <div class="col-md-6">
-                <form class="v-form" action="" method="get">
+                <form class="v-form">
                     <div class="input-group">
                         @if($year and $month)
                             <span class="input-group-addon">

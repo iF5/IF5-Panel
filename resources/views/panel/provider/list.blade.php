@@ -47,12 +47,10 @@
                                             <a href="{{ route('provider.show', ['id' => $provider->id]) }}">Abrir</a>
                                         </li>
                                         @if($provider->status)
-                                            <!--
                                             <li>
                                                 <a href="{{ route('checklist.provider.identify', $provider->id) }}">Checklist
                                                     de documentos</a>
                                             </li>
-                                            -->
                                             <li>
                                                 <a href="{{ route('employee.identify', [$provider->id]) }}">Funcion&aacute;rios</a>
                                             </li>

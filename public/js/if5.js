@@ -345,13 +345,12 @@ $(function () {
         e.preventDefault();
         var month = '#month' + this.rel;
         var validity = '#validity' + this.rel;
-        var assert = validate.assert({
-            month: {value: $(month).val(), type: 'VOID'},
-            validity: {value: $(validity).val(), type: 'NUMBER'}
-        });
+        var form = {};
+        form[month] = {value: $(month).val(), type: 'VOID'};
+        form[validity] = {value: $(validity).val(), type: 'NUMBER'};
 
+        var assert = validate.assert(form);
         if (!assert.isSuccess) {
-            //if5Modal.alert();
             return false;
         }
 
