@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * For admin
  */
@@ -9,11 +8,9 @@ Route::group(['middleware' => 'can:onlyAdmin'], function () {
     Route::put('checklist-company/approve', 'Panel\ChecklistCompanyController@approve')->name('checklist.company.approve');
     Route::put('checklist-company/disapprove', 'Panel\ChecklistCompanyController@disapprove')->name('checklist.company.disapprove');
     //
-    Route::get('checklist-provider/{id}/identify', 'Panel\ChecklistProviderController@identify')->name('checklist.provider.identify');
     Route::put('checklist-provider/approve', 'Panel\ChecklistProviderController@approve')->name('checklist.provider.approve');
     Route::put('checklist-provider/disapprove', 'Panel\ChecklistProviderController@disapprove')->name('checklist.provider.disapprove');
     //
-    Route::get('checklist-employee/{id}/identify', 'Panel\ChecklistEmployeeController@identify')->name('checklist.employee.identify');
     Route::put('checklist-employee/approve', 'Panel\ChecklistEmployeeController@approve')->name('checklist.employee.approve');
     Route::put('checklist-employee/disapprove', 'Panel\ChecklistEmployeeController@disapprove')->name('checklist.employee.disapprove');
 });
@@ -26,6 +23,8 @@ Route::group(['middleware' => 'can:isCompany'], function () {
         ->name('checklist.company.show.pdf');
     Route::post('checklist-company/store', 'Panel\ChecklistCompanyController@store')->name('checklist.company.store');
     Route::get('checklist-company/{periodicity}', 'Panel\ChecklistCompanyController@index')->name('checklist.company.index');
+    //
+    Route::get('checklist-provider/{id}/identify', 'Panel\ChecklistProviderController@identify')->name('checklist.provider.identify');
 });
 
 /**
@@ -43,4 +42,9 @@ Route::group(['middleware' => 'can:isProvider'], function () {
     Route::get('checklist-employee/{periodicity}', 'Panel\ChecklistEmployeeController@index')->name('checklist.employee.index');
 });
 
-
+/**
+ * For admin and provider
+ */
+Route::group(['middleware' => 'can:isAdminOrProvider'], function () {
+    Route::get('checklist-employee/{id}/identify', 'Panel\ChecklistEmployeeController@identify')->name('checklist.employee.identify');
+});

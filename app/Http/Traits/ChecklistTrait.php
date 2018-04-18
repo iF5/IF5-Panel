@@ -172,6 +172,7 @@ trait ChecklistTrait
         );
 
         return view('panel.checklist.show', [
+            'entityName' => $this->getEntityName(),
             'document' => $document,
             'status' => $this->status,
             'pdf' => sprintf('%s%s', $this->getDirWithHost($year, $month), $document->fileName),

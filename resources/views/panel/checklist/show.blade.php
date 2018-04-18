@@ -44,17 +44,20 @@
                                 <font color="#FF4500"> {{ $document->observation }}</font>
                             </li>
                         @endif
+                        @can('onlyAdmin')
                         <li class="list-group-item">
-                            <input type="hidden" id="queryStringData" value="{{ $queryStringData }}"/>
 
-                            <a href="{{ route('checklist.company.approve') }}"
-                               class="btn btn-success btn-lg checklist-approve" title="Aprovar"
-                               rel="0"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+                                <input type="hidden" id="queryStringData" value="{{ $queryStringData }}"/>
 
-                            <a href="{{ route('checklist.company.disapprove') }}"
-                               class="btn btn-danger btn-lg checklist-disapprove" title="Reprovar"
-                               rel="0"><span class="glyphicon glyphicon-thumbs-down"></span></a>
+                                <a href="{{ route("checklist.{$entityName}.approve") }}"
+                                   class="btn btn-success btn-lg checklist-approve" title="Aprovar"
+                                   rel="0"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+
+                                <a href="{{ route("checklist.{$entityName}.disapprove") }}"
+                                   class="btn btn-danger btn-lg checklist-disapprove" title="Reprovar"
+                                   rel="0"><span class="glyphicon glyphicon-thumbs-down"></span></a>
                         </li>
+                        @endcan
                     </ul>
                 </div>
             </div>

@@ -38,8 +38,7 @@
 
             <div class="col-md-8">
                 @can('onlyAdmin')
-                <a class="btn btn-success" href="{{ route('report.create') }}"> Cadastrar novo
-                    rel&aacute;torio +</a>
+                <a class="btn btn-success" href="{{ route('report.create') }}"> Cadastrar novo</a>
                 @endcan
             </div>
 
