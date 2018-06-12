@@ -20,32 +20,236 @@
                     <thead>
                     <tr>
                         <th>
-                            <div>Documentos</div>
+                            <div>Cliente 1</div>
                         </th>
-                        @foreach($providers as $provider)
-                            <th>
-                                <div style="width: 200px; text-align: center;">
-                                    <a href="{{ route('dashboard.employee', ["providerId" => $provider['providerId']]) }}">
-                                        {{ $provider['providerName'] }}
-                                    </a>
-                                </div>
-                            </th>
-                        @endforeach
+                        <th>
+                            <div style="width: 200px; text-align: center;">
+                                <i class="material-icons" style="font-size:30px;color:red;">error</i>
+                            </div>
+                        </th>
+                        <th>
+                            <div style="width: 200px; text-align: center;">
+                                <a href="#">
+                                    <i class="material-icons" style="font-size:30px;color:yellow;">warning</i>
+                                </a>
+                            </div>
+                        </th>
+                        <th>
+                            <div style="width: 200px; text-align: center;">
+                                <a href="#">
+                                    <i class="material-icons" style="font-size:30px;color:green">check</i>
+                                </a>
+                            </div>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
-                        @foreach($documents as $key => $value)
-                            <tr>
-                            <td>
-                                {{ $key }}
-                            </td>
-                            @foreach($value as $val)
-                            <td>
-                                {{ $val['documentQuantity'] }}/{{  $val['employeeQuantity'] }}
-                            </td>
-                            @endforeach
-                            </tr>
-                        @endforeach
+                        <tr>
+                          <td>
+                              Próprios
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+
+                            </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                              Prestadores
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+
+                            </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                              Funcionários
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+
+                            </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>
+                            <div>Cliente 2</div>
+                        </th>
+                        <th>
+                            <div style="width: 200px; text-align: center;">
+                                <i class="material-icons" style="font-size:30px;color:red;">error</i>
+                            </div>
+                        </th>
+                        <th>
+                            <div style="width: 200px; text-align: center;">
+                                <a href="#">
+                                    <i class="material-icons" style="font-size:30px;color:yellow;">warning</i>
+                                </a>
+                            </div>
+                        </th>
+                        <th>
+                            <div style="width: 200px; text-align: center;">
+                                <a href="#">
+                                    <i class="material-icons" style="font-size:30px;color:green">check</i>
+                                </a>
+                            </div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                          <td>
+                              Próprios
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+
+                            </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                              Prestadores
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+
+                            </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                              Funcionários
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+
+                            </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>
+                            <div>Cliente 3</div>
+                        </th>
+                        <th>
+                            <div style="width: 200px; text-align: center;">
+                                <i class="material-icons" style="font-size:30px;color:red;">error</i>
+                            </div>
+                        </th>
+                        <th>
+                            <div style="width: 200px; text-align: center;">
+                                <a href="#">
+                                    <i class="material-icons" style="font-size:30px;color:yellow;">warning</i>
+                                </a>
+                            </div>
+                        </th>
+                        <th>
+                            <div style="width: 200px; text-align: center;">
+                                <a href="#">
+                                    <i class="material-icons" style="font-size:30px;color:green">check</i>
+                                </a>
+                            </div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                          <td>
+                              Próprios
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+
+                            </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                              Prestadores
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+
+                            </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                              Funcionários
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+
+                            </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;"> 10 </div>
+                          </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
