@@ -38,16 +38,53 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $keyword = \Request::input('keyword');
-        $providers = $this->prepareReportToProviders($keyword);
+        $this->getCompanies();
+        $this->getDocumentCompanies();
 
         return view('panel.dashboard.index', [
+
+            'breadcrumbs' => $this->getBreadcrumb()
+
+        ]);
+
+        //$keyword = \Request::input('keyword');
+        //$providers = $this->prepareReportToProviders($keyword);
+
+        /*return view('panel.dashboard.index', [
             'documents' => $providers['documents'],
             'providers' => $providers['providers'],
             'breadcrumbs' => $this->getBreadcrumb(),
             'keyword' => $keyword
-        ]);
+        ]);*/
     }
+
+    private function getCompanies()
+    {
+        $newCompanies = [];
+        $companies = $this->dashboardRepository->getCompanies();
+        foreach($companies as $company) {
+            $newCompanies[$company->id]['name'] = $company->name;
+        }
+        return $newCompanies;
+    }
+
+    private function getDocumentCompanies()
+    {
+      $newDocumentCompanies = [];
+      $documentCompanies = $this->dashboardRepository->getDocumentCompanies();
+      foreach ($documentCompanies as $documentCompany) {
+          $companyId = $documentCompany->companyId;
+          $status = $documentCompany->status;
+          
+          !is_null($status) ? $status : 0;
+          $newDocumentCompanies[$companyId][$status][] = $documentCompany->documentId;
+      }
+      dd($newDocumentCompanies);
+      //dd($documentCompanies);
+    }
+
+
+    #--------------------------------------------------------------------------#
 
     /**
      * @param int $totalDocuments

@@ -14,6 +14,36 @@ class DashboardRepository
 
     private $bindings = [];
 
+    public function getCompanies()
+    {
+        try {
+            $stmt = \DB::table('companies')->select('id', 'name');
+            return $stmt->get();
+        } catch(\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+    public function getDocumentCompanies()
+    {
+        try {
+            $stmt = \DB::table('companies_has_documents')->selectRaw('
+                companies_has_documents.companyId,
+                companies_has_documents.documentId,
+                document_checklists.status
+            ')->leftJoin('documents', function($join){
+                $join->on('companies_has_documents.documentId', '=', 'documents.id');
+            })->leftjoin('document_checklists', function($join){
+                $join->on('companies_has_documents.documentId', '=', 'document_checklists.documentId');
+            });
+            //dd($stmt->toSql());
+            return $stmt->get();
+        } catch(\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+#----------------------------------------------------------#//
 
     public function emploweeHasDocuments()
     {
@@ -23,7 +53,7 @@ class DashboardRepository
                     count(employees_has_documents.documentId) AS documentQuantity,
                     employees.providerId
                 ')->leftJoin('employees_has_documents', function ($join) {
-                $join->on('employees_has_documents.documentId', '=', 'documents.id');
+                  $join->on('employees_has_documents.documentId', '=', 'documents.id');
             })->join('employees', function ($join) {
                 $join->on('employees.id', '=', 'employees_has_documents.employeeId');
             });
@@ -146,7 +176,7 @@ class DashboardRepository
                 b.providerName,
                 b.employeeQuantity
             ', $this->bindings)->from(\DB::raw("
-                ({$a->toSql()}) AS a, 
+                ({$a->toSql()}) AS a,
                 ({$b->toSql()}) AS b
              "))->whereRaw('a.providerId = b.providerId');
 
@@ -212,7 +242,7 @@ class DashboardRepository
             ]);
 
             if ($this->getRole() === 'company') {
-               
+
                 $stmt->whereIn('employees.id', function ($query) {
                     $query->select('employeeId')
                         ->from('employees_has_companies')
