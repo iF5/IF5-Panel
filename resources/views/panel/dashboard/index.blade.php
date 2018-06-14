@@ -16,11 +16,12 @@
             <div class="col-md-6"></div>
 
             <div class="col-md-12" style="overflow-x: auto; min-height: 350px;">
+              @foreach($companies as $key => $company)
                 <table class="table table-bordered">
                     <thead>
                     <tr>
                         <th>
-                            <div>Cliente 1</div>
+                            <div>{{ $company['name'] }}</div>
                         </th>
                         <th>
                             <div style="width: 200px; text-align: center;">
@@ -49,15 +50,37 @@
                               Próprios
                           </td>
                           <td>
-                            <div style="text-align: center;"> 10 </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-
+                            <div style="text-align: center;">
+                                @if(array_key_exists($key, $documentCompanies))
+                                  @if(array_key_exists($PENDING_UPLOAD, $documentCompanies[$key]))
+                                      {{ count($documentCompanies[$key][0]) }}
+                                  @else
+                                      {{ 0 }}
+                                  @endif
+                                @endif
                             </div>
                           </td>
                           <td>
-                            <div style="text-align: center;"> 10 </div>
+                            <div style="text-align: center;">
+                              @if(array_key_exists($key, $documentCompanies))
+                                @if(array_key_exists($PENDING_APPROVAL, $documentCompanies[$key]))
+                                    {{ count($documentCompanies[$key][1]) }}
+                                @else
+                                    {{ 0 }}
+                                @endif
+                              @endif
+                            </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;">
+                              @if(array_key_exists($key, $documentCompanies))
+                                @if(array_key_exists($APPROVED, $documentCompanies[$key]))
+                                    {{ count($documentCompanies[$key][2]) }}
+                                @else
+                                    {{ 0 }}
+                                @endif
+                              @endif
+                            </div>
                           </td>
                         </tr>
                         <tr>
@@ -65,15 +88,37 @@
                               Prestadores
                           </td>
                           <td>
-                            <div style="text-align: center;"> 10 </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-
+                            <div style="text-align: center;">
+                              @if(array_key_exists($key, $documentProviders))
+                                @if(array_key_exists($PENDING_UPLOAD, $documentProviders[$key]))
+                                    {{ count($documentProviders[$key][0]) }}
+                                @else
+                                    {{ 0 }}
+                                @endif
+                              @endif
                             </div>
                           </td>
                           <td>
-                            <div style="text-align: center;"> 10 </div>
+                            <div style="text-align: center;">
+                              @if(array_key_exists($key, $documentProviders))
+                                @if(array_key_exists($PENDING_APPROVAL, $documentProviders[$key]))
+                                    {{ count($documentProviders[$key][1]) }}
+                                @else
+                                    {{ 0 }}
+                                @endif
+                              @endif
+                            </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;">
+                              @if(array_key_exists($key, $documentProviders))
+                                @if(array_key_exists($APPROVED, $documentProviders[$key]))
+                                    {{ count($documentProviders[$key][2]) }}
+                                @else
+                                    {{ 0 }}
+                                @endif
+                              @endif
+                            </div>
                           </td>
                         </tr>
                         <tr>
@@ -81,177 +126,42 @@
                               Funcionários
                           </td>
                           <td>
-                            <div style="text-align: center;"> 10 </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-
+                            <div style="text-align: center;">
+                              @if(array_key_exists($key, $documentEmployees))
+                                @if(array_key_exists($PENDING_UPLOAD, $documentEmployees[$key]))
+                                    {{ count($documentEmployees[$key][0]) }}
+                                @else
+                                    {{ 0 }}
+                                @endif
+                              @endif
                             </div>
                           </td>
                           <td>
-                            <div style="text-align: center;"> 10 </div>
+                            <div style="text-align: center;">
+                              @if(array_key_exists($key, $documentEmployees))
+                                @if(array_key_exists($PENDING_APPROVAL, $documentEmployees[$key]))
+                                    {{ count($documentEmployees[$key][1]) }}
+                                @else
+                                    {{ 0 }}
+                                @endif
+                              @endif
+                            </div>
+                          </td>
+                          <td>
+                            <div style="text-align: center;">
+                              @if(array_key_exists($key, $documentEmployees))
+                                @if(array_key_exists($APPROVED, $documentEmployees[$key]))
+                                    {{ count($documentEmployees[$key][2]) }}
+                                @else
+                                    {{ 0 }}
+                                @endif
+                              @endif
+                            </div>
                           </td>
                         </tr>
                     </tbody>
                 </table>
-
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>
-                            <div>Cliente 2</div>
-                        </th>
-                        <th>
-                            <div style="width: 200px; text-align: center;">
-                                <i class="material-icons" style="font-size:30px;color:red;">error</i>
-                            </div>
-                        </th>
-                        <th>
-                            <div style="width: 200px; text-align: center;">
-                                <a href="#">
-                                    <i class="material-icons" style="font-size:30px;color:yellow;">warning</i>
-                                </a>
-                            </div>
-                        </th>
-                        <th>
-                            <div style="width: 200px; text-align: center;">
-                                <a href="#">
-                                    <i class="material-icons" style="font-size:30px;color:green">check</i>
-                                </a>
-                            </div>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                          <td>
-                              Próprios
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-
-                            </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                              Prestadores
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-
-                            </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                              Funcionários
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-
-                            </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-                          </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th>
-                            <div>Cliente 3</div>
-                        </th>
-                        <th>
-                            <div style="width: 200px; text-align: center;">
-                                <i class="material-icons" style="font-size:30px;color:red;">error</i>
-                            </div>
-                        </th>
-                        <th>
-                            <div style="width: 200px; text-align: center;">
-                                <a href="#">
-                                    <i class="material-icons" style="font-size:30px;color:yellow;">warning</i>
-                                </a>
-                            </div>
-                        </th>
-                        <th>
-                            <div style="width: 200px; text-align: center;">
-                                <a href="#">
-                                    <i class="material-icons" style="font-size:30px;color:green">check</i>
-                                </a>
-                            </div>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                          <td>
-                              Próprios
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-
-                            </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                              Prestadores
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-
-                            </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                              Funcionários
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-
-                            </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;"> 10 </div>
-                          </td>
-                        </tr>
-                    </tbody>
-                </table>
+                @endforeach
             </div>
         </div>
     </div>

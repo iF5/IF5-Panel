@@ -43,6 +43,52 @@ class DashboardRepository
         }
     }
 
+    public function getDocumentProviders()
+    {
+        try {
+            $stmt = \DB::table('providers_has_documents')->selectRaw('
+                providers_has_companies.companyId,
+                providers_has_documents.documentId,
+                document_checklists.status
+            ')->leftJoin('documents', function($join){
+                $join->on('providers_has_documents.documentId', '=', 'documents.id');
+            })->leftjoin('document_checklists', function($join){
+                $join->on('providers_has_documents.documentId', '=', 'document_checklists.documentId');
+            })->join('providers_has_companies', function($join){
+                $join->on('providers_has_companies.providerId', '=', 'providers_has_documents.providerId');
+            });
+            //dd($stmt->toSql());
+            return $stmt->get();
+        } catch(\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
+    public function getDocumentEmployees()
+    {
+        try {
+            $stmt = \DB::table('employees_has_documents')->selectRaw('
+                providers_has_companies.companyId,
+                employees_has_documents.documentId,
+                employees_has_documents.employeeId,
+                employees.providerId,
+                document_checklists.status
+            ')->leftJoin('documents', function($join){
+                $join->on('employees_has_documents.documentId', '=', 'documents.id');
+            })->leftjoin('document_checklists', function($join){
+                $join->on('employees_has_documents.documentId', '=', 'document_checklists.documentId');
+            })->join('employees', function($join){
+                $join->on('employees_has_documents.employeeId', '=', 'employees.id');
+            })->join('providers_has_companies', function($join){
+                $join->on('providers_has_companies.providerId', '=', 'employees.providerId');
+            });
+            //dd($stmt->toSql());
+            return $stmt->get();
+        } catch(\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
 #----------------------------------------------------------#//
 
     public function emploweeHasDocuments()

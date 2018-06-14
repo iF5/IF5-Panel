@@ -23,6 +23,21 @@ class DashboardController extends Controller
      */
     protected $breadcrumbService;
 
+    private $companies;
+
+    private $documentCompanies;
+
+    private $documentProviders;
+
+    private $documentEmployees;
+
+    const PENDING_UPLOAD = 0;
+
+    const PENDING_APPROVAL = 1;
+
+    const APPROVED = 2;
+
+    const DISAPPROVED = 3;
 
     public function __construct(
         DashboardRepository $dashboardRepository,
@@ -38,13 +53,19 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $this->getCompanies();
-        $this->getDocumentCompanies();
+        $this->companiesData();
 
         return view('panel.dashboard.index', [
 
-            'breadcrumbs' => $this->getBreadcrumb()
-
+            'breadcrumbs' => $this->getBreadcrumb(),
+            'companies' => $this->companies,
+            'documentCompanies' => $this->documentCompanies,
+            'documentProviders' => $this->documentProviders,
+            'documentEmployees' => $this->documentEmployees,
+            'PENDING_UPLOAD' => self::PENDING_UPLOAD,
+            'PENDING_APPROVAL' => self::PENDING_APPROVAL,
+            'APPROVED' => self::APPROVED,
+            'DISAPPROVED' => self::DISAPPROVED
         ]);
 
         //$keyword = \Request::input('keyword');
@@ -56,6 +77,14 @@ class DashboardController extends Controller
             'breadcrumbs' => $this->getBreadcrumb(),
             'keyword' => $keyword
         ]);*/
+    }
+
+    private function companiesData()
+    {
+      $this->companies = $this->getCompanies();
+      $this->documentCompanies = $this->getDocumentCompanies();
+      $this->documentProviders = $this->getDocumentProviders();
+      $this->documentEmployees = $this->getDocumentEmployees();
     }
 
     private function getCompanies()
@@ -72,17 +101,39 @@ class DashboardController extends Controller
     {
       $newDocumentCompanies = [];
       $documentCompanies = $this->dashboardRepository->getDocumentCompanies();
-      foreach ($documentCompanies as $documentCompany) {
-          $companyId = $documentCompany->companyId;
-          $status = $documentCompany->status;
-          
-          !is_null($status) ? $status : 0;
-          $newDocumentCompanies[$companyId][$status][] = $documentCompany->documentId;
-      }
-      dd($newDocumentCompanies);
-      //dd($documentCompanies);
+      return $this->formatData($documentCompanies);
     }
 
+    private function getDocumentProviders()
+    {
+        $newDocumentProviders = [];
+        $documentProviders = $this->dashboardRepository->getDocumentProviders();
+        return $this->formatData($documentProviders);
+    }
+
+    private function getDocumentEmployees()
+    {
+        $documentEmployees = $this->dashboardRepository->getDocumentEmployees();
+        return $this->formatData($documentEmployees);
+    }
+
+    private function formatData($Array)
+    {
+      $newArray = [];
+      foreach ($Array as $array) {
+          $companyId = $array->companyId;
+          $status = $array->status;
+          /**
+           * $status = 0; Nenhum doc feito upload
+           * $status = 1; Pendente aprovação
+           * $status = 2; Aprovado
+           * $status = 3; Reprovado
+           */
+          $status = !is_null($status) ? $status : 0;
+          $newArray[$companyId][$status][] = $array->documentId;
+      }
+      return $newArray;
+    }
 
     #--------------------------------------------------------------------------#
 
