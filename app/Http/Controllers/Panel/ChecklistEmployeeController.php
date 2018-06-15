@@ -103,7 +103,7 @@ class ChecklistEmployeeController extends Controller
     {
         if ($year && $month) {
             return $this->documentChecklistRepository->findByDocument(
-                sprintf('%d-%d-01', $year, $month), $periodicity, $this->getEntityGroup()
+                sprintf('%d-%d-01', $year, $month), $periodicity, $this->getEntityGroup(), $this->getEntityId()
             );
         }
 

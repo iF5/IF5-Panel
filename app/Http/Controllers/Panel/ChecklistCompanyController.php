@@ -10,7 +10,7 @@ use App\Repositories\Panel\DocumentRepository;
 use App\Services\BreadcrumbService;
 use App\Facades\Company;
 
-class ChecklistCompanyController extends Controller
+  class ChecklistCompanyController extends Controller
 {
 
     use ChecklistTrait;

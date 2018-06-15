@@ -65,7 +65,7 @@ class DocumentChecklistRepository extends DocumentChecklist
      * @param int $entityGroup
      * @return mixed
      */
-    public function findByDocument($referenceDate, $periodicity, $entityGroup)
+    public function findByDocument($referenceDate, $periodicity, $entityGroup, $entityId)
     {
         try {
             return $this->leftJoin('documents', function ($join) {
@@ -73,6 +73,7 @@ class DocumentChecklistRepository extends DocumentChecklist
             })->where([
                 ['documents.periodicity', '=', $periodicity],
                 ['documents.entityGroup', '=', $entityGroup],
+                ['document_checklists.entityId', '=', $entityId],
                 ['documents.isActive', '=', 1],
                 ['document_checklists.referenceDate', '=', $referenceDate]
             ])->get();
