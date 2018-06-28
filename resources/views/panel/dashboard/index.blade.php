@@ -16,6 +16,16 @@
             <div class="col-md-6"></div>
 
             <div class="col-md-12" style="overflow-x: auto; min-height: 350px;">
+              @if (count($companies) < 1)
+                    <div class="alert alert-warning" role="alert">
+                        <h4 class="alert-heading">Atenção!</h4>
+                        <p>Não há clientes cadastrados, é necessário que cadastre pelo menos 1 pra que as informações sejam apresentadas no Dashboard.</p>
+                        <hr>
+                        <p class="mb-0"><a href="/company/create" class="btn btn-warning">Adicionar novo cliente</a>
+                        </p>
+                    </div>
+              @endif
+
               @foreach($companies as $key => $company)
                 <table class="table table-bordered">
                     <thead>
