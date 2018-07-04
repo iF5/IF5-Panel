@@ -45,6 +45,16 @@ class DashboardRepository
         }
     }
 
+    public function getProviders()
+    {
+        try {
+            $stmt = \DB::table('providers')->select('id', 'name');
+            return $stmt->get();
+        } catch(\Exception $e) {
+            throw new ModelNotFoundException;
+        }
+    }
+
     public function getDocumentProviders()
     {
         try {

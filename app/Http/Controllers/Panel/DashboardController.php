@@ -7,11 +7,13 @@ use App\Http\Traits\LogTrait;
 use App\Models\Document;
 use App\Repositories\Panel\DashboardRepository;
 use App\Services\BreadcrumbService;
+use App\Http\Traits\AuthTrait;
 
 class DashboardController extends Controller
 {
 
     use LogTrait;
+    use AuthTrait;
 
     /**
      * @var DashboardRepository
@@ -24,6 +26,8 @@ class DashboardController extends Controller
     protected $breadcrumbService;
 
     private $companies;
+
+    private $providers;
 
     private $documentCompanies;
 
@@ -53,12 +57,13 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $this->companiesData();
+        $this->{$this->getRole()}();
 
         return view('panel.dashboard.index', [
 
             'breadcrumbs' => $this->getBreadcrumb(),
             'companies' => $this->companies,
+            'providers' => $this->providers,
             'documentCompanies' => $this->documentCompanies,
             'documentProviders' => $this->documentProviders,
             'documentEmployees' => $this->documentEmployees,
@@ -79,12 +84,23 @@ class DashboardController extends Controller
         ]);*/
     }
 
-    private function companiesData()
+    private function admin()
     {
-      $this->companies = $this->getCompanies();
-      $this->documentCompanies = $this->getDocumentCompanies();
-      $this->documentProviders = $this->getDocumentProviders();
-      $this->documentEmployees = $this->getDocumentEmployees();
+        $this->companies = $this->getCompanies();
+        $this->documentCompanies = $this->getDocumentCompanies();
+        $this->providers = $this->getProviders();
+        $this->documentProviders = $this->getDocumentProviders();
+        $this->documentEmployees = $this->getDocumentEmployees();
+    }
+
+    private function company()
+    {
+        dd("company");
+    }
+
+    private function provider()
+    {
+        dd("provider");
     }
 
     private function getCompanies()
@@ -95,6 +111,16 @@ class DashboardController extends Controller
             $newCompanies[$company->id]['name'] = $company->name;
         }
         return $newCompanies;
+    }
+
+    private function getProviders()
+    {
+        $newProviders = [];
+        $providers = $this->dashboardRepository->getProviders();
+        foreach($providers as $provider) {
+            $newProviders[$provider->id]['name'] = $provider->name;
+        }
+        return $newProviders;
     }
 
     private function getDocumentCompanies()
