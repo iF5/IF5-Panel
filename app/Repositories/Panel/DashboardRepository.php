@@ -4,6 +4,7 @@ namespace App\Repositories\Panel;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Traits\AuthTrait;
+use App\Models\Company;
 
 class DashboardRepository
 {
@@ -24,7 +25,7 @@ class DashboardRepository
         }
     }
 
-    public function getDocumentCompanies()
+    public function getDocumentCompanies($id = null)
     {
         try {
             $stmt = \DB::table('companies_has_documents')->selectRaw('
@@ -37,7 +38,11 @@ class DashboardRepository
                 $join->on('companies_has_documents.documentId', '=', 'document_checklists.documentId');
                 $join->on('companies_has_documents.companyId', '=', 'document_checklists.entityId');
             });
-            //dd($stmt->toSql());
+
+            if ($id) {
+                $stmt->where('companies_has_documents.companyId', '=', $id);
+            }
+
             return $stmt->get();
         } catch(\Exception $e) {
             //echo $e->getMessage(), "<br>";
@@ -45,17 +50,25 @@ class DashboardRepository
         }
     }
 
-    public function getProviders()
+    public function getProviders($companyId = null)
     {
         try {
-            $stmt = \DB::table('providers')->select('id', 'name');
+            if ($companyId) {
+                $stmt = \DB::table('providers_has_companies')
+                    ->select('providers.id', 'providers.name')
+                    ->where('providers_has_companies.companyId', '=', $companyId)
+                    ->join('providers', 'providers_has_companies.providerId', 'providers.id');
+            } else {
+                $stmt = \DB::table('providers')->select('providers.id', 'providers.name');
+            }
+
             return $stmt->get();
         } catch(\Exception $e) {
             throw new ModelNotFoundException;
         }
     }
 
-    public function getDocumentProviders()
+    public function getDocumentProviders($companyId)
     {
         try {
             $stmt = \DB::table('providers_has_documents')->selectRaw('
@@ -69,14 +82,17 @@ class DashboardRepository
             })->join('providers_has_companies', function($join){
                 $join->on('providers_has_companies.providerId', '=', 'providers_has_documents.providerId');
             });
-            //dd($stmt->toSql());
+
+            if ($companyId) {
+                $stmt->where('providers_has_companies.companyId', '=', $companyId);
+            }
             return $stmt->get();
         } catch(\Exception $e) {
             throw new ModelNotFoundException;
         }
     }
 
-    public function getDocumentEmployees()
+    public function getDocumentEmployees($companyId)
     {
         try {
             $stmt = \DB::table('employees_has_documents')->selectRaw('
@@ -95,10 +111,21 @@ class DashboardRepository
             })->join('providers_has_companies', function($join){
                 $join->on('providers_has_companies.providerId', '=', 'employees.providerId');
             });
+
+            if ($companyId) {
+                $stmt->where('providers_has_companies.companyId', '=', $companyId);
+            }
             //dd($stmt->toSql());
             return $stmt->get();
         } catch(\Exception $e) {
             throw new ModelNotFoundException;
         }
+    }
+
+    public function getCompanyById($id)
+    {
+        $company = New Company();
+
+        return $company->find($id);
     }
 }

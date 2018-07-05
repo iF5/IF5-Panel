@@ -8,6 +8,7 @@ use App\Models\Document;
 use App\Repositories\Panel\DashboardRepository;
 use App\Services\BreadcrumbService;
 use App\Http\Traits\AuthTrait;
+use App\Models\Company;
 
 class DashboardController extends Controller
 {
@@ -30,6 +31,8 @@ class DashboardController extends Controller
     private $providers;
 
     private $documentCompanies;
+
+    private $documentCompany;
 
     private $documentProviders;
 
@@ -57,21 +60,8 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $this->{$this->getRole()}();
 
-        return view('panel.dashboard.index', [
-
-            'breadcrumbs' => $this->getBreadcrumb(),
-            'companies' => $this->companies,
-            'providers' => $this->providers,
-            'documentCompanies' => $this->documentCompanies,
-            'documentProviders' => $this->documentProviders,
-            'documentEmployees' => $this->documentEmployees,
-            'PENDING_UPLOAD' => self::PENDING_UPLOAD,
-            'PENDING_APPROVAL' => self::PENDING_APPROVAL,
-            'APPROVED' => self::APPROVED,
-            'DISAPPROVED' => self::DISAPPROVED
-        ]);
+        return view('panel.dashboard.index', $this->{$this->getRole()}());
 
         //$keyword = \Request::input('keyword');
         //$providers = $this->prepareReportToProviders($keyword);
@@ -91,11 +81,45 @@ class DashboardController extends Controller
         $this->providers = $this->getProviders();
         $this->documentProviders = $this->getDocumentProviders();
         $this->documentEmployees = $this->getDocumentEmployees();
+
+        return [
+            'role' => $this->getRole(),
+            'breadcrumbs' => $this->getBreadcrumb(),
+            'companies' => $this->companies,
+            'providers' => $this->providers,
+            'documentCompanies' => $this->documentCompanies,
+            'documentProviders' => $this->documentProviders,
+            'documentEmployees' => $this->documentEmployees,
+            'PENDING_UPLOAD' => self::PENDING_UPLOAD,
+            'PENDING_APPROVAL' => self::PENDING_APPROVAL,
+            'APPROVED' => self::APPROVED,
+            'DISAPPROVED' => self::DISAPPROVED
+        ];
     }
 
     private function company()
     {
-        dd("company");
+        $company = $this->dashboardRepository->getCompanyById($this->getCompanyId());
+        $providers = $this->dashboardRepository->getProviders($this->getCompanyId());
+        $documentsCompany = $this->dashboardRepository->getDocumentCompanies($this->getCompanyId());
+        $documentsProviders = $this->dashboardRepository->getDocumentProviders($this->getCompanyId());
+        $documentsEmployees = $this->dashboardRepository->getDocumentEmployees($this->getCompanyId());
+
+        return [
+            'role' => $this->getRole(),
+            'breadcrumbs' => $this->getBreadcrumb(),
+            'company' => $company,
+            'providers' => $providers->toArray(),
+            'documentsCompany' => $documentsCompany->toArray(),
+            'documentProviders' => $documentsProviders->toArray(),
+            'documentEmployees' => $documentsEmployees->toArray(),
+            'PENDING_UPLOAD' => self::PENDING_UPLOAD,
+            'PENDING_APPROVAL' => self::PENDING_APPROVAL,
+            'APPROVED' => self::APPROVED,
+            'DISAPPROVED' => self::DISAPPROVED
+        ];
+
+
     }
 
     private function provider()
