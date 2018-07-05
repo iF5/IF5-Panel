@@ -68,7 +68,7 @@ class DashboardRepository
         }
     }
 
-    public function getDocumentProviders($companyId)
+    public function getDocumentProviders($companyId = null)
     {
         try {
             $stmt = \DB::table('providers_has_documents')->selectRaw('
@@ -92,7 +92,7 @@ class DashboardRepository
         }
     }
 
-    public function getDocumentEmployees($companyId)
+    public function getDocumentEmployees($companyId = null)
     {
         try {
             $stmt = \DB::table('employees_has_documents')->selectRaw('

@@ -27,7 +27,7 @@
                     </div>
               @endif
 
-              @foreach($companies as $company['id'] => $company)
+              @foreach($companies as $key => $company)
                 <table class="table table-bordered">
                     <thead>
                     <tr>
@@ -62,9 +62,9 @@
                           </td>
                           <td>
                             <div style="text-align: center;">
-                                @if(array_key_exists($company['id'], $documentsCompany))
-                                  @if(array_key_exists($PENDING_UPLOAD, $documentsCompany[$company['id']]))
-                                      {{ count($documentsCompany[$company['id']][0]) }}
+                                @if(array_key_exists($key, $documentCompanies))
+                                  @if(array_key_exists($PENDING_UPLOAD, $documentsCompany[$key]))
+                                      {{ count($documentCompanies[$key][0]) }}
                                   @endif
                                 @else
                                     0
@@ -73,9 +73,9 @@
                           </td>
                           <td>
                             <div style="text-align: center;">
-                              @if(array_key_exists($company['id'], $documentsCompany))
-                                @if(array_key_exists($PENDING_APPROVAL, $documentsCompany[$company['id']]))
-                                    {{ count($documentsCompany[$company['id']][1]) }}
+                              @if(array_key_exists($key, $documentCompanies))
+                                @if(array_key_exists($PENDING_APPROVAL, $documentsCompany[$key]))
+                                    {{ count($documentCompanies[$key][1]) }}
                                 @endif
                               @else
                                   0
@@ -84,9 +84,9 @@
                           </td>
                           <td>
                             <div style="text-align: center;">
-                              @if(array_key_exists($company['id'], $documentsCompany))
-                                @if(array_key_exists($APPROVED, $documentsCompany[$company['id']]))
-                                    {{ count($documentsCompany[$company['id']][2]) }}
+                              @if(array_key_exists($key, $documentCompanies))
+                                @if(array_key_exists($APPROVED, $documentsCompany[$key]))
+                                    {{ count($documentCompanies[$key][2]) }}
                                 @endif
                               @else
                                   0
@@ -100,9 +100,9 @@
                           </td>
                           <td>
                             <div style="text-align: center;">
-                              @if(array_key_exists($company['id'], $documentProviders))
-                                @if(array_key_exists($PENDING_UPLOAD, $documentProviders[$company['id']]))
-                                    {{ count($documentProviders[$company['id']][0]) }}
+                              @if(array_key_exists($key, $documentProviders))
+                                @if(array_key_exists($PENDING_UPLOAD, $documentProviders[$key]))
+                                    {{ count($documentProviders[$key][0]) }}
                                 @endif
                               @else
                                 0
@@ -111,9 +111,9 @@
                           </td>
                           <td>
                             <div style="text-align: center;">
-                              @if(array_key_exists($company['id'], $documentProviders))
-                                @if(array_key_exists($PENDING_APPROVAL, $documentProviders[$company['id']]))
-                                    {{ count($documentProviders[$company['id']][1]) }}
+                              @if(array_key_exists($key, $documentProviders))
+                                @if(array_key_exists($PENDING_APPROVAL, $documentProviders[$key]))
+                                    {{ count($documentProviders[$key][1]) }}
                                 @endif
                               @else
                                 0
@@ -122,9 +122,9 @@
                           </td>
                           <td>
                             <div style="text-align: center;">
-                              @if(array_key_exists($company['id'], $documentProviders))
-                                @if(array_key_exists($APPROVED, $documentProviders[$company['id']]))
-                                    {{ count($documentProviders[$company['id']][2]) }}
+                              @if(array_key_exists($key, $documentProviders))
+                                @if(array_key_exists($APPROVED, $documentProviders[$key]))
+                                    {{ count($documentProviders[$key][2]) }}
                                 @endif
                               @else
                                 0
@@ -138,9 +138,9 @@
                           </td>
                           <td>
                             <div style="text-align: center;">
-                              @if(array_key_exists($company['id'], $documentEmployees))
-                                @if(array_key_exists($PENDING_UPLOAD, $documentEmployees[$company['id']]))
-                                    {{ count($documentEmployees[$company['id']][0]) }}
+                              @if(array_key_exists($key, $documentEmployees))
+                                @if(array_key_exists($PENDING_UPLOAD, $documentEmployees[$key]))
+                                    {{ count($documentEmployees[$key][0]) }}
                                 @endif
                               @else
                                 0
@@ -149,9 +149,9 @@
                           </td>
                           <td>
                             <div style="text-align: center;">
-                              @if(array_key_exists($company['id'], $documentEmployees))
-                                @if(array_key_exists($PENDING_APPROVAL, $documentEmployees[$company['id']]))
-                                    {{ count($documentEmployees[$company['id']][1]) }}
+                              @if(array_key_exists($key, $documentEmployees))
+                                @if(array_key_exists($PENDING_APPROVAL, $documentEmployees[$key]))
+                                    {{ count($documentEmployees[$key][1]) }}
                                 @endif
                               @else
                                 0
@@ -160,9 +160,9 @@
                           </td>
                           <td>
                             <div style="text-align: center;">
-                              @if(array_key_exists($company['id'], $documentEmployees))
-                                @if(array_key_exists($APPROVED, $documentEmployees[$company['id']]))
-                                    {{ count($documentEmployees[$company['id']][2]) }}
+                              @if(array_key_exists($key, $documentEmployees))
+                                @if(array_key_exists($APPROVED, $documentEmployees[$key]))
+                                    {{ count($documentEmployees[$key][2]) }}
                                 @endif
                               @else
                                 0
