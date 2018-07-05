@@ -102,8 +102,8 @@ class DashboardController extends Controller
         $company = $this->dashboardRepository->getCompanyById($this->getCompanyId());
         $providers = $this->dashboardRepository->getProviders($this->getCompanyId());
         $documentsCompany = $this->dashboardRepository->getDocumentCompanies($this->getCompanyId());
-        $documentsProviders = $this->dashboardRepository->getDocumentProviders($this->getCompanyId());
-        $documentsEmployees = $this->dashboardRepository->getDocumentEmployees($this->getCompanyId());
+        $documentsProviders = $this->dashboardRepository->getDocumentProviders('companyId', $this->getCompanyId());
+        $documentsEmployees = $this->dashboardRepository->getDocumentEmployees('companyId', $this->getCompanyId());
 
         return [
             'role' => $this->getRole(),
@@ -118,13 +118,25 @@ class DashboardController extends Controller
             'APPROVED' => self::APPROVED,
             'DISAPPROVED' => self::DISAPPROVED
         ];
-
-
     }
 
     private function provider()
     {
-        dd("provider");
+        $provider = $this->dashboardRepository->getProviderById($this->getProviderId());
+        $documentsProviders = $this->dashboardRepository->getDocumentProviders('providerId', $this->getProviderId());
+        $documentsEmployees = $this->dashboardRepository->getDocumentEmployees('providerId', $this->getProviderId());
+
+        return [
+            'role' => $this->getRole(),
+            'breadcrumbs' => $this->getBreadcrumb(),
+            'provider' => $provider->toArray(),
+            'documentProviders' => $documentsProviders->toArray(),
+            'documentEmployees' => $documentsEmployees->toArray(),
+            'PENDING_UPLOAD' => self::PENDING_UPLOAD,
+            'PENDING_APPROVAL' => self::PENDING_APPROVAL,
+            'APPROVED' => self::APPROVED,
+            'DISAPPROVED' => self::DISAPPROVED
+        ];
     }
 
     private function getCompanies()
