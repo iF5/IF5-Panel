@@ -77,10 +77,26 @@ class DashboardController extends Controller
     private function admin()
     {
         $this->companies = $this->getCompanies();
-        $this->documentCompanies = $this->getDocumentCompanies();
         $this->providers = $this->getProviders();
+        $this->documentCompanies = $this->getDocumentCompanies();
         $this->documentProviders = $this->getDocumentProviders();
         $this->documentEmployees = $this->getDocumentEmployees();
+
+        /*
+        dd([
+            'role' => $this->getRole(),
+            'breadcrumbs' => $this->getBreadcrumb(),
+            'companies' => $this->companies,
+            'providers' => $this->providers,
+            'documentCompanies' => $this->documentCompanies,
+            'documentProviders' => $this->documentProviders,
+            'documentEmployees' => $this->documentEmployees,
+            'PENDING_UPLOAD' => self::PENDING_UPLOAD,
+            'PENDING_APPROVAL' => self::PENDING_APPROVAL,
+            'APPROVED' => self::APPROVED,
+            'DISAPPROVED' => self::DISAPPROVED
+        ]);
+        */
 
         return [
             'role' => $this->getRole(),
@@ -100,19 +116,35 @@ class DashboardController extends Controller
     private function company()
     {
         $company = $this->dashboardRepository->getCompanyById($this->getCompanyId());
-        $providers = $this->dashboardRepository->getProviders($this->getCompanyId());
-        $documentsCompany = $this->dashboardRepository->getDocumentCompanies($this->getCompanyId());
-        $documentsProviders = $this->dashboardRepository->getDocumentProviders('companyId', $this->getCompanyId());
-        $documentsEmployees = $this->dashboardRepository->getDocumentEmployees('companyId', $this->getCompanyId());
+        $providers = $this->getProviders($this->getCompanyId());
+        $documentsCompany = $this->formatData($this->dashboardRepository->getDocumentCompanies($this->getCompanyId()));
+        $documentsProviders = $this->formatData($this->dashboardRepository->getDocumentProviders('companyId', $this->getCompanyId()));
+        $documentsEmployees = $this->formatData($this->dashboardRepository->getDocumentEmployees('companyId', $this->getCompanyId()));
+
+        /*
+        dd([
+            'role' => $this->getRole(),
+            'breadcrumbs' => $this->getBreadcrumb(),
+            'company' => $company,
+            'providers' => $providers,
+            'documentsCompany' => $documentsCompany,
+            'documentProviders' => $documentsProviders,
+            'documentEmployees' => $documentsEmployees,
+            'PENDING_UPLOAD' => self::PENDING_UPLOAD,
+            'PENDING_APPROVAL' => self::PENDING_APPROVAL,
+            'APPROVED' => self::APPROVED,
+            'DISAPPROVED' => self::DISAPPROVED
+        ]);
+        */
 
         return [
             'role' => $this->getRole(),
             'breadcrumbs' => $this->getBreadcrumb(),
             'company' => $company,
-            'providers' => $providers->toArray(),
-            'documentsCompany' => $documentsCompany->toArray(),
-            'documentProviders' => $documentsProviders->toArray(),
-            'documentEmployees' => $documentsEmployees->toArray(),
+            'providers' => $providers,
+            'documentsCompany' => $documentsCompany,
+            'documentProviders' => $documentsProviders,
+            'documentEmployees' => $documentsEmployees,
             'PENDING_UPLOAD' => self::PENDING_UPLOAD,
             'PENDING_APPROVAL' => self::PENDING_APPROVAL,
             'APPROVED' => self::APPROVED,
@@ -149,10 +181,10 @@ class DashboardController extends Controller
         return $newCompanies;
     }
 
-    private function getProviders()
+    private function getProviders($companyId = null)
     {
         $newProviders = [];
-        $providers = $this->dashboardRepository->getProviders();
+        $providers = $companyId ? $this->dashboardRepository->getProviders($this->getCompanyId()) : $this->dashboardRepository->getProviders();
         foreach($providers as $provider) {
             $newProviders[$provider->id]['name'] = $provider->name;
         }

@@ -30,144 +30,126 @@
               @foreach($companies as $key => $company)
                 <table class="table table-bordered">
                     <thead>
-                    <tr>
-                        <th>
-                            <div>{{ $company['name'] }}</div>
-                        </th>
-                        <th>
-                            <div style="width: 200px; text-align: center;">
+                        <tr>
+                            <th>{{ $company['name'] }}</th>
+                            <th style="text-align: center;">
                                 <i class="material-icons" style="font-size:30px;color:red;">error</i>
-                            </div>
-                        </th>
-                        <th>
-                            <div style="width: 200px; text-align: center;">
-                                <a href="#">
-                                    <i class="material-icons" style="font-size:30px;color:yellow;">warning</i>
-                                </a>
-                            </div>
-                        </th>
-                        <th>
-                            <div style="width: 200px; text-align: center;">
-                                <a href="#">
-                                    <i class="material-icons" style="font-size:30px;color:green">check</i>
-                                </a>
-                            </div>
-                        </th>
-                    </tr>
+                            </th>
+                            <th style="text-align: center;">
+                                <a href="#"><i class="material-icons" style="font-size:30px;color:yellow;">warning</i></a>
+                            </th>
+                            <th style="text-align: center;">
+                                <a href="#"><i class="material-icons" style="font-size:30px;color:green">check</i></a>
+                            </th>
+                        </tr>
                     </thead>
                     <tbody>
                         <tr>
-                          <td>
-                              Próprios
-                          </td>
-                          <td>
-                            <div style="text-align: center;">
+                            <td><a href="/checklist-company/{{ $key }}">Próprios</a></td>
+                            <td style="text-align: center;">
                                 @if(array_key_exists($key, $documentCompanies))
-                                  @if(array_key_exists($PENDING_UPLOAD, $documentsCompany[$key]))
+                                  @if(array_key_exists($PENDING_UPLOAD, $documentCompanies[$key]))
                                       {{ count($documentCompanies[$key][0]) }}
+                                  @else
+                                      0
                                   @endif
                                 @else
                                     0
                                 @endif
-                            </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;">
+                            </td>
+                            <td style="text-align: center;">
                               @if(array_key_exists($key, $documentCompanies))
-                                @if(array_key_exists($PENDING_APPROVAL, $documentsCompany[$key]))
+                                @if(array_key_exists($PENDING_APPROVAL, $documentCompanies[$key]))
                                     {{ count($documentCompanies[$key][1]) }}
+                                @else
+                                    0
                                 @endif
                               @else
                                   0
                               @endif
-                            </div>
-                          </td>
-                          <td>
-                            <div style="text-align: center;">
+                            </td>
+                            <td style="text-align: center;">
                               @if(array_key_exists($key, $documentCompanies))
-                                @if(array_key_exists($APPROVED, $documentsCompany[$key]))
+                                @if(array_key_exists($APPROVED, $documentCompanies[$key]))
                                     {{ count($documentCompanies[$key][2]) }}
+                                @else
+                                    0
                                 @endif
                               @else
                                   0
                               @endif
-                            </div>
-                          </td>
+                            </td>
                         </tr>
                         <tr>
-                          <td>
-                              Prestadores
-                          </td>
-                          <td>
-                            <div style="text-align: center;">
+                            <td><a href="/provider/{{ $key }}/identify">Prestadores</a></td>
+                          <td style="text-align: center;">
                               @if(array_key_exists($key, $documentProviders))
                                 @if(array_key_exists($PENDING_UPLOAD, $documentProviders[$key]))
                                     {{ count($documentProviders[$key][0]) }}
+                                @else
+                                    0
                                 @endif
                               @else
                                 0
                               @endif
-                            </div>
                           </td>
-                          <td>
-                            <div style="text-align: center;">
+                          <td style="text-align: center;">
                               @if(array_key_exists($key, $documentProviders))
                                 @if(array_key_exists($PENDING_APPROVAL, $documentProviders[$key]))
                                     {{ count($documentProviders[$key][1]) }}
+                                @else
+                                    0
                                 @endif
                               @else
                                 0
                               @endif
-                            </div>
                           </td>
-                          <td>
-                            <div style="text-align: center;">
+                          <td style="text-align: center;">
                               @if(array_key_exists($key, $documentProviders))
                                 @if(array_key_exists($APPROVED, $documentProviders[$key]))
                                     {{ count($documentProviders[$key][2]) }}
+                                @else
+                                    0
                                 @endif
                               @else
                                 0
                               @endif
-                            </div>
                           </td>
                         </tr>
                         <tr>
-                          <td>
-                              Funcionários
-                          </td>
-                          <td>
-                            <div style="text-align: center;">
+                            <td><a href="/provider/{{ $key }}/identify">Funcionários</a></td>
+                          <td style="text-align: center;">
                               @if(array_key_exists($key, $documentEmployees))
                                 @if(array_key_exists($PENDING_UPLOAD, $documentEmployees[$key]))
                                     {{ count($documentEmployees[$key][0]) }}
+                                @else
+                                    0
                                 @endif
                               @else
                                 0
                               @endif
-                            </div>
                           </td>
-                          <td>
-                            <div style="text-align: center;">
+                          <td style="text-align: center;">
                               @if(array_key_exists($key, $documentEmployees))
                                 @if(array_key_exists($PENDING_APPROVAL, $documentEmployees[$key]))
                                     {{ count($documentEmployees[$key][1]) }}
+                                @else
+                                    0
                                 @endif
                               @else
                                 0
                               @endif
-                            </div>
                           </td>
-                          <td>
-                            <div style="text-align: center;">
+                          <td style="text-align: center;">
                               @if(array_key_exists($key, $documentEmployees))
                                 @if(array_key_exists($APPROVED, $documentEmployees[$key]))
                                     {{ count($documentEmployees[$key][2]) }}
+                                @else
+                                    0
                                 @endif
                               @else
                                 0
                               @endif
-                            </div>
                           </td>
                         </tr>
                     </tbody>
@@ -175,7 +157,7 @@
                 @endforeach
             </div>
             @elseif($role == 'company')
-            <div class="col-md-12" style="overflow-x: auto; min-height: 350px;">
+            <div class="col-md-12" style="overflow-x: auto;">
                 @if (!$company)
                     <div class="alert alert-warning" role="alert">
                         <h4 class="alert-heading">Atenção!</h4>
@@ -185,153 +167,231 @@
                         </p>
                     </div>
                 @endif
-
-
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <th>
-                                <div>{{ $company['name'] }}</div>
+                            <th>{{ $company['name'] }}</th>
+                            <th style="text-align: center;">
+                                <i class="material-icons" style="font-size:30px;color:red;">error</i>
                             </th>
-                            <th>
-                                <div style="width: 200px; text-align: center;">
-                                    <i class="material-icons" style="font-size:30px;color:red;">error</i>
-                                </div>
+                            <th style="text-align: center;">
+                                <a href="#"><i class="material-icons" style="font-size:30px;color:yellow;">warning</i></a>
                             </th>
-                            <th>
-                                <div style="width: 200px; text-align: center;">
-                                    <a href="#">
-                                        <i class="material-icons" style="font-size:30px;color:yellow;">warning</i>
-                                    </a>
-                                </div>
-                            </th>
-                            <th>
-                                <div style="width: 200px; text-align: center;">
-                                    <a href="#">
-                                        <i class="material-icons" style="font-size:30px;color:green">check</i>
-                                    </a>
-                                </div>
+                            <th style="text-align: center;">
+                                <a href="#"><i class="material-icons" style="font-size:30px;color:green">check</i></a>
                             </th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td>
-                                Próprios
-                            </td>
-                            <td>
-                                <div style="text-align: center;">
-                                    @if(array_key_exists($company['id'], $documentsCompany))
-                                        @if(array_key_exists($PENDING_UPLOAD, $documentsCompany[$company['id']]))
-                                            {{ count($documentsCompany[$company['id']][0]) }}
-                                        @endif
+                            <td><a href="#">Próprios</a></td>
+                            <td style="text-align: center;">
+                                @if(array_key_exists($company['id'], $documentsCompany))
+                                    @if(array_key_exists($PENDING_UPLOAD, $documentsCompany[$company['id']]))
+                                        {{ count($documentsCompany[$company['id']][0]) }}
                                     @else
                                         0
                                     @endif
-                                </div>
+                                @else
+                                    0
+                                @endif
                             </td>
-                            <td>
-                                <div style="text-align: center;">
-                                    @if(array_key_exists($company['id'], $documentsCompany))
-                                        @if(array_key_exists($PENDING_APPROVAL, $documentsCompany[$company['id']]))
-                                            {{ count($documentsCompany[$company['id']][1]) }}
-                                        @endif
+                            <td style="text-align: center;">
+                                @if(array_key_exists($company['id'], $documentsCompany))
+                                    @if(array_key_exists($PENDING_APPROVAL, $documentsCompany[$company['id']]))
+                                        {{ count($documentsCompany[$company['id']][1]) }}
                                     @else
                                         0
                                     @endif
-                                </div>
+                                @else
+                                    0
+                                @endif
                             </td>
-                            <td>
-                                <div style="text-align: center;">
-                                    @if(array_key_exists($company['id'], $documentsCompany))
-                                        @if(array_key_exists($PENDING_APPROVAL, $documentsCompany[$company['id']]))
-                                            {{ count($documentsCompany[$company['id']][2]) }}
-                                        @endif
+                            <td style="text-align: center;">
+                                @if(array_key_exists($company['id'], $documentsCompany))
+                                    @if(array_key_exists($APPROVED, $documentsCompany[$company['id']]))
+                                        {{ count($documentsCompany[$company['id']][2]) }}
                                     @else
                                         0
                                     @endif
-                                </div>
+                                @else
+                                    0
+                                @endif
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                                Prestadores
-                            </td>
-                            <td>
-                                <div style="text-align: center;">
-                                    @if(array_key_exists($company['id'], $documentProviders))
-                                        @if(array_key_exists($PENDING_UPLOAD, $documentProviders[$company['id']]))
-                                            {{ count($documentProviders[$company['id']][0]) }}
-                                        @endif
+                            <td><a href="/provider">Prestadores</a></td>
+                            <td style="text-align: center;">
+                                @if(array_key_exists($company['id'], $documentProviders))
+                                    @if(array_key_exists($PENDING_UPLOAD, $documentProviders[$company['id']]))
+                                        {{ count($documentProviders[$company['id']][0]) }}
                                     @else
                                         0
                                     @endif
-                                </div>
+                                @else
+                                    0
+                                @endif
                             </td>
-                            <td>
-                                <div style="text-align: center;">
-                                    @if(array_key_exists($company['id'], $documentProviders))
-                                        @if(array_key_exists($PENDING_APPROVAL, $documentProviders[$company['id']]))
-                                            {{ count($documentProviders[$company['id']][1]) }}
-                                        @endif
+                            <td style="text-align: center;">
+                                @if(array_key_exists($company['id'], $documentProviders))
+                                    @if(array_key_exists($PENDING_APPROVAL, $documentProviders[$company['id']]))
+                                        {{ count($documentProviders[$company['id']][1]) }}
                                     @else
                                         0
                                     @endif
-                                </div>
+                                @else
+                                    0
+                                @endif
                             </td>
-                            <td>
-                                <div style="text-align: center;">
-                                    @if(array_key_exists($company['id'], $documentProviders))
-                                        @if(array_key_exists($APPROVED, $documentProviders[$company['id']]))
-                                            {{ count($documentProviders[$company['id']][2]) }}
-                                        @endif
+                            <td style="text-align: center;">
+                                @if(array_key_exists($company['id'], $documentProviders))
+                                    @if(array_key_exists($APPROVED, $documentProviders[$company['id']]))
+                                        {{ count($documentProviders[$company['id']][2]) }}
                                     @else
                                         0
                                     @endif
-                                </div>
+                                @else
+                                    0
+                                @endif
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                                Funcionários
-                            </td>
-                            <td>
-                                <div style="text-align: center;">
-                                    @if(array_key_exists($company['id'], $documentEmployees))
-                                        @if(array_key_exists($PENDING_UPLOAD, $documentEmployees[$company['id']]))
-                                            {{ count($documentEmployees[$company['id']][0]) }}
-                                        @endif
+                            <td><a href="#">Funcionários</a></td>
+                            <td style="text-align: center;">
+                                @if(array_key_exists($company['id'], $documentEmployees))
+                                    @if(array_key_exists($PENDING_UPLOAD, $documentEmployees[$company['id']]))
+                                        {{ count($documentEmployees[$company['id']][0]) }}
                                     @else
                                         0
                                     @endif
+                                @else
+                                    0
+                                @endif
                                 </div>
                             </td>
-                            <td>
-                                <div style="text-align: center;">
-                                    @if(array_key_exists($company['id'], $documentEmployees))
-                                        @if(array_key_exists($PENDING_APPROVAL, $documentEmployees[$company['id']]))
-                                            {{ count($documentEmployees[$company['id']][1]) }}
-                                        @endif
+                            <td style="text-align: center;">
+                                @if(array_key_exists($company['id'], $documentEmployees))
+                                    @if(array_key_exists($PENDING_APPROVAL, $documentEmployees[$company['id']]))
+                                        {{ count($documentEmployees[$company['id']][1]) }}
                                     @else
                                         0
                                     @endif
-                                </div>
+                                @else
+                                    0
+                                @endif
                             </td>
-                            <td>
-                                <div style="text-align: center;">
-                                    @if(array_key_exists($company['id'], $documentEmployees))
-                                        @if(array_key_exists($APPROVED, $documentEmployees[$company['id']]))
-                                            {{ count($documentEmployees[$company['id']][2]) }}
-                                        @endif
+                            <td style="text-align: center;">
+                                @if(array_key_exists($company['id'], $documentEmployees))
+                                    @if(array_key_exists($APPROVED, $documentEmployees[$company['id']]))
+                                        {{ count($documentEmployees[$company['id']][2]) }}
                                     @else
                                         0
                                     @endif
-                                </div>
+                                @else
+                                    0
+                                @endif
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 
+            </div>
+
+
+            <div class="col-md-12" style="overflow-x: auto;">
+                <h5 style="font-weight: bold;">PRESTADORES DE SERVIÇOS</h5>
+                @foreach($providers as $key => $provider)
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{{ $provider['name'] }}</th>
+                            <th style="text-align: center;">
+                                <i class="material-icons" style="font-size:30px;color:red;">error</i>
+                            </th>
+                            <th style="text-align: center;">
+                                <a href="#"><i class="material-icons" style="font-size:30px;color:yellow;">warning</i></a>
+                            </th>
+                            <th style="text-align: center;">
+                                <a href="#"><i class="material-icons" style="font-size:30px;color:green">check</i></a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="/provider/{{ $key }}/identify">Prestador</a></td>
+                            <td>
+                                @if(array_key_exists($key, $documentProviders))
+                                    @if(array_key_exists($PENDING_UPLOAD, $documentProviders[$key]))
+                                        {{ count($documentProviders[$key][0]) }}
+                                    @else
+                                        0
+                                    @endif
+                                @else
+                                    0
+                                @endif
+                            </td>
+                            <td>
+                                @if(array_key_exists($key, $documentProviders))
+                                    @if(array_key_exists($PENDING_APPROVAL, $documentProviders[$key]))
+                                        {{ count($documentProviders[$key][1]) }}
+                                    @else
+                                        0
+                                    @endif
+                                @else
+                                    0
+                                @endif
+                            </td>
+                            <td>
+                                @if(array_key_exists($key, $documentProviders))
+                                    @if(array_key_exists($APPROVED, $documentProviders[$key]))
+                                        {{ count($documentProviders[$key][2]) }}
+                                    @else
+                                        0
+                                    @endif
+                                @else
+                                    0
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">Funcionários</a></td>
+                            <td>
+                                @if(array_key_exists($company['id'], $documentEmployees))
+                                    @if(array_key_exists($PENDING_UPLOAD, $documentEmployees[$company['id']][$key]))
+                                        {{ count($documentEmployees[$company['id']][$key][0]) }}
+                                    @else
+                                        0
+                                    @endif
+                                @else
+                                    0
+                                @endif
+                            </td>
+                            <td>
+                                @if(array_key_exists($company['id'], $documentEmployees))
+                                    @if(array_key_exists($PENDING_APPROVAL, $documentEmployees[$company['id']][$key]))
+                                        {{ count($documentEmployees[$company['id']][$key][1]) }}
+                                    @else
+                                        0
+                                    @endif
+                                @else
+                                    0
+                                @endif
+                            </td>
+                            <td>
+                                @if(array_key_exists($company['id'], $documentEmployees))
+                                    @if(array_key_exists($APPROVED, $documentEmployees[$company['id']][$key]))
+                                        {{ count($documentEmployees[$company['id']][$key][2]) }}
+                                    @else
+                                        0
+                                    @endif
+                                @else
+                                    0
+                                @endif
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                @endforeach
             </div>
             @elseif($role == 'provider')
                 <h1>provider</h1>
